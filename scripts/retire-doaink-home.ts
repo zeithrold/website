@@ -5,7 +5,7 @@ export const RETIRE_CONFIRMATION = "DELETE_DOAINK_HOME_PERMANENTLY";
 const BASE = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/workers`;
 type Domain = { id: string; hostname: string; service: string; environment: string; zone_id: string };
 type Binding = { type: string };
-type References = { services?: { incoming: unknown[]; pages_function?: boolean }; durable_objects?: unknown[]; dispatch_outbounds?: unknown[] };
+type References = { services?: { incoming: unknown[]; pages_function?: boolean }; domains?: unknown[]; durable_objects?: unknown[]; dispatch_outbounds?: unknown[] };
 type Service = { id: string; default_environment: { environment: string }; environments: { environment: string }[] };
 
 // The target, account and DELETE URL are fixed. No resource name is accepted as input.
@@ -75,8 +75,15 @@ export async function retireDoainkHome(
   const schedules = await read<{ schedules: unknown[] }>(`/scripts/${LEGACY_WORKER_NAME}/schedules`);
   assert.ok(Array.isArray(schedules.schedules) && schedules.schedules.length === 0, "Old Worker still has Cron triggers");
   const references = await read<References>(`/scripts/${LEGACY_WORKER_NAME}/references`);
-  const unknownCategories = Object.keys(references).filter(key => !["services", "durable_objects", "dispatch_outbounds"].includes(key));
+  const unknownCategories = Object.keys(references).filter(key => !["services", "domains", "durable_objects", "dispatch_outbounds"].includes(key));
   assert.equal(unknownCategories.length, 0, `Unknown dependency categories require review: ${unknownCategories.join(", ")}`);
+  // Cloudflare's Worker.References schema defines domains as Custom Domain[].
+  // Verify the real response explicitly; retain the independent /domains check.
+  if ("domains" in references) {
+    assert.ok(Array.isArray(references.domains), "references.domains must be a Custom Domain array; stop for review");
+    assert.equal(references.domains.length, 0, "Old Worker still has Custom Domain references; stop for review");
+    console.log("Verified old Worker references.domains: empty Custom Domain array.");
+  }
   assert.equal(references.services?.incoming.length ?? 0, 0, "Other Workers reference the old Worker");
   assert.ok(!references.services?.pages_function, "Pages references the old Worker");
   assert.equal(references.durable_objects?.length ?? 0, 0, "Old Worker has Durable Object references/resources");
