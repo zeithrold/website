@@ -28,7 +28,11 @@ pnpm test:e2e
 ```
 
 `pnpm start --port 4173` runs the production Worker locally, using the generated
-`dist/server/wrangler.json`. `wrangler.jsonc` is the source configuration.
+`dist/server/wrangler.json`. It first validates the production config, then uses
+a temporary copy with empty local routes so Wrangler does not infer the live
+domain as its local upstream and rewrite redirects. The deployed config/code,
+ASSETS and bindings stay intact; the copy is removed on shutdown. `wrangler.jsonc`
+is the source configuration.
 Dependencies have a 24-hour minimum release age; CI uses the committed lockfile.
 Browser tests run against the production Worker, save screenshots under
 `artifacts/`, and retain traces on failure. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`
@@ -58,16 +62,26 @@ desktop/mobile browser behavior. It has no Cloudflare credential or deploy step.
 
 [Deploy Worker manually](.github/workflows/deploy.yml) is **manual-only**. It
 requires `main`, `WEBSITE_DEPLOY_ENABLED=true`, the exact confirmation
-`DEPLOY_WORKER_ONLY`, and the `production` environment. It repeats all checks and
-deploys the same tested artifact. Configure environment reviewer protection only
+`DEPLOY_ZTD_ME_ONLY`, the full reviewed main SHA in `expected_commit`, the approved
+account ID, and the `production` environment. Invalid inputs fail explicitly.
+It repeats all checks and deploys the same tested artifact. Configure environment
+reviewer protection only
 after user approval; the workflow does not create or configure that protection.
 
 The deploy step references the existing `CLOUDFLARE_API_TOKEN` repository secret.
 Do not read its value or create a replacement credential. Set a confirmed public
-account ID in the repository variable `CLOUDFLARE_ACCOUNT_ID` after approval.
-Neither variable is configured by this change. The checked-in config has no
-domain routes, with `workers_dev` and preview URLs disabled. Even an authorized
-manual Worker deployment does not perform the domain migration.
+account ID `a0df2e968b524bdd77c0eab565058522` in `CLOUDFLARE_ACCOUNT_ID`.
+Neither variable is configured by this phase PR. The checked-in config and exact
+build guard allow only the approved `ztd.me` Custom Domain, with `workers_dev`
+and all preview URLs disabled. The former worker-only confirmation is rejected.
+Before deployment, GET-only checks reject unexpected domain ownership, missing
+Custom Domain state or extra targets on the new Worker. A post-check verifies the
+new canonical owner. Permission errors stop without credential changes.
+
+This phase PR only prepares code; the Mac coordinator owns the cutover and must
+hand off before dispatch. Merge first, then coordinate one writer. The pinned
+Wrangler can reassign an existing Custom Domain directly in CI; do not delete
+the old binding first. Keep `doaink-home` and its `doa.ink` binding for rollback.
 
 `vercel.json` disables automatic Vercel Git deployments for this repository. It
 does not modify an existing Vercel project or deployment.
@@ -85,6 +99,6 @@ and `showcase.ztd.me` continue on their own infrastructure. The expired
 `zeithrold.cloud` is excluded. `zeithrold.com`, its
 DNS/website/SSH server, `zeithrold-com`, and all mail records are outside scope.
 
-See [the approval-required migration and rollback plan](docs/migration.md).
+See [the canonical cutover sequence and rollback plan](docs/migration.md).
 Do not dispatch deployment, attach domains, change DNS, configure persistent
 authorization, or retire `zeithrold-dev` during the review phase.
