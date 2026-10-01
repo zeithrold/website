@@ -74,14 +74,15 @@ does not modify an existing Vercel project or deployment.
 
 ## Redirects and migration
 
-The Worker recognizes only the exact apex hosts `doa.ink`, `zeithrold.dev`, and
-`ztd.one`: 308 to `https://ztd.me`, preserving path and query, including asset
+The Worker recognizes only the exact hosts `doa.ink`, `zeithrold.dev`,
+`www.zeithrold.dev`, and `ztd.one`: 308 to `https://ztd.me`, preserving path and query, including asset
 paths. Canonical HTTP requests upgrade in one hop. A fixed destination origin
 prevents open redirects. Responses use `no-store` to reduce cached migration
-state. Subdomains and unrelated hosts receive 421 if incorrectly routed here.
+state. All other subdomains and unrelated hosts receive 421 if incorrectly routed here.
 
 No aliases are attached by the checked-in Worker configuration. `blog.ztd.me`
-and `showcase.ztd.me` continue on their own infrastructure. `zeithrold.com`, its
+and `showcase.ztd.me` continue on their own infrastructure. The expired
+`zeithrold.cloud` is excluded. `zeithrold.com`, its
 DNS/website/SSH server, `zeithrold-com`, and all mail records are outside scope.
 
 See [the approval-required migration and rollback plan](docs/migration.md).

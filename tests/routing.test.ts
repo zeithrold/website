@@ -39,7 +39,7 @@ test("host-like paths and redirect parameters cannot change destination origin",
 });
 
 test("subdomains, lookalikes, unrelated hosts and the protected domain fail closed", () => {
-  for (const host of ["blog.ztd.me", "showcase.ztd.me", "www.ztd.me", "www.doa.ink", "blog.doa.ink", "www.zeithrold.dev", "test.ztd.one", "ztd.one.evil.example", "evilztd.one", "zeithrold.com", "www.zeithrold.com", "ztd.one.", "evil.example"]) {
+  for (const host of ["blog.ztd.me", "showcase.ztd.me", "www.ztd.me", "www.doa.ink", "blog.doa.ink", "blog.zeithrold.dev", "www.zeithrold.dev.evil.example", "test.ztd.one", "ztd.one.evil.example", "evilztd.one", "zeithrold.cloud", "www.zeithrold.cloud", "zeithrold.com", "www.zeithrold.com", "ztd.one.", "evil.example"]) {
     const response = routeRequest(new Request(`https://${host}/`));
     assert.equal(response?.status, 421, host);
     assert.equal(response.headers.has("location"), false, host);

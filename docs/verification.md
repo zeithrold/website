@@ -8,7 +8,7 @@ Validated in the selected Codex Cloud environment on 2026-10-01, with Node
 | Frozen dependency install | Passed | 24-hour minimum release age and committed resolution |
 | Generated Worker binding types | Passed | `wrangler types --include-runtime=false`; ASSETS only |
 | TypeScript | Passed | `pnpm typecheck` |
-| Unit tests | 16 passed | HTTPS/apex/path/query/method policy, open-redirect attempts, subdomain isolation, preference validation |
+| Unit tests | 19 passed | HTTPS/exact-host/path/query/method policy, open-redirect attempts, subdomain isolation, preference validation |
 | Production build | Passed | `pnpm build`; generated `dist/server/wrangler.json` |
 | Build boundary check | Passed | One Worker + ASSETS, no addons, empty routes, workers.dev/previews off, Vercel Git deploy off |
 | Browser suite | 10 passed | `pnpm test:e2e` against the local production Worker |
@@ -20,7 +20,9 @@ languages, English and Simplified Chinese, light/dark preference restoration,
 system defaults, unavailable localStorage, keyboard skip link and anchor
 navigation, reduced motion, source/service/contact links, local font loading,
 canonical/Open Graph metadata, 404 navigation, static resources, and actual Worker
-responses with alias and excluded service Host headers. Axe checks WCAG A/AA
+responses with alias and excluded service Host headers, including the explicit
+`www.zeithrold.dev` alias and rejection of expired `zeithrold.cloud`/host lookalikes.
+Axe checks WCAG A/AA
 rules in both languages and both themes. Automated checks do not establish a
 complete accessibility audit.
 
