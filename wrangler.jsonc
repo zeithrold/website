@@ -4,8 +4,10 @@
   "main": "worker/index.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
-  // Domain attachment is a separate, approval-required migration.
-  "routes": [],
+  // Approved canonical phase only. Alias migration requires a separate review.
+  "routes": [
+    { "pattern": "ztd.me", "custom_domain": true, "enabled": true, "previews_enabled": false }
+  ],
   "workers_dev": false,
   "preview_urls": false,
   "assets": {

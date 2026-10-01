@@ -1,11 +1,15 @@
 name: Deploy Worker manually
 
-# No push, PR, workflow_run, or schedule trigger. Never dispatch in the review phase.
+# No push, PR, workflow_run, or schedule trigger. One coordinator owns the cutover.
 on:
   workflow_dispatch:
     inputs:
       confirmation:
-        description: 'After approval, type DEPLOY_WORKER_ONLY (does not attach domains)'
+        description: 'Type DEPLOY_ZTD_ME_ONLY (reassigns only ztd.me; keep aliases/old Worker)'
+        required: true
+        type: string
+      expected_commit:
+        description: 'Full reviewed main SHA after this phase PR is merged'
         required: true
         type: string
 
@@ -17,13 +21,32 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  authorize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout the dispatched commit
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24"
+      - name: Require the exact approved release
+        env:
+          EXPECTED_COMMIT: ${{ inputs.expected_commit }}
+          DEPLOY_CONFIRMATION: ${{ inputs.confirmation }}
+          DEPLOY_ENABLED: ${{ vars.WEBSITE_DEPLOY_ENABLED }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/check-release.mjs
+
   verify:
-    if: github.ref == 'refs/heads/main' && vars.WEBSITE_DEPLOY_ENABLED == 'true' && inputs.confirmation == 'DEPLOY_WORKER_ONLY'
+    needs: authorize
     uses: ./.github/workflows/checks.yml
 
   deploy:
     needs: verify
-    if: github.ref == 'refs/heads/main' && vars.WEBSITE_DEPLOY_ENABLED == 'true' && inputs.confirmation == 'DEPLOY_WORKER_ONLY'
     environment: production
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -48,8 +71,13 @@ jobs:
         with:
           name: worker-${{ github.sha }}
           path: dist/
-      - name: Verify no domain attachment or addons
+      - name: Verify exactly ztd.me and no aliases or addons
         run: pnpm check:build
+      - name: Check existing Custom Domain ownership without changing it
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/check-cloudflare-target.mjs
       - name: Deploy the tested Worker and built-in assets
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -59,8 +87,13 @@ jobs:
             echo "::error::The existing CLOUDFLARE_API_TOKEN secret is required."
             exit 1
           fi
-          if ! [[ "$CLOUDFLARE_ACCOUNT_ID" =~ ^[a-f0-9]{32}$ ]]; then
-            echo "::error::Set the confirmed public account ID in CLOUDFLARE_ACCOUNT_ID."
+          if [[ "$CLOUDFLARE_ACCOUNT_ID" != "a0df2e968b524bdd77c0eab565058522" ]]; then
+            echo "::error::CLOUDFLARE_ACCOUNT_ID must match the approved account."
             exit 1
           fi
           pnpm run deploy
+      - name: Verify the new canonical ownership
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/check-cloudflare-target.mjs --after

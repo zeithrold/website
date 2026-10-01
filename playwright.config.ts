@@ -14,6 +14,7 @@ export default defineConfig({
   webServer: {
     command: "pnpm start --port 4173",
     url: "http://127.0.0.1:4173", reuseExistingServer: false, timeout: 60000,
+    gracefulShutdown: { signal: "SIGTERM", timeout: 5000 },
     env: { WRANGLER_LOG_PATH: "/tmp/ztd-homepage-wrangler-logs", WRANGLER_SEND_METRICS: "false" },
   },
 });
