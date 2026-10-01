@@ -101,5 +101,7 @@ DNS/website/SSH server, `zeithrold-com`, and all mail records are outside scope.
 
 See [the current alias cutover and rollback plan](docs/alias-migration.md) and
 [the completed canonical phase record](docs/migration.md).
+The subsequently approved permanent retirement of the two exact old services
+has a separate [remote retirement procedure](docs/retirement.md).
 Do not dispatch deployment, attach domains, change DNS, configure persistent
 authorization, or retire `zeithrold-dev` during the review phase.
