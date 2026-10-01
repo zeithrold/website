@@ -112,12 +112,12 @@ test("production Worker handles missing routes and static assets", async ({ page
 });
 
 test("real Worker redirects before assets and refuses service hosts", async ({ request }) => {
-  for (const host of ["doa.ink", "zeithrold.dev", "ztd.one"]) {
+  for (const host of ["doa.ink", "zeithrold.dev", "www.zeithrold.dev", "ztd.one"]) {
     const response = await request.get("/favicon.svg?from=old%2Fhome", { headers: { Host: host }, maxRedirects: 0 });
     expect(response.status()).toBe(308);
     expect(response.headers().location).toBe("https://ztd.me/favicon.svg?from=old%2Fhome");
   }
-  for (const host of ["blog.ztd.me", "showcase.ztd.me", "zeithrold.com", "evil.example"]) {
+  for (const host of ["blog.ztd.me", "showcase.ztd.me", "zeithrold.com", "zeithrold.cloud", "www.zeithrold.dev.evil.example", "evil.example"]) {
     const response = await request.get("/", { headers: { Host: host }, maxRedirects: 0 });
     expect(response.status()).toBe(421);
     expect(response.headers().location).toBeUndefined();

@@ -1,9 +1,9 @@
 export const CANONICAL_ORIGIN = "https://ztd.me";
-export const REDIRECT_HOSTS = ["doa.ink", "zeithrold.dev", "ztd.one"] as const;
+export const REDIRECT_HOSTS = ["doa.ink", "zeithrold.dev", "www.zeithrold.dev", "ztd.one"] as const;
 
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]"]);
 
-/** Runs before the app AND static assets. Only exact, approved apex hosts match. */
+/** Runs before the app AND static assets. Only exact, approved hosts match. */
 export function routeRequest(request: Request): Response | null {
   const url = new URL(request.url);
   const canonical = url.hostname === "ztd.me";
