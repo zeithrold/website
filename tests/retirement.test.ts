@@ -11,7 +11,7 @@ const domains = [
   { id: "showcase", hostname: "showcase.ztd.me", service: "showcase", environment: "production", zone_id: "a".repeat(32) },
 ];
 
-function api(options: { absent?: boolean; dependency?: boolean; forbidden?: boolean; uncertain?: boolean; stillListed?: boolean; resource?: boolean } = {}) {
+function api(options: { absent?: boolean; dependency?: boolean; forbidden?: boolean; uncertain?: boolean; stillListed?: boolean; resource?: boolean; unknownCategory?: boolean } = {}) {
   const calls: { path: string; method: string }[] = [];
   let deleted = !!options.absent;
   const fetcher: typeof fetch = async (input, init) => {
@@ -40,7 +40,7 @@ function api(options: { absent?: boolean; dependency?: boolean; forbidden?: bool
       "/services/doaink-home/environments/production/subdomain": { enabled: true },
       "/scripts/doaink-home/settings": { bindings: [{ type: options.resource ? "kv_namespace" : "assets" }], tail_consumers: [], logpush: false },
       "/scripts/doaink-home/schedules": { schedules: [] },
-      "/scripts/doaink-home/references": { services: { incoming: options.dependency ? [{ service: "another-worker" }] : [], pages_function: false }, durable_objects: [], dispatch_outbounds: [] },
+      "/scripts/doaink-home/references": { services: { incoming: options.dependency ? [{ service: "another-worker" }] : [], pages_function: false }, durable_objects: [], dispatch_outbounds: [], ...(options.unknownCategory ? { unreviewed_dependency: [] } : {}) },
       "/tails/by-consumer/doaink-home": [],
       "/scripts/doaink-home/deployments": { deployments: [{ versions: [{ version_id: versionId }] }] },
       [`/scripts/doaink-home/versions/${versionId}`]: { resources: { script: { handlers: ["fetch"] } } },
@@ -71,9 +71,11 @@ test("an already absent old Worker never produces DELETE", async () => {
 });
 
 test("permission failures, incoming references and other resource bindings stop before DELETE", async () => {
-  for (const options of [{ forbidden: true }, { dependency: true }, { resource: true }]) {
+  for (const options of [{ forbidden: true }, { dependency: true }, { resource: true }, { unknownCategory: true }]) {
     const fake = api(options);
-    await assert.rejects(retireDoainkHome(request(RETIRE_CONFIRMATION), fake.fetcher));
+    const attempt = retireDoainkHome(request(RETIRE_CONFIRMATION), fake.fetcher);
+    if (options.unknownCategory) await assert.rejects(attempt, /Unknown dependency categories require review: unreviewed_dependency/);
+    else await assert.rejects(attempt);
     assert.ok(fake.calls.every(call => call.method === "GET"));
   }
 });

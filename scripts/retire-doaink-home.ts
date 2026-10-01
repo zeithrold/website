@@ -75,7 +75,8 @@ export async function retireDoainkHome(
   const schedules = await read<{ schedules: unknown[] }>(`/scripts/${LEGACY_WORKER_NAME}/schedules`);
   assert.ok(Array.isArray(schedules.schedules) && schedules.schedules.length === 0, "Old Worker still has Cron triggers");
   const references = await read<References>(`/scripts/${LEGACY_WORKER_NAME}/references`);
-  assert.ok(Object.keys(references).every(key => ["services", "durable_objects", "dispatch_outbounds"].includes(key)), "Unknown dependency category requires review");
+  const unknownCategories = Object.keys(references).filter(key => !["services", "durable_objects", "dispatch_outbounds"].includes(key));
+  assert.equal(unknownCategories.length, 0, `Unknown dependency categories require review: ${unknownCategories.join(", ")}`);
   assert.equal(references.services?.incoming.length ?? 0, 0, "Other Workers reference the old Worker");
   assert.ok(!references.services?.pages_function, "Pages references the old Worker");
   assert.equal(references.durable_objects?.length ?? 0, 0, "Old Worker has Durable Object references/resources");
