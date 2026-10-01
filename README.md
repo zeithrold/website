@@ -54,34 +54,36 @@ The selection is editorial, not a claim about current priorities or project
 availability. Tools is explicitly early development. Its implemented inspect,
 plan, and Skill sync are described without promising check/run/doctor commands.
 
-## CI and staged deployment
+## GitHub Actions
 
-[Checks](.github/workflows/checks.yml) runs on pushes and PRs and checks binding
-types, TypeScript, unit tests, the production build, deployment boundaries, and
-desktop/mobile browser behavior. It has no Cloudflare credential or deploy step.
+[`CI & Deploy`](.github/workflows/deploy.yml) runs on pushes to `main` and pull
+requests targeting `main`. Its **Verify** job checks generated binding types,
+TypeScript, unit tests, the production build, deployment boundaries, and the full
+desktop/mobile browser suite against that production Worker locally. It uploads
+the verified `dist/` artifact named for the workflow commit. PRs only verify;
+the verification job has no Cloudflare credentials.
 
-[Deploy Worker manually](.github/workflows/deploy.yml) is **manual-only**. It
-requires `main`, `WEBSITE_DEPLOY_ENABLED=true`, the exact confirmation
-`DEPLOY_ZTD_ME_AND_ALIASES`, the full reviewed main SHA in `expected_commit`, the approved
-account ID, and the `production` environment. Invalid inputs fail explicitly.
-It repeats all checks and deploys the same tested artifact. Configure environment
-reviewer protection only
-after user approval; the workflow does not create or configure that protection.
+After a successful main push verification, **Deploy** automatically downloads
+that same run's artifact, checks out the same commit, and deploys it without
+rebuilding, tagged with the Git SHA. There is no manual dispatch, confirmation,
+enable switch, or expected-SHA input. Stale PR checks are canceled; an active main
+run is never interrupted, and the latest pending main run waits for it to finish.
+Browser evidence and verified builds are retained for seven days.
 
-The deploy step references the existing `CLOUDFLARE_API_TOKEN` repository secret.
-Do not read its value or create a replacement credential. Set a confirmed public
-account ID `a0df2e968b524bdd77c0eab565058522` in `CLOUDFLARE_ACCOUNT_ID`.
-Neither variable is configured by this phase PR. The checked-in config and exact
-build guard allow exactly `ztd.me` plus the four approved alias Custom Domains,
-with `workers_dev` and all preview URLs disabled. Older phase confirmations are rejected.
-Before deployment, GET-only checks reject unexpected domain ownership, missing
-Custom Domain state or extra targets on the new Worker. A post-check verifies the
-five approved owners while keeping the canonical host online. Permission errors stop without credential changes.
+Deployment reuses the existing `CLOUDFLARE_API_TOKEN` secret,
+`CLOUDFLARE_ACCOUNT_ID` variable (`a0df2e968b524bdd77c0eab565058522`), and
+`production` environment. Their values, permissions, and protection settings are
+not changed by the workflow. Missing credentials, an unexpected account, or
+permission errors stop deployment without a credential fallback.
 
-The Mac coordinator must hand off the agreed exact dev A/www CNAME cleanup before dispatch.
-Merge/finish CI first, then coordinate one binding writer: Cloud workflow.
-Wrangler can transfer doa.ink directly; do not detach it first. Keep the old
-Worker and Vercel projects for rollback. See the record-specific sequence below.
+The Worker stays `ztd-homepage`, with exactly `ztd.me`, `doa.ink`,
+`zeithrold.dev`, `www.zeithrold.dev`, and `ztd.one`; workers.dev and preview URLs
+stay disabled. Build guards still reject extra hosts and addons. GET-only domain
+checks before and after deployment require all five existing domains to remain
+on this Worker. Missing domains or legacy/unexpected owners fail before Wrangler,
+so routine deployment cannot repeat the old cutover or reclaim retired bindings.
+The obsolete one-time retirement workflow is removed; this workflow never
+retires a service.
 
 `vercel.json` disables automatic Vercel Git deployments for this repository. It
 does not modify an existing Vercel project or deployment.
@@ -99,9 +101,9 @@ and `showcase.ztd.me` continue on their own infrastructure. The expired
 `zeithrold.cloud` is excluded. `zeithrold.com`, its
 DNS/website/SSH server, `zeithrold-com`, and all mail records are outside scope.
 
-See [the current alias cutover and rollback plan](docs/alias-migration.md) and
-[the completed canonical phase record](docs/migration.md).
-The subsequently approved permanent retirement of the two exact old services
-has a separate [remote retirement procedure](docs/retirement.md).
-Do not dispatch deployment, attach domains, change DNS, configure persistent
-authorization, or retire `zeithrold-dev` during the review phase.
+See [the five-domain deployment and historical alias cutover](docs/alias-migration.md),
+[the completed canonical phase record](docs/migration.md), and
+[the archived retirement procedure](docs/retirement.md). The old cutover and
+retirement instructions are historical; routine deployments follow the GitHub
+Actions section above. Reviewing a PR runs verification only. Merging it into
+main triggers automatic deployment after verification passes.

@@ -1,4 +1,12 @@
-# Approved permanent retirement of old services
+# Archived permanent retirement procedure for old services
+
+This is a historical procedure, not part of routine deployment. The obsolete
+one-time `retire-doaink-home.yml` workflow has been removed as code cleanup;
+removing it does not execute or verify a remote deletion. Do not dispatch or
+recreate it as part of a release. Existing services, credentials, domains, DNS,
+mail, and Vercel settings are unchanged by this cleanup. Current releases use
+[CI & Deploy](../.github/workflows/deploy.yml) and the
+[README deployment process](../README.md#github-actions).
 
 The owner explicitly approved permanent deletion of only these old services,
 including their deployment history/configuration, and no longer wants them as

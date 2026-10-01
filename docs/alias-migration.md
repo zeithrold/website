@@ -1,4 +1,16 @@
-# Approved four-alias cutover
+# Five-domain deployment and historical alias cutover
+
+Routine deployments now use [CI & Deploy](../.github/workflows/deploy.yml): a
+push to main verifies and automatically deploys the same build artifact; PRs only
+verify. No manual confirmation, enable variable, or expected-SHA input is used.
+All five domains must already belong to ztd-homepage before deployment. Domain
+ownership checks reject missing/legacy owners, rather than repeating a cutover.
+
+The remaining sections preserve the historical alias migration procedure. Its
+manual dispatch, DNS handoff, and legacy rollback instructions are superseded
+for routine releases. Do not repeat them or restore a retired service. See the
+[README](../README.md#github-actions) for the current release process and the
+[archived retirement record](retirement.md) for the later service-retirement scope.
 
 The owner approved only `doa.ink`, `zeithrold.dev`, `www.zeithrold.dev` and
 `ztd.one` becoming 308 redirects to `https://ztd.me`, preserving path/query.
@@ -8,7 +20,7 @@ Baseline: main `7694f052134cc41879334965f6925b6c2c30f629`, Worker version
 `daa61e8e-af46-472e-b4a2-d9ca309af42c`. The canonical workflow and Mac public
 acceptance passed. Mac holds the DNS/binding rollback snapshots.
 
-## Five-host source state and trigger
+## Historical five-host source state and trigger
 
 `wrangler.jsonc` and the exact deployment policy contain only these enabled
 Custom Domains: `ztd.me`, `doa.ink`, `zeithrold.dev`, `www.zeithrold.dev`,
