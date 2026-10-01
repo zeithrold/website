@@ -1,9 +1,13 @@
 # Completed canonical ztd.me cutover record
 
 This records the completed canonical phase and its historical one-host policy.
-Current five-host configuration, DNS coordination and dispatch instructions are
-in [alias-migration.md](alias-migration.md); historical confirmation values below
-are not accepted by the current alias phase.
+The instructions below are historical and are superseded for routine releases.
+Current [CI & Deploy](../.github/workflows/deploy.yml) verifies PRs and
+automatically deploys successful main pushes with the existing five-host policy.
+It has no manual confirmation, enable switch, or expected-SHA input. See the
+[README](../README.md#github-actions) for current deployment behavior and
+[alias-migration.md](alias-migration.md) for the historical five-host cutover.
+Do not restore the retired services described in historical rollback steps.
 
 The owner approved replacing the ztd.me homepage only. This phase PR prepares
 source configuration and checks; preparing it performs no Cloudflare writes.

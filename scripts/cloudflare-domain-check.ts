@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { ACCOUNT_ID, CANONICAL_HOST, EXPECTED_ROUTES, LEGACY_WORKER_NAME, WORKER_NAME } from "./deployment-policy.ts";
+import { ACCOUNT_ID, EXPECTED_ROUTES, WORKER_NAME } from "./deployment-policy.ts";
 
 type WorkerDomain = { hostname: string; service: string; environment: string; zone_name: string; zone_id: string };
 type DomainResult = { success?: boolean; result?: WorkerDomain[]; result_info?: { total_pages?: number } };
@@ -7,7 +7,7 @@ type DomainResult = { success?: boolean; result?: WorkerDomain[]; result_info?: 
 // GET only. Fail on unavailable permissions, ambiguous results or changed ownership.
 // Do not log the token, request headers, raw responses, or a whole-account inventory.
 export async function checkCloudflareTarget(
-  { accountId, token, after = false }: { accountId?: string; token?: string; after?: boolean },
+  { accountId, token }: { accountId?: string; token?: string },
   fetcher: typeof fetch = fetch,
 ): Promise<string> {
   assert.equal(accountId, ACCOUNT_ID, "Unexpected Cloudflare account");
@@ -36,26 +36,19 @@ export async function checkCloudflareTarget(
   const owners: string[] = [];
   for (const host of hosts) {
     const records = await read({ hostname: host });
-    assert.ok(records.length <= 1, `Ambiguous ${host} state; stop for review`);
-    if (!records.length) {
-      assert.ok(!after && host !== CANONICAL_HOST && host !== "doa.ink", `Required ${host} Custom Domain is missing`);
-      owners.push(`${host}: unattached`);
-      continue;
-    }
+    assert.equal(records.length, 1, `Required ${host} Custom Domain is missing or ambiguous`);
     const domain = records[0];
     assert.equal(domain.hostname, host);
     assert.equal(domain.zone_name, host === "www.zeithrold.dev" ? "zeithrold.dev" : host);
     assert.match(domain.zone_id, /^[a-f0-9]{32}$/);
     assert.equal(domain.environment, "production");
-    const allowedOwners = !after && host === "doa.ink" ? [LEGACY_WORKER_NAME, WORKER_NAME] : [WORKER_NAME];
-    assert.ok(allowedOwners.includes(domain.service), `Unexpected ${host} owner; stop for review`);
+    assert.equal(domain.service, WORKER_NAME, `Unexpected ${host} owner; stop for review`);
     owners.push(`${host}: ${domain.service}`);
   }
 
   const targets = await read({ service: WORKER_NAME });
-  assert.ok(targets.every(target => hosts.includes(target.hostname) && target.service === WORKER_NAME && target.environment === "production"), "New Worker has unapproved domains; do not remove or replace them");
-  assert.equal(new Set(targets.map(target => target.hostname)).size, targets.length, "New Worker domain state is ambiguous");
-  assert.ok(targets.some(target => target.hostname === CANONICAL_HOST), "ztd.me must remain on the new Worker");
-  if (after) assert.deepEqual(targets.map(target => target.hostname).sort(), [...hosts].sort(), "Deployment did not attach exactly the five approved hosts");
+  assert.ok(targets.every(target => hosts.includes(target.hostname) && target.service === WORKER_NAME && target.environment === "production"), "Worker has unapproved domains; do not remove or replace them");
+  assert.equal(new Set(targets.map(target => target.hostname)).size, targets.length, "Worker domain state is ambiguous");
+  assert.deepEqual(targets.map(target => target.hostname).sort(), [...hosts].sort(), "Worker must keep exactly the five existing hosts");
   return owners.join("; ");
 }

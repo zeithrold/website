@@ -4,7 +4,6 @@ export const ACCOUNT_ID = "a0df2e968b524bdd77c0eab565058522";
 export const WORKER_NAME = "ztd-homepage";
 export const LEGACY_WORKER_NAME = "doaink-home";
 export const CANONICAL_HOST = "ztd.me";
-export const CONFIRMATION = "DEPLOY_ZTD_ME_AND_ALIASES";
 export const EXPECTED_ROUTES = [
   { pattern: CANONICAL_HOST, custom_domain: true, enabled: true, previews_enabled: false },
   { pattern: "doa.ink", custom_domain: true, enabled: true, previews_enabled: false },
@@ -35,7 +34,7 @@ export function assertDeploymentConfig(config: DeploymentConfig): void {
   if (config.account_id !== undefined) assert.equal(config.account_id, ACCOUNT_ID);
   assert.equal(config.workers_dev, false, "workers.dev must stay disabled");
   assert.equal(config.preview_urls, false, "Preview URLs must stay disabled");
-  assert.deepEqual(config.routes, EXPECTED_ROUTES, "Alias phase requires exactly the five approved hosts; extra hosts and wildcards are forbidden");
+  assert.deepEqual(config.routes, EXPECTED_ROUTES, "Deployment requires exactly the five existing hosts; extra hosts and wildcards are forbidden");
   assert.equal(config.route, undefined, "Do not override the approved routes with the singular route field");
   assert.equal(config.assets?.binding, "ASSETS");
   assert.equal(config.assets?.run_worker_first, true);
@@ -46,19 +45,17 @@ export function assertDeploymentConfig(config: DeploymentConfig): void {
 }
 
 export type ReleaseRequest = {
+  repository?: string;
+  eventName?: string;
   ref?: string;
   actualCommit?: string;
-  expectedCommit?: string;
-  enabled?: string;
-  confirmation?: string;
   accountId?: string;
 };
 
 export function assertReleaseRequest(request: ReleaseRequest): void {
-  assert.equal(request.ref, "refs/heads/main", "Dispatch from main only");
-  assert.equal(request.enabled, "true", "Repository variable WEBSITE_DEPLOY_ENABLED must be exactly true");
-  assert.equal(request.confirmation, CONFIRMATION, `Confirmation must be ${CONFIRMATION}`);
-  assert.match(request.expectedCommit ?? "", /^[a-f0-9]{40}$/, "expected_commit must be the full reviewed main SHA");
-  assert.equal(request.actualCommit, request.expectedCommit, "main moved: review the new commit before dispatching");
+  assert.equal(request.repository, "zeithrold/website", "Deploy only from the existing repository");
+  assert.equal(request.eventName, "push", "Deploy only on push");
+  assert.equal(request.ref, "refs/heads/main", "Deploy only from main");
+  assert.match(request.actualCommit ?? "", /^[a-f0-9]{40}$/, "GITHUB_SHA must identify the workflow commit");
   assert.equal(request.accountId, ACCOUNT_ID, "CLOUDFLARE_ACCOUNT_ID must match the approved account");
 }

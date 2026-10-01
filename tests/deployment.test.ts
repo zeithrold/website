@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { ACCOUNT_ID, CONFIRMATION, EXPECTED_ROUTES, assertDeploymentConfig, assertReleaseRequest } from "../scripts/deployment-policy.ts";
+import { ACCOUNT_ID, EXPECTED_ROUTES, assertDeploymentConfig, assertReleaseRequest } from "../scripts/deployment-policy.ts";
 import { checkCloudflareTarget } from "../scripts/cloudflare-domain-check.ts";
 import { REDIRECT_HOSTS } from "../lib/routing.ts";
 
@@ -10,8 +10,8 @@ const configuration = () => ({
   assets: { binding: "ASSETS", run_worker_first: true }, compatibility_flags: ["nodejs_compat"],
 });
 const release = () => ({
-  ref: "refs/heads/main", actualCommit: "b".repeat(40), expectedCommit: "b".repeat(40),
-  enabled: "true", confirmation: CONFIRMATION, accountId: ACCOUNT_ID,
+  repository: "zeithrold/website", eventName: "push", ref: "refs/heads/main",
+  actualCommit: "b".repeat(40), accountId: ACCOUNT_ID,
 });
 
 test("deployment accepts exactly ztd.me and the four approved redirect aliases", () => {
@@ -41,12 +41,13 @@ test("previews, another Worker/account, addons and nested environment overrides 
   ]) assert.throws(() => assertDeploymentConfig({ ...configuration(), ...change }));
 });
 
-test("the old confirmation, stale approval, incorrect switch and branch cannot authorize this phase", () => {
+test("only a main push with a workflow commit to the existing repository and account can deploy", () => {
   for (const change of [
-    { confirmation: "DEPLOY_WORKER_ONLY" }, { confirmation: "DEPLOY_ZTD_ME_ONLY" }, { confirmation: "DEPLOY_ZTD_ME_AND_ALIASES " },
-    { ref: "refs/heads/feat/ztd-me-custom-domain" }, { enabled: "TRUE" }, { enabled: "" },
-    { expectedCommit: "b0b2e2c" }, { expectedCommit: "" }, { expectedCommit: "a".repeat(40) },
-    { actualCommit: "c".repeat(40) }, { accountId: "" }, { accountId: "a".repeat(32) },
+    { repository: "other/website" }, { repository: "" },
+    { eventName: "pull_request" }, { eventName: "workflow_dispatch" }, { eventName: "workflow_run" }, { eventName: "" },
+    { ref: "refs/heads/feature" }, { ref: "refs/tags/main" }, { ref: "" },
+    { actualCommit: "b0b2e2c" }, { actualCommit: "" }, { actualCommit: "g".repeat(40) },
+    { accountId: "" }, { accountId: "a".repeat(32) },
   ]) assert.throws(() => assertReleaseRequest({ ...release(), ...change }));
 });
 
@@ -54,9 +55,8 @@ const domain = (hostname = "ztd.me", service = "ztd-homepage") => ({
   hostname, service, environment: "production", zone_name: hostname === "www.zeithrold.dev" ? "zeithrold.dev" : hostname, zone_id: "a".repeat(32),
 });
 const allDomains = () => EXPECTED_ROUTES.map(route => domain(route.pattern));
-const startingDomains = () => [domain(), domain("doa.ink", "doaink-home")];
 const fakeToken = "test-token-never-uploaded";
-function respond(records = startingDomains(), targets = [domain()]) {
+function respond(records = allDomains(), targets = allDomains()) {
   const fetcher: typeof fetch = async (input, init) => {
     const url = new URL(String(input));
     assert.equal(url.origin, "https://api.cloudflare.com");
@@ -72,13 +72,9 @@ function respond(records = startingDomains(), targets = [domain()]) {
   return fetcher;
 }
 
-test("domain preflight preserves the live canonical owner and supports old doa plus unattached aliases", async () => {
-  const before = await checkCloudflareTarget({ accountId: ACCOUNT_ID, token: fakeToken }, respond());
-  assert.match(before, /ztd.me: ztd-homepage; doa.ink: doaink-home/);
-  assert.match(before, /www.zeithrold.dev: unattached/);
-  const after = await checkCloudflareTarget({ accountId: ACCOUNT_ID, token: fakeToken, after: true }, respond(allDomains(), allDomains()));
-  assert.equal(after.split("; ").length, 5);
-  assert.equal(after.includes("unattached"), false);
+test("domain checks require all five existing production hosts on ztd-homepage", async () => {
+  const owners = await checkCloudflareTarget({ accountId: ACCOUNT_ID, token: fakeToken }, respond());
+  assert.equal(owners, EXPECTED_ROUTES.map(route => `${route.pattern}: ztd-homepage`).join("; "));
 });
 
 test("unexpected ownership, missing Custom Domain, zone mismatch or extra targets stop deployment", async () => {
@@ -86,15 +82,15 @@ test("unexpected ownership, missing Custom Domain, zone mismatch or extra target
     [[], []], [[domain("ztd.me", "doaink-home")], [domain()]],
     [[{ ...domain(), zone_name: "doa.ink" }], [domain()]],
     [[{ ...domain(), environment: "staging" }], [domain()]], [[domain(), domain()], [domain()]],
-    [startingDomains(), [domain(), domain("blog.ztd.me")]],
+    [allDomains(), [...allDomains(), domain("blog.ztd.me")]],
     [[domain(), domain("doa.ink", "other-worker")], [domain()]],
   ]) await assert.rejects(checkCloudflareTarget({ accountId: ACCOUNT_ID, token: fakeToken }, respond(records, targets)));
 });
 
-test("post-check requires all five new bindings; canonical-only or partial publication is insufficient", async () => {
-  await assert.rejects(checkCloudflareTarget({ accountId: ACCOUNT_ID, token: fakeToken, after: true }, respond()));
-  await assert.rejects(checkCloudflareTarget({ accountId: ACCOUNT_ID, token: fakeToken, after: true }, respond(allDomains(), [domain()])));
-  await assert.rejects(checkCloudflareTarget({ accountId: ACCOUNT_ID, token: fakeToken, after: true }, respond(allDomains(), [...allDomains(), domain("blog.ztd.me")])));
+test("missing aliases or legacy owners stop routine deployment before any binding transfer", async () => {
+  await assert.rejects(checkCloudflareTarget({ accountId: ACCOUNT_ID, token: fakeToken }, respond([domain()], [domain()])));
+  await assert.rejects(checkCloudflareTarget({ accountId: ACCOUNT_ID, token: fakeToken }, respond(allDomains(), [domain()])));
+  await assert.rejects(checkCloudflareTarget({ accountId: ACCOUNT_ID, token: fakeToken }, respond(allDomains().map(record => record.hostname === "doa.ink" ? { ...record, service: "doaink-home" } : record))));
 });
 
 test("HTTP 403 stops after one read without retrying or exposing token/response content", async () => {

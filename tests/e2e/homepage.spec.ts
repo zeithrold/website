@@ -8,6 +8,11 @@ test("WCAG AA checks in both languages and themes", async ({ page }) => {
     if (locale === "zh-CN") await page.getByRole("button", { name: "切换到中文" }).click();
     for (const theme of ["light", "dark"]) {
       if (theme === "dark") await page.getByRole("button", { name: locale === "en" ? "Switch to dark theme" : "切换到深色主题" }).click();
+      // Audit settled colors, including the button's hydration opacity transition.
+      await page.evaluate(async () => {
+        await document.fonts.ready;
+        await Promise.all(document.getAnimations().map(animation => animation.finished.catch(() => {})));
+      });
       const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
       expect(results.violations.map((violation) => ({ id: violation.id, nodes: violation.nodes.map((node) => node.target) }))).toEqual([]);
     }
