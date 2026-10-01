@@ -8,9 +8,9 @@ Validated in the selected Codex Cloud environment on 2026-10-01, with Node
 | Frozen dependency install | Passed | 24-hour minimum release age and committed resolution |
 | Generated Worker binding types | Passed | `wrangler types --include-runtime=false`; ASSETS only |
 | TypeScript | Passed | `pnpm typecheck` |
-| Unit tests | 28 passed | Redirect/preferences plus exact canonical deployment scope, stale release rejection and mocked GET-only Cloudflare domain checks |
+| Unit tests | 28 passed | Redirect/preferences plus exact five-host deployment scope, stale release rejection and adapted GET-only domain checks |
 | Production build | Passed | `pnpm build`; generated `dist/server/wrangler.json` |
-| Build boundary check | Passed | One Worker + ASSETS, exactly ztd.me Custom Domain, no aliases/addons, workers.dev/all previews off, Vercel Git deploy off |
+| Build boundary check | Passed | One Worker + ASSETS, exactly the five approved Custom Domains, no extra hosts/addons, all previews/workers.dev off, Vercel Git deploy off |
 | Browser suite | 10 passed | `pnpm test:e2e` against the local production Worker |
 | Actions syntax | Passed | actionlint 1.7.12, downloaded from its official GitHub release with checksum verification |
 | Whitespace | Passed | `git diff --check` |
@@ -49,7 +49,13 @@ Build output includes upstream vinext/Rolldown notices about ineffective dynamic
 imports and unknown static route classification. They are nonfatal; the complete
 production Worker was exercised rather than relying on classification output.
 
-## Prior worker-only deployment and this phase's boundary
+## Prior deployments and this phase's boundary
+
+The [canonical run 36811684865](https://github.com/zeithrold/website/actions/runs/36811684865)
+passed on main `7694f052134cc41879334965f6925b6c2c30f629`, deploying version
+`daa61e8e-af46-472e-b4a2-d9ca309af42c` and confirming ztd.me's new owner. The
+coordinator reports Mac public acceptance passed. This alias phase adapts the
+existing policy/check fixtures; it adds no new test matrix or dependency.
 
 [Run 36808706116, attempt 2](https://github.com/zeithrold/website/actions/runs/36808706116)
 passed on main `b0b2e2cc3baf2cb25bdbd93189c8e8fde458d57d`. Its deployment logs
@@ -66,18 +72,18 @@ The canonical phase initially timed out local browser readiness because Wrangler
 inferred ztd.me as the local upstream and rewrote the canonical HTTPS redirect
 back to localhost. `start-local.mjs` validates the original production config and
 uses a temporary route-free copy for local emulation of the same bundle/ASSETS.
-The deployed config remains canonical-only and is checked again after testing.
+The deployed config retains all five approved hosts and is checked again after testing.
 
-The following were deliberately not executed while preparing this canonical phase PR:
+The following were deliberately not executed while preparing this alias phase PR:
 
 - Cloudflare production/manual deployment or remote version upload.
-- Live HTTP release verification or a claim that ztd.me already serves the new site.
+- New live HTTP alias release verification; Mac already accepted the canonical site.
 - DNS, Custom Domain attachment, TLS policy changes, mail-record changes.
 - Vercel project changes or retirement.
 - Persistent authorization, new credentials, or addon provisioning.
 
 GitHub workflow status is available on the phase PR; this document records local
 evidence and does not substitute for remote Actions or live cutover acceptance.
-The coordinator's handoff, fresh web/binding snapshot and exact merged main SHA
-are still needed before dispatch. Alias migration and legacy-resource retirement
-remain separate approvals described in `docs/migration.md`.
+The coordinator's agreed exact dev A/www CNAME cleanup/handoff and the merged main SHA are
+needed before dispatch, as described in `docs/alias-migration.md`. Alias migration
+is approved; legacy-resource retirement remains outside this approval.

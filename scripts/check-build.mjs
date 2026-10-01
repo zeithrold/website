@@ -9,4 +9,4 @@ assert.ok(!readdirSync("dist/server").some(name => name.startsWith("wrangler.loc
 assert.ok(existsSync(resolve("dist/server", config.main)), "Worker entry is missing");
 assert.ok(existsSync("dist/client/favicon.svg"), "Static assets are missing");
 assert.deepEqual(JSON.parse(readFileSync("vercel.json", "utf8")).git.deploymentEnabled, false);
-console.log("Build verified: one Worker + ASSETS, exactly ztd.me Custom Domain, no aliases/addons/previews or automatic Vercel deployments.");
+console.log("Build verified: one Worker + ASSETS, exactly five approved Custom Domains, no extra hosts/addons/previews or automatic Vercel deployments.");

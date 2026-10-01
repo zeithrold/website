@@ -62,7 +62,7 @@ desktop/mobile browser behavior. It has no Cloudflare credential or deploy step.
 
 [Deploy Worker manually](.github/workflows/deploy.yml) is **manual-only**. It
 requires `main`, `WEBSITE_DEPLOY_ENABLED=true`, the exact confirmation
-`DEPLOY_ZTD_ME_ONLY`, the full reviewed main SHA in `expected_commit`, the approved
+`DEPLOY_ZTD_ME_AND_ALIASES`, the full reviewed main SHA in `expected_commit`, the approved
 account ID, and the `production` environment. Invalid inputs fail explicitly.
 It repeats all checks and deploys the same tested artifact. Configure environment
 reviewer protection only
@@ -72,16 +72,16 @@ The deploy step references the existing `CLOUDFLARE_API_TOKEN` repository secret
 Do not read its value or create a replacement credential. Set a confirmed public
 account ID `a0df2e968b524bdd77c0eab565058522` in `CLOUDFLARE_ACCOUNT_ID`.
 Neither variable is configured by this phase PR. The checked-in config and exact
-build guard allow only the approved `ztd.me` Custom Domain, with `workers_dev`
-and all preview URLs disabled. The former worker-only confirmation is rejected.
+build guard allow exactly `ztd.me` plus the four approved alias Custom Domains,
+with `workers_dev` and all preview URLs disabled. Older phase confirmations are rejected.
 Before deployment, GET-only checks reject unexpected domain ownership, missing
 Custom Domain state or extra targets on the new Worker. A post-check verifies the
-new canonical owner. Permission errors stop without credential changes.
+five approved owners while keeping the canonical host online. Permission errors stop without credential changes.
 
-This phase PR only prepares code; the Mac coordinator owns the cutover and must
-hand off before dispatch. Merge first, then coordinate one writer. The pinned
-Wrangler can reassign an existing Custom Domain directly in CI; do not delete
-the old binding first. Keep `doaink-home` and its `doa.ink` binding for rollback.
+The Mac coordinator must hand off the agreed exact dev A/www CNAME cleanup before dispatch.
+Merge/finish CI first, then coordinate one binding writer: Cloud workflow.
+Wrangler can transfer doa.ink directly; do not detach it first. Keep the old
+Worker and Vercel projects for rollback. See the record-specific sequence below.
 
 `vercel.json` disables automatic Vercel Git deployments for this repository. It
 does not modify an existing Vercel project or deployment.
@@ -94,11 +94,12 @@ paths. Canonical HTTP requests upgrade in one hop. A fixed destination origin
 prevents open redirects. Responses use `no-store` to reduce cached migration
 state. All other subdomains and unrelated hosts receive 421 if incorrectly routed here.
 
-No aliases are attached by the checked-in Worker configuration. `blog.ztd.me`
+The checked-in configuration persists all four approved aliases. `blog.ztd.me`
 and `showcase.ztd.me` continue on their own infrastructure. The expired
 `zeithrold.cloud` is excluded. `zeithrold.com`, its
 DNS/website/SSH server, `zeithrold-com`, and all mail records are outside scope.
 
-See [the canonical cutover sequence and rollback plan](docs/migration.md).
+See [the current alias cutover and rollback plan](docs/alias-migration.md) and
+[the completed canonical phase record](docs/migration.md).
 Do not dispatch deployment, attach domains, change DNS, configure persistent
 authorization, or retire `zeithrold-dev` during the review phase.

@@ -1,4 +1,9 @@
-# Canonical ztd.me cutover
+# Completed canonical ztd.me cutover record
+
+This records the completed canonical phase and its historical one-host policy.
+Current five-host configuration, DNS coordination and dispatch instructions are
+in [alias-migration.md](alias-migration.md); historical confirmation values below
+are not accepted by the current alias phase.
 
 The owner approved replacing the ztd.me homepage only. This phase PR prepares
 source configuration and checks; preparing it performs no Cloudflare writes.

@@ -4,9 +4,13 @@ export const ACCOUNT_ID = "a0df2e968b524bdd77c0eab565058522";
 export const WORKER_NAME = "ztd-homepage";
 export const LEGACY_WORKER_NAME = "doaink-home";
 export const CANONICAL_HOST = "ztd.me";
-export const CONFIRMATION = "DEPLOY_ZTD_ME_ONLY";
+export const CONFIRMATION = "DEPLOY_ZTD_ME_AND_ALIASES";
 export const EXPECTED_ROUTES = [
   { pattern: CANONICAL_HOST, custom_domain: true, enabled: true, previews_enabled: false },
+  { pattern: "doa.ink", custom_domain: true, enabled: true, previews_enabled: false },
+  { pattern: "zeithrold.dev", custom_domain: true, enabled: true, previews_enabled: false },
+  { pattern: "www.zeithrold.dev", custom_domain: true, enabled: true, previews_enabled: false },
+  { pattern: "ztd.one", custom_domain: true, enabled: true, previews_enabled: false },
 ];
 
 export type DeploymentConfig = {
@@ -31,8 +35,8 @@ export function assertDeploymentConfig(config: DeploymentConfig): void {
   if (config.account_id !== undefined) assert.equal(config.account_id, ACCOUNT_ID);
   assert.equal(config.workers_dev, false, "workers.dev must stay disabled");
   assert.equal(config.preview_urls, false, "Preview URLs must stay disabled");
-  assert.deepEqual(config.routes, EXPECTED_ROUTES, "Canonical phase requires exactly ztd.me; aliases and wildcards are forbidden");
-  assert.equal(config.route, undefined, "Do not override the canonical route with the singular route field");
+  assert.deepEqual(config.routes, EXPECTED_ROUTES, "Alias phase requires exactly the five approved hosts; extra hosts and wildcards are forbidden");
+  assert.equal(config.route, undefined, "Do not override the approved routes with the singular route field");
   assert.equal(config.assets?.binding, "ASSETS");
   assert.equal(config.assets?.run_worker_first, true);
   assert.ok(Array.isArray(config.compatibility_flags) && config.compatibility_flags.includes("nodejs_compat"));

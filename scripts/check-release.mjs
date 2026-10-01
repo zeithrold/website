@@ -8,4 +8,4 @@ assertReleaseRequest({
   confirmation: process.env.DEPLOY_CONFIRMATION,
   accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
 });
-console.log("Release authorized: reviewed main SHA, approved account, ztd.me-only phase.");
+console.log("Release authorized: reviewed main SHA, approved account, ztd.me plus four approved aliases.");
