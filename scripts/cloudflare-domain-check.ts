@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { ACCOUNT_ID, CANONICAL_HOST, LEGACY_WORKER_NAME, WORKER_NAME } from "./deployment-policy.ts";
+import { ACCOUNT_ID, CANONICAL_HOST, EXPECTED_ROUTES, LEGACY_WORKER_NAME, WORKER_NAME } from "./deployment-policy.ts";
 
 type WorkerDomain = { hostname: string; service: string; environment: string; zone_name: string; zone_id: string };
 type DomainResult = { success?: boolean; result?: WorkerDomain[]; result_info?: { total_pages?: number } };
@@ -32,18 +32,30 @@ export async function checkCloudflareTarget(
     assert.ok((body.result_info?.total_pages ?? 1) <= 1, "Paginated domain state requires manual review");
     return body.result;
   }
-  const canonical = await read({ hostname: CANONICAL_HOST });
-  assert.equal(canonical.length, 1, "ztd.me must already be exactly one verified Custom Domain; do not replace unrelated DNS");
-  const domain = canonical[0];
-  assert.equal(domain.hostname, CANONICAL_HOST);
-  assert.equal(domain.zone_name, CANONICAL_HOST);
-  assert.match(domain.zone_id, /^[a-f0-9]{32}$/);
-  assert.equal(domain.environment, "production");
-  assert.ok(after ? domain.service === WORKER_NAME : [LEGACY_WORKER_NAME, WORKER_NAME].includes(domain.service), "Unexpected ztd.me owner; stop for review");
+  const hosts = EXPECTED_ROUTES.map(route => route.pattern);
+  const owners: string[] = [];
+  for (const host of hosts) {
+    const records = await read({ hostname: host });
+    assert.ok(records.length <= 1, `Ambiguous ${host} state; stop for review`);
+    if (!records.length) {
+      assert.ok(!after && host !== CANONICAL_HOST && host !== "doa.ink", `Required ${host} Custom Domain is missing`);
+      owners.push(`${host}: unattached`);
+      continue;
+    }
+    const domain = records[0];
+    assert.equal(domain.hostname, host);
+    assert.equal(domain.zone_name, host === "www.zeithrold.dev" ? "zeithrold.dev" : host);
+    assert.match(domain.zone_id, /^[a-f0-9]{32}$/);
+    assert.equal(domain.environment, "production");
+    const allowedOwners = !after && host === "doa.ink" ? [LEGACY_WORKER_NAME, WORKER_NAME] : [WORKER_NAME];
+    assert.ok(allowedOwners.includes(domain.service), `Unexpected ${host} owner; stop for review`);
+    owners.push(`${host}: ${domain.service}`);
+  }
 
   const targets = await read({ service: WORKER_NAME });
-  assert.ok(targets.every(target => target.hostname === CANONICAL_HOST && target.service === WORKER_NAME && target.environment === "production"), "New Worker has unapproved domains; do not remove or replace them");
-  assert.ok(targets.length <= 1, "New Worker domain state is ambiguous");
-  if (after) assert.equal(targets.length, 1, "Deployment did not attach ztd.me");
-  return domain.service;
+  assert.ok(targets.every(target => hosts.includes(target.hostname) && target.service === WORKER_NAME && target.environment === "production"), "New Worker has unapproved domains; do not remove or replace them");
+  assert.equal(new Set(targets.map(target => target.hostname)).size, targets.length, "New Worker domain state is ambiguous");
+  assert.ok(targets.some(target => target.hostname === CANONICAL_HOST), "ztd.me must remain on the new Worker");
+  if (after) assert.deepEqual(targets.map(target => target.hostname).sort(), [...hosts].sort(), "Deployment did not attach exactly the five approved hosts");
+  return owners.join("; ");
 }

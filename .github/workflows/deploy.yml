@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       confirmation:
-        description: 'Type DEPLOY_ZTD_ME_ONLY (reassigns only ztd.me; keep aliases/old Worker)'
+        description: 'After Mac DNS handoff, type DEPLOY_ZTD_ME_AND_ALIASES (five approved hosts)'
         required: true
         type: string
       expected_commit:
@@ -71,7 +71,7 @@ jobs:
         with:
           name: worker-${{ github.sha }}
           path: dist/
-      - name: Verify exactly ztd.me and no aliases or addons
+      - name: Verify exactly the five approved hosts and no addons
         run: pnpm check:build
       - name: Check existing Custom Domain ownership without changing it
         env:
@@ -92,7 +92,7 @@ jobs:
             exit 1
           fi
           pnpm run deploy
-      - name: Verify the new canonical ownership
+      - name: Verify all five approved domain owners
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
