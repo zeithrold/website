@@ -28,7 +28,7 @@ export async function retireDoainkHome(
         method: "GET", redirect: "error", signal: AbortSignal.timeout(15_000),
         headers: { Authorization: `Bearer ${request.token}` },
       });
-    } catch { throw new Error(`Cloudflare GET ${path} failed; stop without deleting`); }
+    } catch { throw new Error(`Cloudflare GET ${path} failed; stop and do not retry mutations`); }
     assert.ok(response.ok, `Cloudflare GET ${path}: HTTP ${response.status}; stop without changing credentials`);
     let body: { success?: boolean; result?: T; result_info?: { total_pages?: number } };
     try { body = await response.json(); }
@@ -105,7 +105,9 @@ export async function retireDoainkHome(
     });
   } catch { throw new Error("Deletion outcome is uncertain; do not retry. Inspect the script list read-only."); }
   assert.ok(response.ok, `DELETE doaink-home: HTTP ${response.status}; do not retry or force`);
-  const text = await response.text();
+  let text: string;
+  try { text = await response.text(); }
+  catch { throw new Error("Deletion response could not be read; do not retry. Inspect the script list read-only."); }
   if (text) {
     let body: { success?: boolean };
     try { body = JSON.parse(text); }
