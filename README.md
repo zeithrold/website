@@ -14,19 +14,26 @@ no KV, R2, D1, database, external font service, or other addons.
 ## Develop and verify
 
 Use Node.js 24 and pnpm 11.22.0 (declared in `package.json`).
+Install the reviewed `zt` CLI with Go 1.24 or newer and put its binary directory
+on `PATH`:
+
+```sh
+go install github.com/zeithrold/tools/cmd/zt@3f9a3a7d33befc5a954ba1e86d3aa6d72e2c762f
+```
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm dev
-pnpm types
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
-pnpm check:build
 pnpm exec playwright install --with-deps chromium
-pnpm test:e2e
+pnpm check
 ```
+
+`pnpm check` runs the explicit `zt.json` frontend profile: strict lint, CSS/token
+validation, generated bindings plus types, unit tests, build plus deployment
+guards, the full production-Worker browser suite and failure-evidence verification.
+The browser suite includes Axe and keyboard checks; it runs once in the profile.
+`pnpm test:a11y` runs its tagged subset for focused work. Native scripts remain
+available; [frontend foundations](docs/frontend-foundation.md) records the mapping.
 
 `pnpm start --port 4173` runs the production Worker locally, using the generated
 `dist/server/wrangler.json`. It first validates the production config, then uses
@@ -34,10 +41,11 @@ a temporary copy with empty local routes so Wrangler does not infer the live
 domain as its local upstream and rewrite redirects. The deployed config/code,
 ASSETS and bindings stay intact; the copy is removed on shutdown. `wrangler.jsonc`
 is the source configuration.
-Dependencies have a 24-hour minimum release age; only the user-approved
-`@ztd-me/eslint` package is exempt. CI uses the committed lockfile.
-Browser tests run against the production Worker, save screenshots under
-`artifacts/`, and retain traces on failure. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`
+Dependencies have a 24-hour minimum release age; the user-approved `@ztd-me/*`
+scope is exempt from age checks. This is not a scope-wide trust exception.
+CI uses the committed lockfile. Browser tests run against the production Worker
+and retain reports, scans, screenshots and failure traces in `.zt/artifacts/`
+under the aggregate, or `.zt/browser/` when run directly. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`
 can select an already installed Chromium in a restricted environment.
 
 In a filesystem-restricted Cloud workspace, point `XDG_CONFIG_HOME`,
@@ -53,6 +61,7 @@ Stop a local Worker before rebuilding its `dist/` directory.
 - [Content evidence and selection policy](docs/content.md).
 - [Strict ESLint configuration and dependency policy](docs/eslint-migration.md).
 - [Verification guide](docs/verification.md).
+- [Frontend foundations, token roles and Skill source](docs/frontend-foundation.md).
 
 The selection is editorial, not a claim about current priorities or project
 availability. Tools is explicitly early development. Its implemented inspect,
@@ -61,10 +70,11 @@ plan, and Skill sync are described without promising check/run/doctor commands.
 ## GitHub Actions
 
 [`CI & Deploy`](.github/workflows/deploy.yml) runs on pushes to `main` and pull
-requests targeting `main`. Its **Verify** job checks generated binding types,
+requests targeting `main`. Its **Verify** job installs the pinned `zt` CLI and
+runs `pnpm check`, including CSS/token validation, generated binding types,
 strict ESLint with zero warnings, TypeScript, unit tests, the production build,
-deployment boundaries, and the full
-desktop/mobile browser suite against that production Worker locally. It uploads
+deployment boundaries, browser accessibility/keyboard checks and retained failure
+evidence. The desktop/mobile suite exercises the production Worker locally. It uploads
 the verified `dist/` artifact named for the workflow commit. PRs only verify;
 the verification job has no Cloudflare credentials.
 
@@ -73,7 +83,8 @@ that same run's artifact, checks out the same commit, and deploys it without
 rebuilding, tagged with the Git SHA. There is no manual dispatch, confirmation,
 enable switch, or expected-SHA input. Stale PR checks are canceled; an active main
 run is never interrupted, and the latest pending main run waits for it to finish.
-Browser evidence and verified builds are retained for seven days.
+Frontend evidence is uploaded even on failure; it and verified builds are
+retained for seven days.
 
 Deployment reuses the existing `CLOUDFLARE_API_TOKEN` secret,
 `CLOUDFLARE_ACCOUNT_ID` variable (`a0df2e968b524bdd77c0eab565058522`), and

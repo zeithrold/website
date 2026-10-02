@@ -19,10 +19,11 @@ snapshots, and the resulting graph has no peer dependency issues.
 
 ## Supply-chain policy
 
-The user explicitly approved `minimumReleaseAgeExclude` **only for
-`@ztd-me/eslint`**. That is the sole release-age exception. The existing 24-hour age
-gate, build-script permissions and patched ZIP-decoder override remain intact;
-transitive and unrelated dependencies have no new age exception.
+The frontend foundation rollout uses the user-approved `minimumReleaseAgeExclude`
+pattern `@ztd-me/*`, replacing the earlier package-only exception. The 24-hour gate
+still applies to other scopes. This approval concerns release age only;
+`trustPolicy: no-downgrade`, the exact semver exception, build-script permissions
+and the patched ZIP-decoder override remain intact.
 
 The coordinated follow-up pins pnpm 11.22.0 and enables the approved
 `minimumReleaseAgeExcludePrune: true`, `shellEmulator: true` and
@@ -42,7 +43,8 @@ to every other package/version. No semver-major override was applied.
 pnpm 11 removed `onlyBuiltDependencies`; the equivalent supported `allowBuilds`
 map permits only the same two packages, esbuild and workerd. Strict build checks
 remain enabled. Frozen installation passes all 758 supply-chain entries with
-these two narrow, approved exceptions and unchanged dependency resolutions.
+the approved age/trust exceptions. Frontend helper dependencies are documented
+in [frontend foundations](frontend-foundation.md).
 
 ## Refactors and checks
 
@@ -93,12 +95,13 @@ storage, malformed preference values, metadata, local assets, redirects and 404s
 Full lint passes with zero errors and zero warnings using published 0.1.1. Frozen
 installation, peer checks, package API/export-boundary smoke checks, generated
 bindings without drift and whitespace checks also pass. Desktop/mobile browser
-captures were inspected after the production Worker tests. These results apply
-to the final package and dependency graph.
+captures were inspected after the production Worker tests. These results record
+the strict ESLint migration. The later frontend foundation adds CSS checks and
+variant tests; its current profile and dependency pins are documented separately.
 
 Run all final checks with zero lint warnings. Build/browser output can include
 nonfatal upstream bundler, proxy and color-environment notices. Follow-ups must
-use the public registry and preserve the package-only age exception and exact-version
+use the public registry and preserve the approved scope age exception and exact-version
 trust exception:
 
 ```sh
@@ -114,5 +117,6 @@ pnpm test:e2e
 pnpm check:build
 ```
 
-Verify the pushed head and CI for that commit. No merge or manual deployment is
-part of this migration; the migration PR remains draft for user review.
+The strict ESLint migration was merged in PR #9. Follow the current
+[verification guide](verification.md) for later changes; historical migration
+results above do not replace final checks on a new commit.

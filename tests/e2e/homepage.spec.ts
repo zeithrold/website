@@ -1,7 +1,7 @@
-import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
+import { assertAccessible, captureState } from '@ztd-me/frontend-checks/playwright'
 
-test('WCAG AA checks in both languages and themes', async ({ page }) => {
+test('WCAG AA checks in both languages and themes', { tag: '@a11y' }, async ({ page }, info) => {
   await page.goto('/')
   await expect(page.getByRole('button', { name: '切换到中文' })).toBeEnabled()
   for (const locale of ['en', 'zh-CN']) {
@@ -21,17 +21,7 @@ test('WCAG AA checks in both languages and themes', async ({ page }) => {
           document.getAnimations().map(async animation => await animation.finished.catch(() => {})),
         )
       })
-      const results = await new AxeBuilder({ page }).withTags([
-        'wcag2a',
-        'wcag2aa',
-        'wcag21aa',
-      ]).analyze()
-      expect(
-        results.violations.map(violation => ({
-          id: violation.id,
-          nodes: violation.nodes.map(node => node.target),
-        })),
-      ).toEqual([])
+      await assertAccessible(page, info, { label: `homepage-${locale}-${theme}` })
     }
     await page
       .getByRole('button', { name: locale === 'en' ? 'Switch to light theme' : '切换到浅色主题' })
@@ -39,7 +29,7 @@ test('WCAG AA checks in both languages and themes', async ({ page }) => {
   }
 })
 
-test('desktop content, outbound links, metadata and local assets', async ({ page }) => {
+test('desktop content, outbound links, metadata and local assets', async ({ page }, info) => {
   await page.setViewportSize({ width: 1440, height: 1000 })
   const errors: string[] = []
   const externalRequests: string[] = []
@@ -78,12 +68,12 @@ test('desktop content, outbound links, metadata and local assets', async ({ page
       () => document.fonts.check('14px "Inter Variable"') && document.fonts.check('14px "DM Sans Variable"'),
     ),
   ).toBe(true)
-  await page.screenshot({ path: 'artifacts/desktop-en-light.png', fullPage: true })
+  await captureState(page, info, 'desktop-en-light')
   expect(errors).toEqual([])
   expect(externalRequests).toEqual([])
 })
 
-test('language and theme persist after reload', async ({ page }) => {
+test('language and theme persist after reload', async ({ page }, info) => {
   await page.goto('/')
   await page.getByRole('button', { name: '切换到中文' }).click()
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN')
@@ -93,7 +83,7 @@ test('language and theme persist after reload', async ({ page }) => {
   await page.reload()
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN')
   await expect(page.locator('html')).toHaveClass('dark')
-  await page.screenshot({ path: 'artifacts/desktop-zh-dark.png', fullPage: true })
+  await captureState(page, info, 'desktop-zh-dark')
 })
 
 for (const width of [
@@ -101,7 +91,7 @@ for (const width of [
   390,
   768,
 ]) {
-  test(`no clipping or horizontal overflow at ${width}px in both languages`, async ({ page }) => {
+  test(`no clipping or horizontal overflow at ${width}px in both languages`, async ({ page }, info) => {
     await page.setViewportSize({ width, height: 844 })
     await page.goto('/')
     for (const language of ['en', 'zh-CN']) {
@@ -117,13 +107,13 @@ for (const width of [
         )
       expect(clipped).toEqual([])
       if (width === 390) {
-        await page.screenshot({ path: `artifacts/mobile-${language}.png`, fullPage: true })
+        await captureState(page, info, `mobile-${language}`)
       }
     }
   })
 }
 
-test('keyboard navigation, anchors and reduced motion', async ({ page }) => {
+test('keyboard navigation, anchors and reduced motion', { tag: '@a11y' }, async ({ page }, info) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/')
   await page.keyboard.press('Tab')
@@ -141,6 +131,13 @@ test('keyboard navigation, anchors and reduced motion', async ({ page }) => {
       .first()
       .evaluate(node => getComputedStyle(node).transitionDuration),
   ).toBe('0s')
+  await page.getByRole('button', { name: '切换到中文' }).focus()
+  await page.keyboard.press('Enter')
+  await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN')
+  await page.getByRole('button', { name: '切换到深色主题' }).focus()
+  await page.keyboard.press('Space')
+  await expect(page.locator('html')).toHaveClass('dark')
+  await captureState(page, info, 'keyboard-zh-dark-reduced-motion')
 })
 
 test('browser locale, system theme and unavailable storage', async ({ browser }) => {
@@ -164,10 +161,11 @@ test('browser locale, system theme and unavailable storage', async ({ browser })
   await context.close()
 })
 
-test('production Worker handles missing routes and static assets', async ({ page, request }) => {
+test('production Worker serves 404 routes and assets', { tag: '@a11y' }, async ({ page, request }, info) => {
   const response = await page.goto('/does-not-exist')
   expect(response?.status()).toBe(404)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('A page still to be made.')
+  await assertAccessible(page, info, { label: 'not-found' })
   await page.getByRole('link', { name: 'Back to ztd.me', exact: true }).click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ideas intouseful things.')
   for (const path of [
