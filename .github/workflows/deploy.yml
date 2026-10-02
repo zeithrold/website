@@ -37,26 +37,27 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Check generated binding types
+      - name: Setup Go for the pinned verification CLI
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version: 1.24.0
+          cache: false
+      - name: Install the reviewed zt CLI
+        env:
+          GOBIN: ${{ runner.temp }}/zt-bin
         run: |
-          pnpm types
-          git diff --exit-code -- worker-configuration.d.ts
-      - name: Lint
-        run: pnpm lint
-      - name: Typecheck
-        run: pnpm typecheck
-      - name: Unit tests
-        run: pnpm test
-      - name: Build Worker
-        run: pnpm build
-      - name: Verify build and deployment boundaries
-        run: pnpm check:build
+          go install github.com/zeithrold/tools/cmd/zt@3f9a3a7d33befc5a954ba1e86d3aa6d72e2c762f
+          printf '%s\n' "$GOBIN" >> "$GITHUB_PATH"
+          mkdir -p .zt/artifacts
+          go version -m "$GOBIN/zt" > .zt/artifacts/zt-toolchain.txt
+          git rev-parse HEAD > .zt/artifacts/revision.txt
+          sha256sum pnpm-lock.yaml > .zt/artifacts/lockfile.sha256
+          node --version > .zt/artifacts/node-version.txt
+          pnpm --version > .zt/artifacts/pnpm-version.txt
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
-      - name: Verify production Worker locally
-        run: pnpm test:e2e
-      - name: Recheck the deploy config after local emulation
-        run: pnpm check:build
+      - name: Verify frontend and production Worker
+        run: pnpm check
       - name: Upload verified build
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -65,16 +66,15 @@ jobs:
           include-hidden-files: true
           retention-days: 7
           if-no-files-found: error
-      - name: Upload browser evidence
+      - name: Upload frontend evidence on success or failure
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: browser-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            artifacts/
-            test-results/
+          name: frontend-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .zt/artifacts/
+          include-hidden-files: true
           retention-days: 7
-          if-no-files-found: ignore
+          if-no-files-found: error
 
   deploy:
     name: Deploy

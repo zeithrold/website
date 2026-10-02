@@ -1,0 +1,170 @@
+.project-visual {
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  height: 204px;
+  padding: 16px 22px;
+  background: var(--background);
+}
+
+.memory-visual {
+  background: color-mix(in srgb, var(--background) 85%, var(--accent-wash));
+}
+
+.visual-topline {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted-text);
+  font-size: 8px;
+  letter-spacing: .2px;
+}
+
+.visual-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-color);
+}
+
+.visual-glyph {
+  margin-left: auto;
+  color: var(--accent-text);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.memory-diagram {
+  width: min(310px, 100%);
+  margin: 25px auto 0;
+}
+
+.memory-core {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 234px;
+  max-width: 100%;
+  padding: 12px 14px;
+  margin: 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--diagram-card);
+  box-shadow: 0 5px 12px var(--shadow-diagram);
+}
+
+.memory-core > svg {
+  color: var(--accent-color);
+}
+
+.memory-core > span {
+  font-size: 10px;
+}
+
+.memory-core .core-count {
+  font-size: 7px;
+  color: var(--muted-text);
+  margin-left: auto;
+}
+
+.memory-connectors {
+  height: 28px;
+  display: flex;
+  justify-content: space-around;
+  width: 70%;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+  position: relative;
+  top: 13px;
+}
+
+.memory-connectors::before {
+  content: "";
+  position: absolute;
+  width: 1px;
+  height: 13px;
+  top: -13px;
+  left: 50%;
+  background: var(--border);
+}
+
+.memory-connectors i {
+  display: block;
+  height: 15px;
+  width: 1px;
+  background: var(--border);
+}
+
+.agent-nodes {
+  display: flex;
+  justify-content: space-around;
+  gap: 9px;
+}
+
+.agent-nodes span {
+  width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 4px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--diagram-card);
+  font-size: 9px;
+}
+
+.ledger-diagram {
+  width: min(300px, 100%);
+  margin: 23px auto 0;
+}
+
+.currency-row {
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+}
+
+.currency-row > span {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .7px;
+  color: var(--accent-text);
+  padding: 8px 16px;
+  background: var(--diagram-card);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+.ledger-system {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 9px;
+  margin-top: 16px;
+  color: var(--muted-text);
+}
+
+.ledger-system > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--foreground);
+  font-size: 9px;
+}
+
+.precision-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  font-size: 7px;
+  color: var(--muted-text);
+  margin-top: 16px;
+}
+
+.precision-label > svg {
+  color: var(--accent-text);
+}
+
+.ledger-system > span svg {
+  color: var(--muted-text);
+}

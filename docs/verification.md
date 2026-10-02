@@ -1,20 +1,12 @@
 # Verification guide
 
-Use Node 24 and pnpm 11.22.0 with the committed lockfile. The complete local
-verification sequence is:
+Use Node 24 and pnpm 11.22.0 with the committed lockfile and the pinned `zt` CLI
+from [frontend foundations](frontend-foundation.md). The complete local sequence is:
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm types
-git diff --exit-code -- worker-configuration.d.ts
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
-pnpm check:build
 pnpm exec playwright install --with-deps chromium
-pnpm test:e2e
-pnpm check:build
+pnpm check
 git diff --check
 ```
 
@@ -30,11 +22,13 @@ workspace, use writable temporary XDG/config/log directories as described in the
 | Frozen dependency install | Committed resolution and approved supply-chain policies |
 | Generated binding types | ASSETS only; no declaration drift |
 | ESLint | Entire source with zero errors and zero warnings |
+| CSS | Stylelint plus cross-file variable and semantic-color checks |
 | TypeScript | Strict project with `noUncheckedIndexedAccess` |
 | Unit tests | 32 tests: routing, preferences and the current deployment/domain boundaries |
 | Production build | Production Worker and generated `dist/server/wrangler.json` |
 | Build boundary checks | One Worker + ASSETS, exactly five approved domains, no addons or previews, Vercel Git deploy disabled |
-| Chromium suite | 11 tests against the local production Worker |
+| Chromium suite | 13 tests against the local production Worker, including variant regression fixtures |
+| Failure evidence | Intentional unnamed-button failure must retain its full Axe scan, trace, screenshot, video and reports |
 | Whitespace | `git diff --check` |
 
 The seven tests for the removed one-time retirement feature are no longer part
@@ -48,19 +42,21 @@ Simplified Chinese, light/dark themes, system defaults, saved/malformed/unavaila
 storage, keyboard skip links and anchors, reduced motion, source/service/contact
 links, local fonts, canonical/Open Graph metadata, 404 navigation and static assets.
 Actual Worker responses cover approved alias hosts and reject excluded/lookalike
-hosts. Axe checks WCAG A/AA rules in both languages and both themes; automated
+hosts. The shared Axe helper checks WCAG 2/2.1/2.2 A/AA rules in both languages and both themes; automated
 checks do not establish a complete accessibility audit. Other browser engines
 are not covered by the current suite.
 
-Screenshots are written by the suite:
+Named screenshots are attached by the suite:
 
-- `artifacts/desktop-en-light.png`
-- `artifacts/desktop-zh-dark.png`
-- `artifacts/mobile-en.png`
-- `artifacts/mobile-zh-CN.png`
+- `desktop-en-light`
+- `desktop-zh-dark`
+- `mobile-en`
+- `mobile-zh-CN`
 
-Screenshots are not committed. CI uploads screenshots and failure traces as
-`browser-<run>-<attempt>`, retained for seven days. The local production URL is
+Reports and captures are not committed. The aggregate keeps them below its unique
+`.zt/artifacts` run directory; standalone browser runs use `.zt/browser`. CI uploads
+the entire `.zt/artifacts` tree as `frontend-<run>-<attempt>` even on failure,
+retained for seven days. The local production URL is
 `http://127.0.0.1:4173`; local verification creates no remote preview deployment.
 
 The local runner first validates the production configuration, then uses a
@@ -76,7 +72,8 @@ instead of relying on that classification output.
 ## CI evidence
 
 [CI & Deploy](../.github/workflows/deploy.yml) repeats the full verification
-sequence for PRs and main pushes. Verify has no Cloudflare credentials. Only a
+profile for PRs and main pushes, installing the CLI from the exact reviewed source.
+It runs the full browser suite once, including accessibility and keyboard checks. Verify has no Cloudflare credentials. Only a
 successful main push may deploy its verified artifact; PRs only verify.
 
 For each change, confirm the remote branch and PR head match the tested commit

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "modules": [
+    {
+      "id": "web",
+      "path": ".",
+      "stack": "js-ts",
+      "profiles": {
+        "frontend": [
+          "lint",
+          "css",
+          "typecheck",
+          "unit",
+          "build",
+          "e2e",
+          "integration"
+        ]
+      },
+      "commands": {
+        "typecheck": ["pnpm", "run", "check:types"],
+        "build": ["pnpm", "run", "check:worker"],
+        "e2e": ["pnpm", "run", "check:browser"],
+        "integration": ["pnpm", "run", "check:evidence"]
+      }
+    }
+  ],
+  "skills": [
+    "js-ts-testing",
+    "ui-foundation",
+    "ui-web",
+    "frontend-engineering",
+    "frontend-verification"
+  ],
+  "lint": {
+    "js-ts": "@ztd-me/eslint"
+  }
+}

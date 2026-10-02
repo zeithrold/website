@@ -15,9 +15,16 @@
     "types": "wrangler types --include-runtime=false",
     "test": "node --test tests/*.test.ts",
     "test:e2e": "playwright test",
+    "test:a11y": "playwright test --grep @a11y",
     "deploy": "wrangler deploy --config dist/server/wrangler.json",
     "check:build": "node scripts/check-build.mjs",
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --max-warnings 0",
+    "lint:css": "ztd-css ./css-check.config.mjs",
+    "check:types": "pnpm types && git diff --exit-code -- worker-configuration.d.ts && pnpm typecheck",
+    "check:worker": "pnpm build && pnpm check:build",
+    "check:browser": "pnpm test:e2e && pnpm check:build",
+    "check:evidence": "node scripts/check-failure-evidence.mjs",
+    "check": "zt check --root . --module web --profile frontend --json"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.3.0",
@@ -37,10 +44,9 @@
     "vinext": "latest"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.13.0",
     "@cloudflare/vite-plugin": "1",
     "@cloudflare/workers-types": "5.20260930.1",
-    "@playwright/test": "^1.63.0",
+    "@playwright/test": "1.62.0",
     "@tailwindcss/postcss": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
@@ -48,10 +54,11 @@
     "@vitejs/plugin-react": "latest",
     "@vitejs/plugin-rsc": "latest",
     "@ztd-me/eslint": "0.1.1",
+    "@ztd-me/frontend-checks": "0.1.0",
     "eslint": "10.11.0",
     "tailwindcss": "latest",
     "typescript": "6.0.3",
-    "vite": "latest",
+    "vite": "8.3.1",
     "wrangler": "4.144.0"
   }
 }
