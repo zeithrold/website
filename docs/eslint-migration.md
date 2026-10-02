@@ -12,8 +12,8 @@ The previous TypeScript `latest` resolved to 7.0.2, outside the package's
 ## Supply-chain policy
 
 The user explicitly approved `minimumReleaseAgeExclude` **only for
-`@ztd-me/eslint`**. That is the sole policy exception. The existing 24-hour age
-gate, build-script allowlist and patched ZIP-decoder override remain intact;
+`@ztd-me/eslint`**. That is the sole release-age exception. The existing 24-hour age
+gate, build-script permissions and patched ZIP-decoder override remain intact;
 transitive and unrelated dependencies have no new age exception.
 
 The coordinated follow-up pins pnpm 11.22.0 and enables the approved
@@ -23,17 +23,18 @@ Node 24 is compatible. Its implementation supports all three settings, including
 exception pruning added in 11.22.0. Unused package-age exceptions are pruned,
 scripts use pnpm's shell emulator and dependency trust downgrades are rejected.
 
-The pnpm 11 frozen installation rejects the existing `semver@6.3.1` lock entry
-with `ERR_PNPM_TRUST_DOWNGRADE`. Babel 7's core and compilation-target helper
-require `semver ^6.3.1`; 6.3.1 is the newest 6.x release. The registry records
-provenance for 7.5.4, published on 2023-07-07, followed by 6.3.1 without provenance
-on 2023-07-10. pnpm compares trust by publication date, across major versions.
-An ordinary targeted resolution also fails the existing-lockfile policy check.
-Waiting for the release-age gate does not resolve this trust-policy conflict.
+The user separately approved exactly `trustPolicyExclude: ['semver@6.3.1']`.
+Babel 7's core and compilation-target helper require this newest 6.x release.
+pnpm compares trust by publication date across major versions: semver 7.5.4 had
+provenance on 2023-07-07, followed by 6.3.1 without provenance on 2023-07-10.
+The locked package integrity matches the public registry. The approved exception
+accepts missing provenance for that exact version; `no-downgrade` still applies
+to every other package/version. No semver-major override was applied.
 
-No trust exception or check bypass has been added. Resolving this requires a
-separate dependency scope decision, such as a verified Babel-only semver 7
-override or a Babel major upgrade. The framework fix alone cannot unblock install.
+pnpm 11 removed `onlyBuiltDependencies`; the equivalent supported `allowBuilds`
+map permits only the same two packages, esbuild and workerd. Strict build checks
+remain enabled. Frozen installation passes all 758 supply-chain entries with
+these two narrow, approved exceptions and unchanged dependency resolutions.
 
 ## Refactors and checks
 
@@ -78,26 +79,30 @@ including this TSX file, and `noUncheckedIndexedAccess: true`. The named metadat
 export is required by the vinext/Next App Router. Preserve this convention;
 do not disable Fast Refresh globally or move the framework export to evade it.
 
+The parent reports a framework-aware fix targeting public 0.1.1 in
+[tools PR #4](https://github.com/zeithrold/tools/pull/4). Adoption waits for the
+parent's public-registry verification; this repository still uses published
+0.1.0. The verified follow-up will use `react: { framework: 'vinext' }` while
+preserving required framework exports and all strict checks.
+
 ## Validation and completion
 
-On the prior Node 24.19.0 / pnpm 10.33.0 validation, frozen installation, generated bindings without
+On Node 24.19.0 / pnpm 11.22.0, frozen installation, generated bindings without
 drift, type checking, all 39 unit tests, the production Worker build and
 build/deployment boundary guards passed. All 11 Chromium browser tests passed
-against the
-production Worker, covering both languages/themes, WCAG AA,
+against the production Worker, covering both languages/themes, WCAG AA,
 320/390/768px layouts, keyboard navigation, reduced motion, saved or unavailable
 storage, malformed preference values, metadata, local assets, redirects and 404s.
 
-With pnpm 11.22.0, the CLI runs and reads all three approved settings correctly.
-Frozen install and targeted semver resolution fail on the trust-policy conflict
-above. `pnpm test` also stops at pnpm's automatic dependency preflight before
-executing tests. Generated bindings, full lint, type checking, build and browser
-tests cannot be rerun until installation succeeds; earlier results do not establish
-validation of this pnpm upgrade.
+Full lint reports one error and zero warnings: the required framework metadata
+export. The workspace settings satisfy the required key order and blank lines;
+no settings or permissions were broadened. Completion requires the published
+framework fix. Build/browser output includes nonfatal upstream bundler, proxy
+and color-environment notices; lint is required to have zero warnings.
 
-Keep the PR in draft until installation and the framework error are resolved
+Keep the PR in draft until the framework error is resolved
 and all final checks pass. Any follow-up must use the public registry and preserve
-the package-only age exception:
+the package-only age exception and exact-version trust exception:
 
 ```sh
 pnpm install --frozen-lockfile
