@@ -1,34 +1,34 @@
-import type { Metadata } from "next";
-import type { ReactElement, ReactNode } from "react";
-import "./globals.css";
-import { PreferencesProvider } from "@/components/preferences-provider";
-import { en } from "@/lib/copy";
+import type { Metadata } from 'next'
+import type { ReactElement, ReactNode } from 'react'
+import { PreferencesProvider } from '@/components/preferences-provider'
+import { en } from '@/lib/copy'
+import './globals.css'
 
 export const metadata: Metadata = {
-  title: "Zeithrold — Projects, experiments & notes",
-  description: en["meta.description"],
-  metadataBase: new URL("https://ztd.me"),
-  alternates: { canonical: "/" },
-  icons: { icon: "/favicon.svg" },
+  title: 'Zeithrold — Projects, experiments & notes',
+  description: en['meta.description'],
+  metadataBase: new URL('https://ztd.me'),
+  alternates: { canonical: '/' },
+  icons: { icon: '/favicon.svg' },
   openGraph: {
-    title: "Zeithrold",
-    description: en["meta.description"],
-    url: "https://ztd.me",
-    type: "website",
+    title: 'Zeithrold',
+    description: en['meta.description'],
+    url: 'https://ztd.me',
+    type: 'website',
     images: [
-      { url: "/og.png", width: 1200, height: 630, alt: "Zeithrold — Ideas into useful things." },
+      { url: '/og.png', width: 1200, height: 630, alt: 'Zeithrold — Ideas into useful things.' },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Zeithrold",
-    description: en["meta.description"],
-    images: ["/og.png"],
+    card: 'summary_large_image',
+    title: 'Zeithrold',
+    description: en['meta.description'],
+    images: ['/og.png'],
   },
-};
+}
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>): ReactElement {
   return (
     <html lang="en"><body><PreferencesProvider>{children}</PreferencesProvider></body></html>
-  );
+  )
 }

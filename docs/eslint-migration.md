@@ -1,64 +1,96 @@
-# Strict ESLint migration — blocked on release age
+# Strict ESLint migration
 
-This branch prepares the website for the published `@ztd-me/eslint@0.1.0`.
-It is not a completed migration and must remain a draft until the steps below pass.
+The website now installs the public `@ztd-me/eslint@0.1.0`, with ESLint 10.11.0
+and TypeScript 6.0.3. Node 24 satisfies its Node >=22.14 requirement. The default
+ESM export and named `createConfig` are the same asynchronous function; the
+configuration enables React and the repository's strict TypeScript project.
 
-The package was published at **2026-10-02 02:06:15 UTC**. The repository's
-unchanged `pnpm-workspace.yaml` requires `minimumReleaseAge: 1440` (24 hours).
-Running the declared pnpm 10.33.0 with the exact public version produced:
+The previous TypeScript `latest` resolved to 7.0.2, outside the package's
+`>=5.4.0 <6.1.0` peer range. The migrated configuration enables
+`noUncheckedIndexedAccess` alongside `strict`.
+
+## Supply-chain policy
+
+The user explicitly approved `minimumReleaseAgeExclude` **only for
+`@ztd-me/eslint`**. That is the sole policy exception. The existing 24-hour age
+gate, build-script allowlist and patched ZIP-decoder override remain intact;
+transitive and unrelated dependencies have no new age exception.
+
+## Refactors and checks
+
+- Extract homepage sections, diagrams, controls and footer while preserving
+  copy, classes, links and accessibility attributes.
+- Restore preferences through a per-provider store after subscription, retaining
+  deterministic SSR, browser defaults, validated saved fields, optional storage,
+  localization and metadata updates. Handle i18next promises explicitly.
+- Separate context/hooks and button variants from component modules for Fast Refresh.
+- Parse Cloudflare JSON as `unknown` and validate envelopes, pagination and records.
+  Split the retirement preflight into small stages, preserving fixed targets,
+  ownership rechecks, the single non-forced DELETE and post-deletion verification.
+- Add malformed-record regression tests and explicit Node test promise handling.
+- Declare vinext's generated virtual Worker module fetch contract, avoiding its
+  unresolved imported type while preserving the runtime handler.
+- Run `pnpm lint` with zero warnings in the existing CI Verify job. Deployment
+  remains limited to a push to main; PRs only verify without Cloudflare credentials.
+
+Only Wrangler's generated `worker-configuration.d.ts` is explicitly ignored by
+lint; CI still regenerates it and requires no drift. No handwritten source is
+ignored, no rules are suppressed and no numeric limits are relaxed.
+
+## Upstream blockers in 0.1.0
+
+Full lint reports four errors and zero warnings. All independent code violations
+are resolved. These remaining errors need an upstream published fix or explicit
+narrow authorization for the additional pnpm policy changes; no local rule
+overrides have been added.
+
+### Framework metadata
+
+`pnpm exec eslint app/layout.tsx` reports only
+`react-refresh/only-export-components` at the required `metadata` export.
+A minimal framework reproduction is:
 
 ```text
-ERR_PNPM_NO_MATURE_MATCHING_VERSION
-Version 0.1.0 of @ztd-me/eslint does not meet the minimumReleaseAge constraint
+import type { Metadata } from 'next'
+export const metadata: Metadata = { title: 'Example' }
+export default function RootLayout() { return <html><body /></html> }
 ```
 
-The earliest permitted install is **2026-10-03 02:06:15 UTC**. No exclusions,
-policy overrides, local links, or tarball installations were used to bypass it.
-The public tarball was inspected read-only for its README, declarations, and
-rule definitions. It was not executed or installed.
+Use the package's default config with `react: true`, an existing strict project
+including this TSX file, and `noUncheckedIndexedAccess: true`. The named metadata
+export is required by the vinext/Next App Router. Preserve this convention;
+do not disable Fast Refresh globally or move the framework export to evade it.
 
-## Prepared changes
+### pnpm policy requirements
 
-- Pin the mature peer dependencies: ESLint 10.11.0 and TypeScript 6.0.3.
-  The previous `typescript: latest` resolved to 7.0.2, outside the package's
-  declared `>=5.4.0 <6.1.0` peer range.
-- Enable `noUncheckedIndexedAccess` alongside the existing `strict` setting.
-- Use the published async default export in `eslint.config.js`, explicitly
-  enabling React and the repository TypeScript project, with no local rule
-  overrides or source ignores.
-- Provide `pnpm lint` with `--max-warnings 0`. It is blocked because the package
-  cannot yet be installed. CI lint integration is still pending.
-- Extract homepage sections, project diagrams, preference controls and footer.
-  Preserve their classes, headings, links, copy and accessibility attributes.
-- Restore preferences through a per-provider external store after subscription,
-  avoiding effect-triggered React state updates and unstable context values.
-  Keep deterministic English/light SSR, browser defaults, saved field validation,
-  optional storage, localization and metadata updates.
-- Add regression coverage for restoration timing, field updates, subscription
-  cleanup, provider isolation, malformed storage and independent field fallback.
+`pnpm exec eslint pnpm-workspace.yaml` reports `pnpm/yaml-enforce-settings`
+three times, requiring these absent settings:
 
-## Required completion after the gate opens
-
-Use Node 24 and the declared pnpm 10.33.0. From this branch:
-
-```sh
-pnpm add -D -E @ztd-me/eslint@0.1.0
-pnpm lint --fix
-pnpm lint
+```text
+minimumReleaseAgeExcludePrune: true
+shellEmulator: true
+trustPolicy: no-downgrade
 ```
 
-Commit the generated lockfile. Preserve the existing age gate and package
-policy. If another dependency is age-blocked, record its earliest permitted
-install instead of bypassing the gate.
+The checked-in workspace file reproduces the conflict. The user approved only
+a package-specific age exception while requiring all other supply-chain policies
+to remain intact. These inherited settings change that policy or script execution.
+Autofix added them once during exploration; they were removed before committing.
+A framework fix alone will not resolve this separate policy conflict.
 
-Fix all remaining violations by behavior-preserving refactoring, including
-handwritten configuration, scripts, and tests. The prepared changes have not
-been certified against the full lint policy. Do not suppress rules, relax
-limits, disable typed/framework checks, or add broad ignores. Report a minimal
-reproducer upstream if a genuine package bug prevents correct code.
+## Validation and completion
 
-Add `pnpm lint` to the existing Verify job after dependency installation; keep
-the current production boundary unchanged. Validate the final commit with:
+On Node 24.19.0 / pnpm 10.33.0, frozen installation, generated bindings without
+drift, type checking, all 39 unit tests, the production Worker build and
+build/deployment boundary guards passed. All 11 Chromium browser tests passed
+against the
+production Worker, covering both languages/themes, WCAG AA,
+320/390/768px layouts, keyboard navigation, reduced motion, saved or unavailable
+storage, malformed preference values, metadata, local assets, redirects and 404s.
+
+Keep the PR in draft until a published, verified package resolves the four errors
+and all final checks pass. Any follow-up must use the public registry and preserve
+the package-only age exception:
 
 ```sh
 pnpm install --frozen-lockfile
@@ -69,42 +101,9 @@ pnpm typecheck
 pnpm test
 pnpm build
 pnpm check:build
-pnpm exec playwright install --with-deps chromium
 pnpm test:e2e
 pnpm check:build
 ```
 
-CI currently verifies PRs without Cloudflare credentials. Deployment is limited
-to a push to `main` in `zeithrold/website`, using the verified artifact; Vercel
-Git deployment is disabled. Keep this migration in a draft PR, verify the remote
-head and CI, and do not merge or manually deploy.
-
-## Preparation validation
-
-Checked in the saved Cloud environment with Node 24.19.0 and pnpm 10.33.0:
-
-| Check | Result |
-| --- | --- |
-| Frozen lockfile installation of mature peers and existing dependencies | Passed |
-| Generated binding types and unchanged generated declaration | Passed |
-| TypeScript 6.0.3 with strict and indexed-access checks | Passed |
-| Unit tests, including three new store regression tests | 37 passed |
-| Production Worker build | Passed, with vinext/bundler and proxy notices |
-| Build/deployment boundary guard before and after browser tests | Passed |
-| Production Worker browser suite using available Chromium | 11 passed |
-| Screenshots for desktop/mobile and English/Chinese themes | Captured and visually reviewed |
-| Published package installation | Blocked by the 24-hour age gate |
-| Full strict lint | Blocked at config import because package installation is forbidden until maturity |
-| CI lint integration and remaining strict refactoring | Pending |
-
-Browser checks cover both languages/themes, WCAG AA, local assets and metadata,
-320/390/768px layouts, keyboard navigation, reduced motion, persisted preferences,
-unavailable or malformed storage, static assets, missing routes and host routing.
-No application behavior change requiring approval was identified.
-
-The parent is investigating whether inherited Fast Refresh checks reject a
-framework layout's metadata and component exports. Preserve `app/layout.tsx`
-and its exported metadata. Once lint can run, report the concrete rule ID and
-a minimal reproduction if encountered; do not add a local override or move
-framework exports to evade the check. Any package fix needs a published,
-verified release before final validation.
+Verify the pushed head and CI for that commit. No merge or manual deployment is
+part of this migration.

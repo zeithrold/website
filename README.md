@@ -19,6 +19,7 @@ Use Node.js 24 and pnpm 10.33.0 (declared in `package.json`).
 pnpm install --frozen-lockfile
 pnpm dev
 pnpm types
+pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
@@ -33,7 +34,8 @@ a temporary copy with empty local routes so Wrangler does not infer the live
 domain as its local upstream and rewrite redirects. The deployed config/code,
 ASSETS and bindings stay intact; the copy is removed on shutdown. `wrangler.jsonc`
 is the source configuration.
-Dependencies have a 24-hour minimum release age; CI uses the committed lockfile.
+Dependencies have a 24-hour minimum release age; only the user-approved
+`@ztd-me/eslint` package is exempt. CI uses the committed lockfile.
 Browser tests run against the production Worker, save screenshots under
 `artifacts/`, and retain traces on failure. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`
 can select an already installed Chromium in a restricted environment.
@@ -49,7 +51,7 @@ Stop a local Worker before rebuilding its `dist/` directory.
 - `app/globals.css`: local Inter/DM Sans and the warm-white/ink/terracotta system.
 - `components/home/`: project diagrams, service cards, and homepage sections.
 - [Content evidence and selection policy](docs/content.md).
-- [Strict ESLint migration preparation and release-age blocker](docs/eslint-migration.md).
+- [Strict ESLint migration and upstream compatibility blockers](docs/eslint-migration.md).
 
 The selection is editorial, not a claim about current priorities or project
 availability. Tools is explicitly early development. Its implemented inspect,
@@ -59,7 +61,8 @@ plan, and Skill sync are described without promising check/run/doctor commands.
 
 [`CI & Deploy`](.github/workflows/deploy.yml) runs on pushes to `main` and pull
 requests targeting `main`. Its **Verify** job checks generated binding types,
-TypeScript, unit tests, the production build, deployment boundaries, and the full
+strict ESLint with zero warnings, TypeScript, unit tests, the production build,
+deployment boundaries, and the full
 desktop/mobile browser suite against that production Worker locally. It uploads
 the verified `dist/` artifact named for the workflow commit. PRs only verify;
 the verification job has no Cloudflare credentials.

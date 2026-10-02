@@ -35,9 +35,11 @@ time. Merging this PR runs Checks only, never a deployment.
 ## Exact repository state for this phase
 
 ```json
-"routes": [
-  { "pattern": "ztd.me", "custom_domain": true, "enabled": true, "previews_enabled": false }
-]
+{
+  "routes": [
+    { "pattern": "ztd.me", "custom_domain": true, "enabled": true, "previews_enabled": false }
+  ]
+}
 ```
 
 `wrangler.jsonc` and `scripts/deployment-policy.ts` now agree on exactly this
