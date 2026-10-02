@@ -62,6 +62,7 @@ Stop a local Worker before rebuilding its `dist/` directory.
 - [Strict ESLint configuration and dependency policy](docs/eslint-migration.md).
 - [Verification guide](docs/verification.md).
 - [Frontend foundations, token roles and Skill source](docs/frontend-foundation.md).
+- [Unified frontend migration checkpoint](docs/unified-frontend-migration.md).
 
 The selection is editorial, not a claim about current priorities or project
 availability. Tools is explicitly early development. Its implemented inspect,

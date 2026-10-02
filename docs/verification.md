@@ -24,7 +24,7 @@ workspace, use writable temporary XDG/config/log directories as described in the
 | ESLint | Entire source with zero errors and zero warnings |
 | CSS | Stylelint plus cross-file variable and semantic-color checks |
 | TypeScript | Strict project with `noUncheckedIndexedAccess` |
-| Unit tests | 32 tests: routing, preferences and the current deployment/domain boundaries |
+| Unit tests | 41 tests: routing, preferences, translation initialization, SSR/cache and deployment/domain boundaries |
 | Production build | Production Worker and generated `dist/server/wrangler.json` |
 | Build boundary checks | One Worker + ASSETS, exactly five approved domains, no addons or previews, Vercel Git deploy disabled |
 | Chromium suite | 13 tests against the local production Worker, including variant regression fixtures |
