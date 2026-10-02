@@ -1,13 +1,21 @@
 # Strict ESLint migration
 
-The website now installs the public `@ztd-me/eslint@0.1.0`, with ESLint 10.11.0
+The website now installs the public `@ztd-me/eslint@0.1.1`, with ESLint 10.11.0
 and TypeScript 6.0.3. Node 24 satisfies its Node >=22.14 requirement. The default
 ESM export and named `createConfig` are the same asynchronous function; the
-configuration enables React and the repository's strict TypeScript project.
+configuration enables the vinext React profile and the strict TypeScript project.
+The parent verified the published archive against tested source
+`5133cc6c2eb4f2e87fc9d376fed146a8d3370ce5` before adoption.
 
 The previous TypeScript `latest` resolved to 7.0.2, outside the package's
 `>=5.4.0 <6.1.0` peer range. The migrated configuration enables
 `noUncheckedIndexedAccess` alongside `strict`.
+
+Wrangler is pinned to the already tested 4.144.0 resolution. Normal pnpm
+resolution otherwise upgraded its `latest` selector to 4.145.0, which required
+newer Worker bindings. Keeping the existing version preserves deployment tooling;
+the only changed package version is ESLint 0.1.0 to 0.1.1. pnpm 11 rewrites peer
+snapshots, and the resulting graph has no peer dependency issues.
 
 ## Supply-chain policy
 
@@ -57,33 +65,19 @@ Only Wrangler's generated `worker-configuration.d.ts` is explicitly ignored by
 lint; CI still regenerates it and requires no drift. No handwritten source is
 ignored, no rules are suppressed and no numeric limits are relaxed.
 
-## Upstream blockers in 0.1.0
+## Framework integration
 
-The remaining framework error needs an upstream published fix. All independent
-code violations are resolved, and no local rule overrides have been added.
+The published 0.1.1 API uses `react: { framework: 'vinext' }`. Its
+`ztd/app-router-exports` rule allows required framework exports only in server
+page/layout modules. The root layout retains its required typed metadata export.
+Client page/layout modules and ordinary component modules retain strict mixed-export
+checking; no local allowlist or disabled rule was added.
 
-### Framework metadata
-
-`pnpm exec eslint app/layout.tsx` reports only
-`react-refresh/only-export-components` at the required `metadata` export.
-A minimal framework reproduction is:
-
-```text
-import type { Metadata } from 'next'
-export const metadata: Metadata = { title: 'Example' }
-export default function RootLayout() { return <html><body /></html> }
-```
-
-Use the package's default config with `react: true`, an existing strict project
-including this TSX file, and `noUncheckedIndexedAccess: true`. The named metadata
-export is required by the vinext/Next App Router. Preserve this convention;
-do not disable Fast Refresh globally or move the framework export to evade it.
-
-The parent reports a framework-aware fix targeting public 0.1.1 in
-[tools PR #4](https://github.com/zeithrold/tools/pull/4). Adoption waits for the
-parent's public-registry verification; this repository still uses published
-0.1.0. The verified follow-up will use `react: { framework: 'vinext' }` while
-preserving required framework exports and all strict checks.
+The installed-package smoke check verified the asynchronous default/named exports,
+server-layout metadata acceptance, rejection of the same export in a client layout
+and ordinary component, and the effective strict limits: complexity 10, cognitive
+complexity 15, function length 60, file length 300, line length 120 and array-layout
+checking. Typed unsafe-call checking remains an error.
 
 ## Validation and completion
 
@@ -94,15 +88,16 @@ against the production Worker, covering both languages/themes, WCAG AA,
 320/390/768px layouts, keyboard navigation, reduced motion, saved or unavailable
 storage, malformed preference values, metadata, local assets, redirects and 404s.
 
-Full lint reports one error and zero warnings: the required framework metadata
-export. The workspace settings satisfy the required key order and blank lines;
-no settings or permissions were broadened. Completion requires the published
-framework fix. Build/browser output includes nonfatal upstream bundler, proxy
-and color-environment notices; lint is required to have zero warnings.
+Full lint passes with zero errors and zero warnings using published 0.1.1. Frozen
+installation, peer checks, package API/export-boundary smoke checks, generated
+bindings without drift and whitespace checks also pass. Desktop/mobile browser
+captures were inspected after the production Worker tests. These results apply
+to the final package and dependency graph.
 
-Keep the PR in draft until the framework error is resolved
-and all final checks pass. Any follow-up must use the public registry and preserve
-the package-only age exception and exact-version trust exception:
+Run all final checks with zero lint warnings. Build/browser output can include
+nonfatal upstream bundler, proxy and color-environment notices. Follow-ups must
+use the public registry and preserve the package-only age exception and exact-version
+trust exception:
 
 ```sh
 pnpm install --frozen-lockfile
@@ -118,4 +113,4 @@ pnpm check:build
 ```
 
 Verify the pushed head and CI for that commit. No merge or manual deployment is
-part of this migration.
+part of this migration; the migration PR remains draft for user review.
