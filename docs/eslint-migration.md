@@ -52,9 +52,11 @@ these two narrow, approved exceptions and unchanged dependency resolutions.
   deterministic SSR, browser defaults, validated saved fields, optional storage,
   localization and metadata updates. Handle i18next promises explicitly.
 - Separate context/hooks and button variants from component modules for Fast Refresh.
-- Parse Cloudflare JSON as `unknown` and validate envelopes, pagination and records.
-  Split the retirement preflight into small stages, preserving fixed targets,
-  ownership rechecks, the single non-forced DELETE and post-deletion verification.
+- Parse Cloudflare JSON as `unknown` and validate envelopes, pagination and records
+  for the current GET-only domain ownership checks.
+- Remove the unused one-time retirement implementation and its dedicated tests.
+  Preserve deployment guards, shared JSON validation and negative ownership tests;
+  retain historical status without runnable cutover or deletion instructions.
 - Add malformed-record regression tests and explicit Node test promise handling.
 - Declare vinext's generated virtual Worker module fetch contract, avoiding its
   unresolved imported type while preserving the runtime handler.
@@ -82,7 +84,7 @@ checking. Typed unsafe-call checking remains an error.
 ## Validation and completion
 
 On Node 24.19.0 / pnpm 11.22.0, frozen installation, generated bindings without
-drift, type checking, all 39 unit tests, the production Worker build and
+drift, type checking, all 32 unit tests, the production Worker build and
 build/deployment boundary guards passed. All 11 Chromium browser tests passed
 against the production Worker, covering both languages/themes, WCAG AA,
 320/390/768px layouts, keyboard navigation, reduced motion, saved or unavailable

@@ -2,7 +2,6 @@ import assert from 'node:assert/strict'
 
 export const ACCOUNT_ID = 'a0df2e968b524bdd77c0eab565058522'
 export const WORKER_NAME = 'ztd-homepage'
-export const LEGACY_WORKER_NAME = 'doaink-home'
 export const CANONICAL_HOST = 'ztd.me'
 export const EXPECTED_ROUTES = [
   { pattern: CANONICAL_HOST, custom_domain: true, enabled: true, previews_enabled: false },

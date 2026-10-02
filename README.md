@@ -51,7 +51,8 @@ Stop a local Worker before rebuilding its `dist/` directory.
 - `app/globals.css`: local Inter/DM Sans and the warm-white/ink/terracotta system.
 - `components/home/`: project diagrams, service cards, and homepage sections.
 - [Content evidence and selection policy](docs/content.md).
-- [Strict ESLint migration and upstream compatibility blockers](docs/eslint-migration.md).
+- [Strict ESLint configuration and dependency policy](docs/eslint-migration.md).
+- [Verification guide](docs/verification.md).
 
 The selection is editorial, not a claim about current priorities or project
 availability. Tools is explicitly early development. Its implemented inspect,
@@ -86,13 +87,12 @@ stay disabled. Build guards still reject extra hosts and addons. GET-only domain
 checks before and after deployment require all five existing domains to remain
 on this Worker. Missing domains or legacy/unexpected owners fail before Wrangler,
 so routine deployment cannot repeat the old cutover or reclaim retired bindings.
-The obsolete one-time retirement workflow is removed; this workflow never
-retires a service.
+This workflow never retires a service.
 
 `vercel.json` disables automatic Vercel Git deployments for this repository. It
 does not modify an existing Vercel project or deployment.
 
-## Redirects and migration
+## Redirects
 
 The Worker recognizes only the exact hosts `doa.ink`, `zeithrold.dev`,
 `www.zeithrold.dev`, and `ztd.one`: 308 to `https://ztd.me`, preserving path and query, including asset
@@ -105,9 +105,14 @@ and `showcase.ztd.me` continue on their own infrastructure. The expired
 `zeithrold.cloud` is excluded. `zeithrold.com`, its
 DNS/website/SSH server, `zeithrold-com`, and all mail records are outside scope.
 
-See [the five-domain deployment and historical alias cutover](docs/alias-migration.md),
-[the completed canonical phase record](docs/migration.md), and
-[the archived retirement procedure](docs/retirement.md). The old cutover and
-retirement instructions are historical; routine deployments follow the GitHub
-Actions section above. Reviewing a PR runs verification only. Merging it into
-main triggers automatic deployment after verification passes.
+## Rollback and history
+
+To roll back the current site's code, revert the affected change through a
+reviewed PR to `main`. The normal verification and deployment workflow publishes
+the reverted build after merge. Keep the current Worker, all five domain owners,
+ASSETS-only bindings and deployment guards intact; code rollback does not require
+restoring a legacy service or repeating a domain cutover.
+
+See [deployment history and legacy-service status](docs/retirement.md) for the
+completed cutovers and last recorded retirement status. Historical operation
+instructions remain in Git; the repository contains no one-time retirement tool.
