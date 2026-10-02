@@ -13,10 +13,21 @@ and public `BrandMark` export. The existing homepage and 404 entry points still
 use `SiteShell`. No shared-package API, storage protocol or palette value is
 invented during preparation.
 
-Integration is blocked on the parent's verified stable contract and actual
-published version of `@ztd-me/frontend`. Do not install a guessed version,
-reference an unpublished branch or commit a vendor/tarball copy. This document
-records preparation; it does not establish shared-package migration readiness.
+The parent verified the stable contract at tools commit
+`7f9401ae1aae60ceb130670a9ce427f4d643df96`. Its six CI jobs passed, including
+an independent packed consumer with unpatched dependencies. The contract is
+mapped in [the concrete adapter plan](unified-frontend-adapter.md).
+
+Package 0.1.0 is not yet public. The remaining release gate is owner merge,
+automatic stage, owner promotion and a successful parent registry smoke check.
+Do not install a guessed version or commit a vendor/tarball copy. These records
+and preparation checks do not establish shared-package migration readiness.
+
+Independent preparation now initializes product translations from a supplied
+locale, separates the locale/metadata bridge from legacy theme mutation, isolates
+the project brand and in-page links, and adds the trusted Worker request/cache
+boundary. Nine regression cases bring the unit suite to 41 tests. The runtime
+still uses the existing local preferences until the package is public.
 
 ## Approved target and ownership
 

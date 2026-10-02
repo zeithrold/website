@@ -5,7 +5,7 @@ import { useCopy } from '@/components/preferences-hooks'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 
-export { BrandMark } from '@/components/site-header'
+export { BrandMark } from '@/components/brand-mark'
 
 export function SiteShell({ children }: { children: ReactNode }): ReactElement {
   const t = useCopy()

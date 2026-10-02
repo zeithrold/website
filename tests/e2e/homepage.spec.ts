@@ -164,10 +164,14 @@ test('browser locale, system theme and unavailable storage', async ({ browser })
 test('production Worker serves 404 routes and assets', { tag: '@a11y' }, async ({ page, request }, info) => {
   const response = await page.goto('/does-not-exist')
   expect(response?.status()).toBe(404)
+  expect(response?.headers()['cache-control']).toBe('private, no-store')
+  expect(response?.headers().vary).toContain('Cookie')
+  expect(response?.headers().vary).toContain('Accept-Language')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('A page still to be made.')
   await assertAccessible(page, info, { label: 'not-found' })
   await page.getByRole('link', { name: 'Back to ztd.me', exact: true }).click()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ideas intouseful things.')
+  expect((await request.get('/')).headers()['cache-control']).toBe('private, no-store')
   for (const path of [
     '/favicon.svg',
     '/og.png',
@@ -177,6 +181,7 @@ test('production Worker serves 404 routes and assets', { tag: '@a11y' }, async (
     const asset = await request.get(path)
     expect(asset.status()).toBe(200)
     expect(asset.headers()['x-content-type-options']).toBe('nosniff')
+    expect(asset.headers()['cache-control']).not.toContain('private')
   }
 })
 

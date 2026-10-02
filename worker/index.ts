@@ -1,5 +1,11 @@
 import app from 'vinext/server/fetch-handler'
+import { frontendRenderRequest, privateApplicationResponse } from '../lib/frontend-request'
 import { routeRequest } from '../lib/routing'
+
+async function renderApplication(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const response = await app.fetch(frontendRenderRequest(request), env, ctx)
+  return privateApplicationResponse(response)
+}
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -18,11 +24,11 @@ export default {
       }
       else {
         await asset.body?.cancel()
-        response = await app.fetch(request, env, ctx)
+        response = await renderApplication(request, env, ctx)
       }
     }
     else {
-      response = await app.fetch(request, env, ctx)
+      response = await renderApplication(request, env, ctx)
     }
     const secured = new Response(response.body, response)
     secured.headers.set('X-Content-Type-Options', 'nosniff')

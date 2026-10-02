@@ -31,7 +31,7 @@ required `frontend` profile maps native commands as follows:
 | lint | `pnpm lint` | Strict ESLint, zero errors and warnings |
 | css | `pnpm lint:css` | Standalone CSS plus cross-file token inventory |
 | typecheck | `pnpm check:types` | Regenerate bindings, require no drift, run TypeScript |
-| unit | `pnpm test` | 32 routing, preference and deployment-boundary tests |
+| unit | `pnpm test` | 41 routing, preference, translation, SSR/cache and deployment-boundary tests |
 | build | `pnpm check:worker` | Build once and check the original deployment configuration |
 | e2e | `pnpm check:browser` | Full production-Worker browser suite, then recheck deployment boundaries |
 | integration | `pnpm check:evidence` | Deliberate accessibility failure must retain complete useful evidence |
