@@ -1,3 +1,5 @@
+import { isRecord } from "./value-guards.ts";
+
 export const PREFERENCES_KEY = "ztd.home.v1";
 export type Locale = "en" | "zh-CN";
 export type Theme = "light" | "dark";
@@ -8,10 +10,11 @@ export function detectLocale(languages: readonly string[]): Locale {
 }
 
 export function readPreferences(value: unknown, fallback: Preferences): Preferences {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return fallback;
-  const record = value as Record<string, unknown>;
+  if (!isRecord(value)) {
+    return fallback;
+  }
   return {
-    locale: record.locale === "en" || record.locale === "zh-CN" ? record.locale : fallback.locale,
-    theme: record.theme === "light" || record.theme === "dark" ? record.theme : fallback.theme,
+    locale: value.locale === "en" || value.locale === "zh-CN" ? value.locale : fallback.locale,
+    theme: value.theme === "light" || value.theme === "dark" ? value.theme : fallback.theme,
   };
 }

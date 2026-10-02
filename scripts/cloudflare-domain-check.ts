@@ -37,7 +37,8 @@ export async function checkCloudflareTarget(
   for (const host of hosts) {
     const records = await read({ hostname: host });
     assert.equal(records.length, 1, `Required ${host} Custom Domain is missing or ambiguous`);
-    const domain = records[0];
+    const [domain] = records;
+    assert.ok(domain !== undefined, `Required ${host} Custom Domain is missing`);
     assert.equal(domain.hostname, host);
     assert.equal(domain.zone_name, host === "www.zeithrold.dev" ? "zeithrold.dev" : host);
     assert.match(domain.zone_id, /^[a-f0-9]{32}$/);

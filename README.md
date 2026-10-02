@@ -47,8 +47,9 @@ Stop a local Worker before rebuilding its `dist/` directory.
 - `lib/projects.ts`: editable project selection and links.
 - `lib/copy.ts`: paired, typed English/Chinese copy.
 - `app/globals.css`: local Inter/DM Sans and the warm-white/ink/terracotta system.
-- `components/homepage.tsx`: project diagrams, service cards, and contact section.
+- `components/home/`: project diagrams, service cards, and homepage sections.
 - [Content evidence and selection policy](docs/content.md).
+- [Strict ESLint migration preparation and release-age blocker](docs/eslint-migration.md).
 
 The selection is editorial, not a claim about current priorities or project
 availability. Tools is explicitly early development. Its implemented inspect,

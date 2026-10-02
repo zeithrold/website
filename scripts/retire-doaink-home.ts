@@ -95,7 +95,9 @@ export async function retireDoainkHome(
   const deployments = await read<{ deployments: { versions: { version_id: string }[] }[] }>(`/scripts/${LEGACY_WORKER_NAME}/deployments`);
   const versions = deployments.deployments[0]?.versions;
   assert.ok(Array.isArray(versions) && versions.length === 1, "Unexpected legacy active deployment");
-  const versionId = versions[0].version_id;
+  const [activeVersion] = versions;
+  assert.ok(activeVersion !== undefined, "Unexpected legacy active deployment");
+  const versionId = activeVersion.version_id;
   assert.match(versionId, /^[a-f0-9-]{36}$/, "Invalid version ID");
   const version = await read<{ resources: { script: { handlers: string[] } } }>(`/scripts/${LEGACY_WORKER_NAME}/versions/${versionId}`);
   assert.deepEqual(version.resources.script.handlers, ["fetch"], "Old Worker has other event handlers/integrations");

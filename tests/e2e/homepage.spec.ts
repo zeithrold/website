@@ -128,3 +128,20 @@ test("real Worker redirects before assets and refuses service hosts", async ({ r
     expect(response.headers().location).toBeUndefined();
   }
 });
+
+test("malformed stored preferences fall back and valid fields restore independently", async ({ browser }) => {
+  for (const stored of ["{broken", JSON.stringify({ locale: "en", theme: "sepia" })]) {
+    const context = await browser.newContext({ locale: "zh-CN", colorScheme: "dark" });
+    await context.addInitScript((value) => {
+      localStorage.setItem("ztd.home.v1", value);
+    }, stored);
+    const page = await context.newPage();
+    await page.goto("http://127.0.0.1:4173/");
+    const locale = stored === "{broken" ? "zh-CN" : "en";
+    await expect(page.locator("html")).toHaveAttribute("lang", locale);
+    await expect(page.locator("html")).toHaveClass("dark");
+    const description = page.locator('meta[name="description"]');
+    await expect(description).toHaveAttribute("content", locale === "en" ? /Projects, experiments/ : /项目、实验与文字/);
+    await context.close();
+  }
+});
