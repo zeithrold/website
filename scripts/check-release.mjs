@@ -1,4 +1,5 @@
-import { assertReleaseRequest } from "./deployment-policy.ts";
+import process from 'node:process'
+import { assertReleaseRequest } from './deployment-policy.ts'
 
 assertReleaseRequest({
   repository: process.env.GITHUB_REPOSITORY,
@@ -6,5 +7,5 @@ assertReleaseRequest({
   ref: process.env.GITHUB_REF,
   actualCommit: process.env.GITHUB_SHA,
   accountId: process.env.CLOUDFLARE_ACCOUNT_ID,
-});
-console.log("Release verified: main push, workflow commit, existing account and five approved hosts.");
+})
+console.log('Release verified: main push, workflow commit, existing account and five approved hosts.')
