@@ -13,7 +13,7 @@ no KV, R2, D1, database, external font service, or other addons.
 
 ## Develop and verify
 
-Use Node.js 24 and pnpm 10.33.0 (declared in `package.json`).
+Use Node.js 24 and pnpm 11.22.0 (declared in `package.json`).
 
 ```sh
 pnpm install --frozen-lockfile

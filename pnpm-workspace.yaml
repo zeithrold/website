@@ -1,6 +1,9 @@
 minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   - '@ztd-me/eslint'
+minimumReleaseAgeExcludePrune: true
+shellEmulator: true
+trustPolicy: no-downgrade
 
 packages:
   - .

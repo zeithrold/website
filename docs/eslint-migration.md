@@ -16,6 +16,25 @@ The user explicitly approved `minimumReleaseAgeExclude` **only for
 gate, build-script allowlist and patched ZIP-decoder override remain intact;
 transitive and unrelated dependencies have no new age exception.
 
+The coordinated follow-up pins pnpm 11.22.0 and enables the approved
+`minimumReleaseAgeExcludePrune: true`, `shellEmulator: true` and
+`trustPolicy: no-downgrade` settings. The public pnpm release requires Node >=22.13;
+Node 24 is compatible. Its implementation supports all three settings, including
+exception pruning added in 11.22.0. Unused package-age exceptions are pruned,
+scripts use pnpm's shell emulator and dependency trust downgrades are rejected.
+
+The pnpm 11 frozen installation rejects the existing `semver@6.3.1` lock entry
+with `ERR_PNPM_TRUST_DOWNGRADE`. Babel 7's core and compilation-target helper
+require `semver ^6.3.1`; 6.3.1 is the newest 6.x release. The registry records
+provenance for 7.5.4, published on 2023-07-07, followed by 6.3.1 without provenance
+on 2023-07-10. pnpm compares trust by publication date, across major versions.
+An ordinary targeted resolution also fails the existing-lockfile policy check.
+Waiting for the release-age gate does not resolve this trust-policy conflict.
+
+No trust exception or check bypass has been added. Resolving this requires a
+separate dependency scope decision, such as a verified Babel-only semver 7
+override or a Babel major upgrade. The framework fix alone cannot unblock install.
+
 ## Refactors and checks
 
 - Extract homepage sections, diagrams, controls and footer while preserving
@@ -39,10 +58,8 @@ ignored, no rules are suppressed and no numeric limits are relaxed.
 
 ## Upstream blockers in 0.1.0
 
-Full lint reports four errors and zero warnings. All independent code violations
-are resolved. These remaining errors need an upstream published fix or explicit
-narrow authorization for the additional pnpm policy changes; no local rule
-overrides have been added.
+The remaining framework error needs an upstream published fix. All independent
+code violations are resolved, and no local rule overrides have been added.
 
 ### Framework metadata
 
@@ -61,26 +78,9 @@ including this TSX file, and `noUncheckedIndexedAccess: true`. The named metadat
 export is required by the vinext/Next App Router. Preserve this convention;
 do not disable Fast Refresh globally or move the framework export to evade it.
 
-### pnpm policy requirements
-
-`pnpm exec eslint pnpm-workspace.yaml` reports `pnpm/yaml-enforce-settings`
-three times, requiring these absent settings:
-
-```text
-minimumReleaseAgeExcludePrune: true
-shellEmulator: true
-trustPolicy: no-downgrade
-```
-
-The checked-in workspace file reproduces the conflict. The user approved only
-a package-specific age exception while requiring all other supply-chain policies
-to remain intact. These inherited settings change that policy or script execution.
-Autofix added them once during exploration; they were removed before committing.
-A framework fix alone will not resolve this separate policy conflict.
-
 ## Validation and completion
 
-On Node 24.19.0 / pnpm 10.33.0, frozen installation, generated bindings without
+On the prior Node 24.19.0 / pnpm 10.33.0 validation, frozen installation, generated bindings without
 drift, type checking, all 39 unit tests, the production Worker build and
 build/deployment boundary guards passed. All 11 Chromium browser tests passed
 against the
@@ -88,7 +88,14 @@ production Worker, covering both languages/themes, WCAG AA,
 320/390/768px layouts, keyboard navigation, reduced motion, saved or unavailable
 storage, malformed preference values, metadata, local assets, redirects and 404s.
 
-Keep the PR in draft until a published, verified package resolves the four errors
+With pnpm 11.22.0, the CLI runs and reads all three approved settings correctly.
+Frozen install and targeted semver resolution fail on the trust-policy conflict
+above. `pnpm test` also stops at pnpm's automatic dependency preflight before
+executing tests. Generated bindings, full lint, type checking, build and browser
+tests cannot be rerun until installation succeeds; earlier results do not establish
+validation of this pnpm upgrade.
+
+Keep the PR in draft until installation and the framework error are resolved
 and all final checks pass. Any follow-up must use the public registry and preserve
 the package-only age exception:
 
