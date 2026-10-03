@@ -1,14 +1,14 @@
 # ztd.me
 
 Zeithrold's personal index: selected open-source projects, experiments, writing,
-and `hello@ztd.me`. English and Simplified Chinese, light/dark themes, local fonts,
+and `hello@ztd.me`. English and Simplified Chinese, light/dark/system modes, six palettes, local fonts,
 keyboard navigation, and reduced-motion support.
 
 Built with vinext App Router, React, TypeScript, Vite, Tailwind, Shadcn's new-york
-Button, Radix, and Lucide. Architecture and visual foundations follow
-[zeithrold/showcase](https://github.com/zeithrold/showcase), reviewed at
-`3466f3a6afa363fcd7fb5cdbd6d6e91fac844cc1` on 2026-10-01. The layout is a project
-index, with no clock implementation. One Cloudflare Worker plus built-in `ASSETS`;
+Button, Radix, and Lucide. Published `@ztd-me/frontend@0.2.0` provides the shared
+appbar/footer, appearance controls and UI locale preferences. Neutral/system is
+the default; product content, diagrams and in-page links remain website-owned.
+One Cloudflare Worker plus built-in `ASSETS`;
 no KV, R2, D1, database, external font service, or other addons.
 
 ## Develop and verify
@@ -56,13 +56,13 @@ Stop a local Worker before rebuilding its `dist/` directory.
 
 - `lib/projects.ts`: editable project selection and links.
 - `lib/copy.ts`: paired, typed English/Chinese copy.
-- `app/globals.css`: local Inter/DM Sans and the warm-white/ink/terracotta system.
+- `app/globals.css`: bundled Inter, local DM Sans and mappings to shared palette tokens.
 - `components/home/`: project diagrams, service cards, and homepage sections.
 - [Content evidence and selection policy](docs/content.md).
 - [Strict ESLint configuration and dependency policy](docs/eslint-migration.md).
 - [Verification guide](docs/verification.md).
 - [Frontend foundations, token roles and Skill source](docs/frontend-foundation.md).
-- [Unified frontend migration checkpoint](docs/unified-frontend-migration.md).
+- [Shared frontend ownership, SSR and preferences](docs/unified-frontend-migration.md).
 
 The selection is editorial, not a claim about current priorities or project
 availability. Tools is explicitly early development. Its implemented inspect,

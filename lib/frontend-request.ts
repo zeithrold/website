@@ -4,8 +4,6 @@ const DEPLOYMENT_HEADER = 'x-ztd-frontend-deployment'
 
 interface WebsiteDeployment {
   environment: 'production' | 'development'
-  namespace: 'website'
-  hostname: 'ztd.me' | 'localhost'
   protocol: 'http:' | 'https:'
 }
 
@@ -25,12 +23,10 @@ export function frontendRenderRequest(request: Request): Request {
 export function frontendDeployment(headers: Headers, builtWorker: boolean = false): WebsiteDeployment {
   const deployment = builtWorker ? headers.get(DEPLOYMENT_HEADER) : null
   if (deployment === 'production') {
-    return { environment: 'production', namespace: 'website', hostname: 'ztd.me', protocol: 'https:' }
+    return { environment: 'production', protocol: 'https:' }
   }
   return {
     environment: 'development',
-    namespace: 'website',
-    hostname: 'localhost',
     protocol: deployment === 'development-https' ? 'https:' : 'http:',
   }
 }

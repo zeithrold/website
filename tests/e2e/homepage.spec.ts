@@ -1,18 +1,17 @@
 import { expect, test } from '@playwright/test'
 import { assertAccessible, captureState } from '@ztd-me/frontend-checks/playwright'
+import { chooseLocale, chooseMode } from './frontend-helpers'
 
 test('WCAG AA checks in both languages and themes', { tag: '@a11y' }, async ({ page }, info) => {
   await page.goto('/')
-  await expect(page.getByRole('button', { name: '切换到中文' })).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'Appearance', exact: true })).toBeEnabled()
   for (const locale of ['en', 'zh-CN']) {
     if (locale === 'zh-CN') {
-      await page.getByRole('button', { name: '切换到中文' }).click()
+      await chooseLocale(page, 'zh-CN')
     }
     for (const theme of ['light', 'dark']) {
       if (theme === 'dark') {
-        await page
-          .getByRole('button', { name: locale === 'en' ? 'Switch to dark theme' : '切换到深色主题' })
-          .click()
+        await chooseMode(page, 'dark')
       }
       // Audit settled colors, including the button's hydration opacity transition.
       await page.evaluate(async () => {
@@ -23,9 +22,7 @@ test('WCAG AA checks in both languages and themes', { tag: '@a11y' }, async ({ p
       })
       await assertAccessible(page, info, { label: `homepage-${locale}-${theme}` })
     }
-    await page
-      .getByRole('button', { name: locale === 'en' ? 'Switch to light theme' : '切换到浅色主题' })
-      .click()
+    await chooseMode(page, 'light')
   }
 })
 
@@ -46,7 +43,7 @@ test('desktop content, outbound links, metadata and local assets', async ({ page
   })
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ideas intouseful things.')
-  await expect(page.getByRole('button', { name: '切换到中文' })).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'Appearance', exact: true })).toBeEnabled()
   for (const href of [
     'https://github.com/zeithrold',
     'https://github.com/zeithrold/memory',
@@ -75,14 +72,14 @@ test('desktop content, outbound links, metadata and local assets', async ({ page
 
 test('language and theme persist after reload', async ({ page }, info) => {
   await page.goto('/')
-  await page.getByRole('button', { name: '切换到中文' }).click()
+  await chooseLocale(page, 'zh-CN')
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('让想法，变得有用。')
-  await page.getByRole('button', { name: '切换到深色主题' }).click()
-  await expect(page.locator('html')).toHaveClass('dark')
+  await chooseMode(page, 'dark')
+  await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark')
   await page.reload()
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN')
-  await expect(page.locator('html')).toHaveClass('dark')
+  await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark')
   await captureState(page, info, 'desktop-zh-dark')
 })
 
@@ -96,7 +93,7 @@ for (const width of [
     await page.goto('/')
     for (const language of ['en', 'zh-CN']) {
       if (language === 'zh-CN') {
-        await page.getByRole('button', { name: '切换到中文' }).click()
+        await chooseLocale(page, 'zh-CN')
       }
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
@@ -131,12 +128,10 @@ test('keyboard navigation, anchors and reduced motion', { tag: '@a11y' }, async 
       .first()
       .evaluate(node => getComputedStyle(node).transitionDuration),
   ).toBe('0s')
-  await page.getByRole('button', { name: '切换到中文' }).focus()
-  await page.keyboard.press('Enter')
+  await chooseLocale(page, 'zh-CN')
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN')
-  await page.getByRole('button', { name: '切换到深色主题' }).focus()
-  await page.keyboard.press('Space')
-  await expect(page.locator('html')).toHaveClass('dark')
+  await chooseMode(page, 'dark')
+  await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark')
   await captureState(page, info, 'keyboard-zh-dark-reduced-motion')
 })
 
@@ -154,8 +149,8 @@ test('browser locale, system theme and unavailable storage', async ({ browser })
   page.on('pageerror', error => errors.push(error.message))
   await page.goto('http://127.0.0.1:4173/')
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN')
-  await expect(page.locator('html')).toHaveClass('dark')
-  await page.getByRole('button', { name: 'Switch to English' }).click()
+  await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark')
+  await chooseLocale(page, 'en')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ideas intouseful things.')
   expect(errors).toEqual([])
   await context.close()
@@ -213,20 +208,24 @@ test('real Worker redirects before assets and refuses service hosts', async ({ r
   }
 })
 
-test('malformed stored preferences fall back and valid fields restore independently', async ({ browser }) => {
+test('current-format cookies fall back and valid fields restore independently', async ({ browser }) => {
   for (const stored of [
     '{broken',
-    JSON.stringify({ locale: 'en', theme: 'sepia' }),
+    JSON.stringify({ version: 1, locale: 'en', mode: 'sepia', palette: 'neutral' }),
   ]) {
     const context = await browser.newContext({ locale: 'zh-CN', colorScheme: 'dark' })
-    await context.addInitScript((value) => {
-      localStorage.setItem('ztd.home.v1', value)
-    }, stored)
+    await context.addCookies([
+      {
+        name: 'ztd.frontend.development.website.v1',
+        value: encodeURIComponent(stored),
+        url: 'http://127.0.0.1:4173',
+      },
+    ])
     const page = await context.newPage()
     await page.goto('http://127.0.0.1:4173/')
     const locale = stored === '{broken' ? 'zh-CN' : 'en'
     await expect(page.locator('html')).toHaveAttribute('lang', locale)
-    await expect(page.locator('html')).toHaveClass('dark')
+    await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark')
     const description = page.locator('meta[name="description"]')
     await expect(description).toHaveAttribute(
       'content',

@@ -14,7 +14,7 @@ html:lang(zh-CN) .eyebrow {
 }
 
 @media (width <= 960px) {
-  .site-shell {
+  .site-content {
     width: calc(100% - 64px);
   }
 
@@ -42,24 +42,11 @@ html:lang(zh-CN) .eyebrow {
     display: none;
   }
 
-  .footer-caption, .footer-separator {
-    display: none;
-  }
 }
 
 @media (width <= 700px) {
-  .site-shell {
+  .site-content {
     width: calc(100% - 40px);
-  }
-
-  .site-header {
-    height: 87px;
-    gap: 10px;
-  }
-
-  .brand {
-    font-size: 20px;
-    gap: 9px;
   }
 
   .brand-mark {
@@ -70,21 +57,12 @@ html:lang(zh-CN) .eyebrow {
     width: 22px;
   }
 
-  .header-nav {
+  .site-section-links {
     gap: 17px;
   }
 
   .nav-link {
     font-size: 11px;
-  }
-
-  .preferences {
-    margin-left: 2px;
-    gap: 1px;
-  }
-
-  .nav-divider {
-    display: none;
   }
 
   .hero {
@@ -247,12 +225,8 @@ html:lang(zh-CN) .eyebrow {
     margin-left: auto;
   }
 
-  .site-footer {
+  .site-afterword {
     padding: 16px 0 20px;
-  }
-
-  .site-footer > div {
-    gap: 16px;
   }
 
   .not-found {
@@ -269,30 +243,13 @@ html:lang(zh-CN) .eyebrow {
 }
 
 @media (width <= 520px) {
-  .site-header {
-    flex-wrap: wrap;
-    height: auto;
-    padding: 21px 0 13px;
-    row-gap: 7px;
-  }
-
-  .header-nav {
-    order: 3;
-    flex-basis: 100%;
+  .site-section-links {
     gap: 25px;
     margin-left: 0;
   }
 
-  .preferences {
-    margin-left: auto;
-  }
-
   .nav-link {
-    min-height: 34px;
-  }
-
-  .language-button, .theme-button {
-    height: 44px;
+    min-height: 44px;
   }
 
   .hero {
@@ -323,7 +280,7 @@ html:lang(zh-CN) .eyebrow {
 }
 
 @media (width <= 360px) {
-  .site-shell {
+  .site-content {
     width: calc(100% - 32px);
   }
 

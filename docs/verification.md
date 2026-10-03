@@ -27,7 +27,7 @@ workspace, use writable temporary XDG/config/log directories as described in the
 | Unit tests | 41 tests: routing, preferences, translation initialization, SSR/cache and deployment/domain boundaries |
 | Production build | Production Worker and generated `dist/server/wrangler.json` |
 | Build boundary checks | One Worker + ASSETS, exactly five approved domains, no addons or previews, Vercel Git deploy disabled |
-| Chromium suite | 13 tests against the local production Worker, including variant regression fixtures |
+| Chromium suite | 33 tests against the local production Worker, including variant regression fixtures |
 | Failure evidence | Intentional unnamed-button failure must retain its full Axe scan, trace, screenshot, video and reports |
 | Whitespace | `git diff --check` |
 
@@ -38,7 +38,7 @@ network failures must still reject deployment. These tests stub GET responses;
 they do not establish current live Cloudflare ownership.
 
 Browser coverage includes 1440px desktop and 320/390/768px layouts, English and
-Simplified Chinese, light/dark themes, system defaults, saved/malformed/unavailable
+Simplified Chinese, all six palettes and light/dark/system modes, saved/malformed/unavailable
 storage, keyboard skip links and anchors, reduced motion, source/service/contact
 links, local fonts, canonical/Open Graph metadata, 404 navigation and static assets.
 Actual Worker responses cover approved alias hosts and reject excluded/lookalike
@@ -64,6 +64,15 @@ temporary route-free copy to prevent Wrangler from inferring the canonical
 hostname as its local upstream and rewriting redirects. It exercises the same
 bundle and ASSETS. The original five-domain deployment configuration is checked
 again after browser testing.
+
+A second local emulator at port 4174 uses `pnpm start --port 4174 --canonical`.
+Wrangler's native local-upstream/upstream-protocol options present canonical HTTPS
+to the same built Worker. Controlled browser origins are fulfilled through this
+local instance; unmatched network requests are aborted. A synthetic sibling page
+exercises cookie visibility and focus refresh, not the real showcase application.
+No production browser request or remote mutation is required. Development isolation
+is verified against the ordinary local instance; preview hosts remain rejected.
+Both temporary local configs must be removed before the final build guard.
 
 Build output may include nonfatal upstream vinext/Rolldown notices about dynamic
 imports and route classification. Verification exercises the production Worker

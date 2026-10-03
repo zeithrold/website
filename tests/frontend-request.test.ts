@@ -18,8 +18,6 @@ test('canonical rendering replaces forged deployment headers and preserves the r
   const rendered = frontendRenderRequest(request)
   assert.ok(isDeepStrictEqual(frontendDeployment(rendered.headers, true), {
     environment: 'production',
-    namespace: 'website',
-    hostname: 'ztd.me',
     protocol: 'https:',
   }))
   assert.ok(Object.is(rendered.method, 'POST'))
@@ -43,7 +41,6 @@ test('local rendering cannot select production sharing through incoming headers'
     } })
     const actual = frontendDeployment(frontendRenderRequest(request).headers, true)
     assert.ok(Object.is(actual.environment, 'development'))
-    assert.ok(Object.is(actual.hostname, 'localhost'))
     assert.ok(Object.is(actual.protocol, new URL(origin).protocol))
   }
 }).catch(handleRegistrationFailure)
@@ -74,8 +71,6 @@ test('absent or invalid Worker context uses isolated development defaults', () =
     }))
     assert.ok(isDeepStrictEqual(actual, {
       environment: 'development',
-      namespace: 'website',
-      hostname: 'localhost',
       protocol: 'http:',
     }))
   }

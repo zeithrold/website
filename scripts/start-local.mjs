@@ -6,7 +6,10 @@ import { assertDeploymentConfig } from './deployment-policy.ts'
 
 const config = JSON.parse(readFileSync('dist/server/wrangler.json', 'utf8'))
 assertDeploymentConfig(config)
-const { values } = parseArgs({ options: { port: { type: 'string', default: '4173' } } })
+const { values } = parseArgs({ options: {
+  port: { type: 'string', default: '4173' },
+  canonical: { type: 'boolean', default: false },
+} })
 const port = values.port
 if (!/^\d+$/.test(port) || Number(port) < 1 || Number(port) > 65535) {
   throw new Error('Use a local port from 1 to 65535')
@@ -28,6 +31,14 @@ const child = spawn(
     '127.0.0.1',
     '--port',
     port,
+    ...(values.canonical
+      ? [
+          '--local-upstream',
+          'ztd.me',
+          '--upstream-protocol',
+          'https',
+        ]
+      : []),
   ],
   { stdio: 'inherit' },
 )

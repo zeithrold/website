@@ -1,14 +1,15 @@
 import { expect, test } from '@playwright/test'
 import { assertAccessible, captureState } from '@ztd-me/frontend-checks/playwright'
 import { buttonVariants } from '../../components/ui/button-variants'
+import { chooseMode } from './frontend-helpers'
 
 for (const theme of ['light', 'dark']) {
   test(`destructive and invalid button tokens render in ${theme}`, { tag: '@a11y' }, async ({ page }, info) => {
     await page.goto('/')
-    await expect(page.getByRole('button', { name: '切换到中文' })).toBeEnabled()
+    await expect(page.getByRole('button', { name: 'Appearance', exact: true })).toBeEnabled()
     if (theme === 'dark') {
-      await page.getByRole('button', { name: 'Switch to dark theme' }).click()
-      await expect(page.locator('html')).toHaveClass('dark')
+      await chooseMode(page, 'dark')
+      await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark')
     }
     // Supplemental component fixtures exercise unused variants without adding product controls.
     await page.evaluate(({ destructive, invalid }) => {

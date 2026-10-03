@@ -34,14 +34,14 @@ automatically. Review claims against each README when changing copy.
 
 ## Visual contract
 
-Follow showcase's local Inter and DM Sans, warm white `#f5f3ee`, ink `#292822`,
-terracotta `#dc613d`, soft borders, rounded surfaces and whitespace. The homepage
-uses a connected-ideas illustration and project architecture sketches. Muted text
-is darker than showcase's original light palette for readable small text. Accent
-text uses `#a84225`; terracotta remains an icon/decorative color.
+The shared frontend package supplies Inter, the appbar/footer and six palettes;
+neutral/system is the default. Local DM Sans, the connected-ideas illustration,
+project architecture sketches, rounded content surfaces and editorial hierarchy
+remain website-owned. Product color roles map to the package's semantic tokens.
+See [shared frontend integration](unified-frontend-migration.md) for ownership,
+SSR, cookie/locale sharing, legacy migration and storage recovery.
 
-Language and theme are local browser preferences, scoped to `ztd.home.v1`.
-They do not read or change showcase's stored preferences. The initial server HTML
-is English/light, then the browser restores valid saved choices or system defaults.
-Storage failure is nonfatal. CSS respects `prefers-reduced-motion`; all outbound
-links stay ordinary same-tab links. Contact is an email link, with no form or addon.
+English/Simplified Chinese copy remains paired and typed. Appearance and UI locale
+may share across production ztd.me subdomains; auth and business data do not. CSS
+respects reduced motion, outbound links remain ordinary same-tab links, and contact
+is an email link without a form or addon.

@@ -1,10 +1,14 @@
 import type { Metadata } from 'next'
 import type { ReactElement, ReactNode } from 'react'
-import { PreferencesProvider } from '@/components/preferences-provider'
-import { en } from '@/lib/copy'
+import { frontendRootAttributes } from '@ztd-me/frontend'
+import { headers } from 'next/headers'
+import { WebsiteFrontend } from '@/components/website-frontend'
+import { en, zh } from '@/lib/copy'
+import { resolveWebsiteFrontend } from '@/lib/website-frontend'
+import '@ztd-me/frontend/styles.css'
 import './globals.css'
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   title: 'Zeithrold — Projects, experiments & notes',
   description: en['meta.description'],
   metadataBase: new URL('https://ztd.me'),
@@ -27,8 +31,23 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>): ReactElement {
+export async function generateMetadata(): Promise<Metadata> {
+  const { initialPreferences } = resolveWebsiteFrontend(await headers())
+  const copy = initialPreferences.locale === 'zh-CN' ? zh : en
+  const description = copy['meta.description']
+  return {
+    ...baseMetadata,
+    description,
+    openGraph: { ...baseMetadata.openGraph, description },
+    twitter: { ...baseMetadata.twitter, description },
+  }
+}
+
+export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>): Promise<ReactElement> {
+  const props = resolveWebsiteFrontend(await headers())
   return (
-    <html lang="en"><body><PreferencesProvider>{children}</PreferencesProvider></body></html>
+    <html {...frontendRootAttributes(props.initialPreferences)}>
+      <body><WebsiteFrontend {...props}>{children}</WebsiteFrontend></body>
+    </html>
   )
 }
