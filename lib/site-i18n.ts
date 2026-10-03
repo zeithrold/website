@@ -1,5 +1,5 @@
+import type { Locale } from '@ztd-me/frontend'
 import type { i18n } from 'i18next'
-import type { Locale } from './preferences'
 import { createInstance } from 'i18next'
 import { en, zh } from './copy.ts'
 
@@ -29,10 +29,5 @@ export function applySiteLocale(instance: i18n, locale: Locale): void {
   const description = instance.getFixedT(locale)('meta.description')
   document.querySelector('meta[name="description"]')?.setAttribute('content', description)
   document.querySelector('meta[property="og:description"]')?.setAttribute('content', description)
-}
-
-export function applySitePreferences(instance: i18n, preferences: { locale: Locale, theme: string }): void {
-  document.documentElement.classList.toggle('dark', preferences.theme === 'dark')
-  document.documentElement.lang = preferences.locale
-  applySiteLocale(instance, preferences.locale)
+  document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', description)
 }

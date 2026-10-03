@@ -1,6 +1,6 @@
 # Website frontend foundations
 
-The executable helper is the registry package `@ztd-me/frontend-checks@0.1.0`,
+The executable helper is the registry package `@ztd-me/frontend-checks@0.1.1`,
 with `@playwright/test@1.62.0`. Strict `@ztd-me/eslint@0.1.1`, TypeScript 6.0.3,
 Node 24 and pnpm 11.22.0 remain in use. Vite is pinned to its existing tested
 8.3.1 resolution to avoid an unrelated upgrade during helper installation.
@@ -31,7 +31,7 @@ required `frontend` profile maps native commands as follows:
 | lint | `pnpm lint` | Strict ESLint, zero errors and warnings |
 | css | `pnpm lint:css` | Standalone CSS plus cross-file token inventory |
 | typecheck | `pnpm check:types` | Regenerate bindings, require no drift, run TypeScript |
-| unit | `pnpm test` | 41 routing, preference, translation, SSR/cache and deployment-boundary tests |
+| unit | `pnpm test` | 41 routing, shared preference, translation, SSR/cache and deployment-boundary tests |
 | build | `pnpm check:worker` | Build once and check the original deployment configuration |
 | e2e | `pnpm check:browser` | Full production-Worker browser suite, then recheck deployment boundaries |
 | integration | `pnpm check:evidence` | Deliberate accessibility failure must retain complete useful evidence |
@@ -49,29 +49,29 @@ screenshot, video and HTML/JSON reports. It changes no product content or servic
 
 ## Local visual and token contract
 
-`app/globals.css` owns font loading, Tailwind theme mappings and light/dark tokens.
-`app/styles/` separates base controls, hero, project diagrams/cards, other sections
-and responsive rules. The original layout, project content and palette are kept.
-Base border resets use the base cascade layer so variant utilities can override
-normal borders for invalid controls.
+Published `@ztd-me/frontend@0.2.0` supplies the appbar/footer, shared controls,
+compiled CSS and Inter font assets. `app/globals.css` imports product styles, loads
+DM Sans and maps business roles to public shared tokens. Neutral/system is default;
+all six palettes and light/dark/system are covered in the browser suite.
 
-The destructive role maps to `#a84225` in light mode and `#ee8661` in dark mode,
-using the existing terracotta palette and CVA's native destructive/invalid styles.
-Supplemental browser fixtures exercise their rendered colors and Axe contrast
-without adding unused product controls. Selection and sketch/diagram/hover shadow
-colors are semantic variables with their original values.
+`app/styles/` separates content layout, hero, diagrams/cards, sections and responsive
+rules. Website content, brand, ordinary source/service links and Button/CVA variants
+remain local. The destructive role stays `#a84225` in light mode and `#ee8661` in dark
+mode, including system-dark before hydration. Browser fixtures verify variant colors
+and contrast without adding unused product controls.
 
-`css-check.config.mjs` selects every handwritten CSS file and Tailwind's theme as
-an explicit declaration source. There are no external-variable exceptions,
-ignored CSS files, local Stylelint rule overrides or suppressed findings. The
-helper statically checks declarations; browser tests validate rendered variants
-and themes. Imported CSS is listed explicitly because the helper does not resolve
-imports. The full-page helper uses its default WCAG 2/2.1/2.2 A/AA tags.
+`css-check.config.mjs` inventories every product CSS file and actual Tailwind/shared
+package declarations. There are no external-variable exemptions, ignored files or
+local Stylelint overrides. Helper 0.1.1 accepts the Tailwind block variant used for
+explicit and system dark; invalid nesting elsewhere remains checked. Cross-file
+inventory complements real browser palette/variant checks.
 
-English/Simplified Chinese, deterministic English/light SSR, `ztd.home.v1` storage,
-system defaults, optional persistence and existing metadata behavior are retained.
-The generic Skills do not replace website content or preferences with another
-project's choices. Visual regression baselines and performance budgets remain deferred.
+SSR initializes root attributes, product translations and localized metadata from
+the same validated cookie/Accept-Language snapshot. English/Simplified Chinese and
+non-sensitive appearance share through the package policy; blocked persistence is
+nonfatal. See [shared frontend integration](unified-frontend-migration.md) for cookie,
+storage isolation, hydration and ownership boundaries. The full-page helper uses its
+default WCAG 2/2.1/2.2 A/AA tags. Visual baselines/performance budgets remain deferred.
 
 ## Evidence and CI
 

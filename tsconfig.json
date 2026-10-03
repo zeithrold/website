@@ -18,6 +18,7 @@
     "resolveJsonModule": true,
     "types": [
       "vinext/types",
+      "vite/client",
       "node",
       "@cloudflare/workers-types"
     ],

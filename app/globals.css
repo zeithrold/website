@@ -7,14 +7,12 @@
 @import url("./styles/sections.css");
 @import url("./styles/responsive.css");
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark {
+  :root[data-frontend-mode="dark"] & { @slot; }
 
-@font-face {
-  font-family: "Inter Variable";
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url("@fontsource-variable/inter/files/inter-latin-wght-normal.woff2") format("woff2");
+  @media (prefers-color-scheme: dark) {
+    :root[data-frontend-mode="system"] & { @slot; }
+  }
 }
 
 @font-face {
@@ -29,8 +27,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
-  --color-primary: var(--foreground);
-  --color-primary-foreground: var(--background);
+  --color-primary: var(--ztd-action);
+  --color-primary-foreground: var(--ztd-action-foreground);
   --color-secondary: var(--subtle);
   --color-secondary-foreground: var(--foreground);
   --color-muted: var(--subtle);
@@ -45,47 +43,41 @@
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 20px;
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
 :root {
-  color-scheme: light;
+  color-scheme: var(--ztd-color-scheme);
 
-  --background: #f5f3ee;
-  --foreground: #292822;
-  --card: #fdfcf9;
-  --subtle: #efede7;
-  --muted-text: #716e64;
-  --border: #e3e0d8;
-  --accent-color: #dc613d;
-  --accent-text: #a84225;
-  --accent-wash: #f1e6dc;
-  --diagram-card: #fdfbf7;
+  --background: var(--ztd-background);
+  --foreground: var(--ztd-foreground);
+  --card: var(--ztd-surface);
+  --subtle: var(--ztd-muted);
+  --muted-text: var(--ztd-muted-foreground);
+  --border: var(--ztd-border);
+  --accent-color: var(--ztd-focus);
+  --accent-text: var(--ztd-accent);
+  --accent-wash: var(--ztd-muted);
+  --diagram-card: var(--ztd-surface);
   --destructive: #a84225;
-  --selection-background: #dc613d30;
+  --selection-background: color-mix(in srgb, var(--ztd-accent) 20%, transparent);
   --shadow-sketch: #25231d04;
   --shadow-diagram: #25231d03;
   --shadow-hover: #25231d05;
 
-  font-family: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Inter Variable", ui-sans-serif, system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
   background: var(--background);
   color: var(--foreground);
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
 }
 
-.dark {
-  color-scheme: dark;
-
-  --background: #1b1c1a;
-  --foreground: #e8e6de;
-  --card: #222320;
-  --subtle: #2c2d29;
-  --muted-text: #a3a297;
-  --border: #3c3d37;
-  --accent-color: #ee8661;
-  --accent-text: #eea487;
-  --accent-wash: #332923;
-  --diagram-card: #292a25;
+:root[data-frontend-mode="dark"] {
   --destructive: #ee8661;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-frontend-mode="system"] {
+    --destructive: #ee8661;
+  }
 }
