@@ -102,6 +102,10 @@ on this Worker. Missing domains or legacy/unexpected owners fail before Wrangler
 so routine deployment cannot repeat the old cutover or reclaim retired bindings.
 This workflow never retires a service.
 
+The deployment checks read only Cloudflare's control-plane API. GitHub Actions
+does not probe the protected public production pages or assets after deployment.
+Local Worker browser tests and real Google Fonts verification remain required.
+
 `vercel.json` disables automatic Vercel Git deployments for this repository. It
 does not modify an existing Vercel project or deployment.
 

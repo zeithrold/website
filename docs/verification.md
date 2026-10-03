@@ -87,5 +87,9 @@ successful main push may deploy its verified artifact; PRs only verify.
 
 For each change, confirm the remote branch and PR head match the tested commit
 and inspect that commit's Actions run. Local checks and mocked domain responses
-do not replace remote CI or current production acceptance. Completed cutover
-records and unverified legacy-service status are in [the history record](retirement.md).
+do not replace remote CI or the deployment's Cloudflare control-plane ownership
+checks. Website's post-deploy check reads only `api.cloudflare.com`; GitHub Actions
+does not fetch public production pages or assets for acceptance. Existing
+deployed-version and traffic checks in other consumers remain control-plane checks.
+The browser suite and actual Google Fonts verification remain required. Completed
+cutover records and unverified legacy-service status are in [the history record](retirement.md).
