@@ -54,23 +54,29 @@ English/Chinese cold and warm budgets remain inside the native browser gates.
 Deploy requires successful verification and an ordinary push to this repository's
 main branch. There is no manual trigger, enabling switch or confirmation parameter.
 The common order is checkout, pnpm/Node setup, frozen dependencies, preparation of
-the production artifact, deployment-boundary checks, deployment, and post-deploy
-verification. Common website/showcase artifact-step names are:
+the production artifact, deployment-boundary checks, deployment, and Cloudflare
+control-plane verification. Common website/showcase artifact-step names are:
 
 - Download the tested Worker
 - Verify deployment boundaries
 - Deploy the tested Worker
-- Verify production deployment
+- Verify Cloudflare deployment state
 
 Preserve project commands and their credential scopes. Website retains its separate
-main/source/account and domain-owner guards before deployment, and repeats its
-GET-only five-domain check afterward. Its existing production environment, secrets,
-permissions, concurrency and immutable build artifact stay unchanged.
+main/source/account and domain-owner guards before deployment. Its final step,
+`Verify production domain owners after deployment`, repeats the GET-only five-domain
+check through `api.cloudflare.com`; it does not fetch the public sites. Its existing
+production environment, secrets, permissions, concurrency and immutable build
+artifact stay unchanged.
 
-Showcase's page/asset comparison script fetches production, so it belongs after
-deployment alongside its existing active-version check. Do not use that production
-comparison as a pre-deploy build check. Its native browser/preference/font suites
-and failure-evidence probe must remain required.
+GitHub Actions must not run public production-site HTTP, page or asset acceptance
+probes against the Cloudflare-protected domains. The owner confirmed a managed
+challenge for Showcase's `GET /` at `2026-10-03T10:59:20Z`: edge HTTP 403, origin
+status 0, Ray `a44b6fd76bcd7e51`. Such a response does not establish application
+failure. Retain existing Cloudflare control-plane deployed-version and traffic
+checks. Native local/CI browser, accessibility, preference, Google Fonts and
+failure-evidence gates remain required. This policy does not change WAF settings,
+credentials or actual deployment.
 
 Memory may keep its broader branch coverage, versioned Chromium cache and 14-day
 evidence retention. Authentication, session, HTTP/MCP/API and two distinct browser
