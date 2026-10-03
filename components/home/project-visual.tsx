@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react'
-import { ArrowRight, ArrowUpRight, Braces, Check, Layers } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Braces, Check, Equal, Layers } from 'lucide-react'
 import { useCopy } from '@/components/preferences-hooks'
 
 function MemoryVisual(): ReactElement {
@@ -39,7 +39,7 @@ function LedgerVisual(): ReactElement {
       <div className="visual-topline">
         <span className="visual-dot" />
         {t('ledger.exact')}
-        <span className="visual-glyph">=</span>
+        <Equal className="visual-glyph" size={13} aria-hidden="true" />
       </div>
       <div className="ledger-diagram" aria-hidden="true">
         <div className="currency-row">

@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "lib": ["esnext"],
+    "types": ["@cloudflare/workers-types"]
+  },
+  "include": ["worker/index.ts", "worker-configuration.d.ts", "types/vinext-worker-entry.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}

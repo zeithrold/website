@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test'
-import type { Locale, Mode, Palette } from '@ztd-me/frontend'
+import type { Locale, Mode, Palette } from '../../components/ui/ztd-me/index.ts'
 import { expect } from '@playwright/test'
 
 const modeLabels = {
@@ -27,6 +27,7 @@ export async function chooseMode(page: Page, mode: Mode): Promise<void> {
   await page.getByRole('button', { name: locale === 'en' ? 'Appearance' : '外观', exact: true }).click()
   await page.getByRole('menuitemradio', { name: modeLabels[locale][mode], exact: true }).click()
   await expect(page.locator('html')).toHaveAttribute('data-frontend-mode', mode)
+  await expect(page.locator('.ztd-overlay')).toHaveCount(0)
 }
 
 export async function choosePalette(page: Page, palette: Palette): Promise<void> {
@@ -34,6 +35,7 @@ export async function choosePalette(page: Page, palette: Palette): Promise<void>
   await page.getByRole('button', { name: locale === 'en' ? 'Appearance' : '外观', exact: true }).click()
   await page.getByRole('menuitemradio', { name: paletteLabels[locale][palette], exact: true }).click()
   await expect(page.locator('html')).toHaveAttribute('data-frontend-palette', palette)
+  await expect(page.locator('.ztd-overlay')).toHaveCount(0)
 }
 
 export async function chooseLocale(page: Page, locale: Locale): Promise<void> {
@@ -41,6 +43,7 @@ export async function chooseLocale(page: Page, locale: Locale): Promise<void> {
   await page.getByRole('combobox', { name: current === 'en' ? 'Language' : '语言' }).click()
   await page.getByRole('option', { name: locale === 'en' ? 'English' : '简体中文', exact: true }).click()
   await expect(page.locator('html')).toHaveAttribute('lang', locale)
+  await expect(page.locator('.ztd-overlay')).toHaveCount(0)
   await expect(page.locator('meta[name="twitter:description"]')).toHaveAttribute(
     'content',
     locale === 'en' ? /Projects, experiments/ : /项目、实验与文字/,

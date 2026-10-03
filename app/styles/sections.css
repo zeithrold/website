@@ -49,7 +49,7 @@
 }
 
 .space-card h3 {
-  font-family: "DM Sans Variable", sans-serif;
+  font-family: var(--ztd-font-sans);
   margin: 0 0 10px;
   font-size: 23px;
   font-weight: 500;
@@ -96,7 +96,7 @@
 }
 
 .contact-section h2 {
-  font-family: "DM Sans Variable", sans-serif;
+  font-family: var(--ztd-font-sans);
   font-size: 30px;
   font-weight: 500;
   letter-spacing: -.85px;
@@ -116,7 +116,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  font-family: "DM Sans Variable", sans-serif;
+  font-family: var(--ztd-font-sans);
   font-size: 29px;
   letter-spacing: -.8px;
   min-height: 48px;

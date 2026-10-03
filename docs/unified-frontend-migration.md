@@ -1,30 +1,33 @@
-# Shared frontend integration
+# Source-owned frontend integration
 
-The website uses published `@ztd-me/frontend@0.2.0` and
-`@ztd-me/frontend-checks@0.1.1` with exact real-registry pins. The owner merged
-reviewed tools source `757ecc6ae77a361680efb9e5875815ff28a65146` at
-`1e8b408ccf165d1b0aa5eca679f9ea62a82cd1a3`; their source trees match exactly.
-The promoted frontend tarball is byte-identical to the tested source candidate.
+The website installs editable `@ztd-me/ui` from public tools source
+`7c708c0e0672a302cd751550276fb7a7a43cf1e5` through `shadcn@4.21.1`.
+The dry run showed all 42 targets absent; the real public install matched every
+item file before intentional local adaptations. `ui-source.lock.json` records
+the public item SHA256, original file hashes and reviewed adaptation hashes.
+`pnpm check:ui` rejects unrecorded changes and runtime dependency regression.
 
-The [generic API upgrade](https://github.com/zeithrold/tools/blob/1e8b408ccf165d1b0aa5eca679f9ea62a82cd1a3/packages/frontend/docs/upgrade-0.2.md)
-removes project enums, legacy storage extraction, automatic deployment/domain
-selection and fixed footer identity. The version-1 preference schema, palette/mode
-values, root attributes, provider and CSS contract are preserved.
+The source replaces `@ztd-me/frontend@0.2.0`. Actual required dependencies use
+exact pins; every unrelated lock resolution is retained. The reviewed Radix
+Select 2.3.7 patch changes declarations only, resolving its `onPlaced` conflict.
+No JavaScript package patch or automatic source synchronization is installed.
+The Google API request uses the variable 400..700 weight range to reduce repeated
+CSS face declarations while retaining every required weight and font family.
+MIT, shadcn MIT and all Noto OFL notices remain with the source.
 
-Independent public-registry downloads match the reviewed package archives:
+The server-safe source module imports use explicit `.ts` extensions so native Node
+unit tests can execute them without a runtime loader. The README example lives
+in `docs/snippets/ui-example.tsx`, included in native lint and strict types. This
+also avoids the published ESLint configuration's typed Markdown virtual-file
+parser issue while preserving a checked, executable example.
 
-| Package | Registry tarball SHA256 |
-| --- | --- |
-| frontend 0.2.0 | `0dbe39fb76dbfd7d45a3d581fb4b66f9e5546ff4736c9e85028874377fda6c5c` |
-| frontend-checks 0.1.1 | `a6ea816b3c4fbae8196784a4d1282e8da9906a6a69f685539c146a30ed7e6774` |
-
-Website preparation PR #11 merged at `20172f6e99d63f0d5c9b4523863b6126a609e41c`.
-The registry lock retains every unrelated resolution, including vinext/cloudflare
-1.0.0, React 19.3.0, TypeScript 6.0.3 and Vite 8.3.1. No temporary tarball dependency,
-vendor copy or transition adapter remains. The separate Inter dependency is removed
-because shared CSS bundles its licensed font files. Release-age policy, its approved
-age-only `@ztd-me/*` exception, trust policy, build permissions and managed Skills
-remain unchanged.
+Application/UI and Worker programs check declarations with `skipLibCheck:false`,
+strict and unchecked indexed access enabled. Cloudflare Workers globals use their
+own program; browser types load only Vite import-meta declarations, since vinext
+already declares CSS/image modules. The separate build-tool program preserves
+the previous `skipLibCheck:true`: Cloudflare Vite/Wrangler declarations refer to
+omitted development-only dependencies. Its source remains strictly type checked
+and receives the full typed ESLint rules. No rule or threshold is reduced.
 
 ## Consumer configuration
 
@@ -53,7 +56,7 @@ key. Notification values are never read. Missing current cookies use negotiated
 locale and default appearance until the user chooses; existing valid version-1
 cookies retain their selections before and after hydration and reload.
 
-Verification covers all seven native gates, 41 unit tests, 33 Chromium tests,
+Verification covers all seven native gates, 41 unit tests and the expanded Chromium suite,
 full Axe scans and retained accessibility-failure evidence. Registry adoption uses
 a frozen real registry lock. Exact-head CI and its actual uploaded evidence must
 pass before review. The integration PR stays draft; only an owner merge can trigger
@@ -61,7 +64,7 @@ the existing main-only deployment.
 
 ## Ownership and composition
 
-The package owns one `FrontendProvider`, `PublicShell`, appbar, footer, Radix
+The installed source owns one `FrontendProvider`, `PublicShell`, appbar, footer, Radix
 Appearance menu and locale Select. Neutral grayscale/system mode is the default.
 Terracotta, moss, ocean, plum and graphite are additional palettes; all six support
 light and dark. UI locales remain English and Simplified Chinese.
@@ -73,9 +76,9 @@ without a year. The three in-page links remain above the content on desktop and
 mobile. The original caption and back-to-top action remain in product content.
 There is one main, skip link and footer; no cross-site menu is added to the appbar.
 
-Homepage/404 content, project data, diagrams, DM Sans, source/service/email links
+Homepage/404 content, project data, diagrams, source/service/email links
 and deployment boundaries remain project-owned. Local Button/CVA variants retain
-link composition; the shared package exports no public Button primitive. Replaced
+link composition; the installed UI exports no public Button primitive. Replaced
 local header/footer, controls/context/store and preference normalizers are removed.
 `preferences-hooks.ts` only provides typed product copy.
 
@@ -125,7 +128,7 @@ last-write-wins values; local storage is neither an SSR nor an auth source.
 
 ## CSS and verification
 
-The root imports compiled package CSS once. Product CSS maps semantic roles to
+The root imports installed source CSS once. Product CSS maps semantic roles to
 public `--ztd-*` tokens without overriding palettes. The website retains its own
 destructive role and validates CVA variants. The CSS gate covers all seven product
 files and actual shared/Tailwind declarations. Helper 0.1.1 accepts Tailwind's block

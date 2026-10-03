@@ -1,12 +1,22 @@
 import type { Page } from '@playwright/test'
-import { expect, test } from '@playwright/test'
-import { preferenceCookie } from '@ztd-me/frontend'
-import { assertAccessible, captureState } from '@ztd-me/frontend-checks/playwright'
+import { expect } from '@playwright/test'
+import { captureState } from '@ztd-me/frontend-checks/playwright'
+import { preferenceCookie } from '../../components/ui/ztd-me/index.ts'
+import { test } from './browser-fixtures'
+import { assertAccessible } from './font-accessibility.mjs'
 import { chooseLocale, chooseMode, choosePalette } from './frontend-helpers'
 
 /** The second local emulator presents a canonical HTTPS URL to the built Worker. */
 async function interceptWebsite(page: Page): Promise<void> {
-  await page.route('**/*', async route => await route.abort())
+  await page.route('**/*', async (route) => {
+    const origin = new URL(route.request().url()).origin
+    if (origin === 'https://fonts.googleapis.com' || origin === 'https://fonts.gstatic.com') {
+      await route.continue()
+    }
+    else {
+      await route.abort()
+    }
+  })
   await page.route('https://ztd.me/**', async (route) => {
     const original = route.request()
     const url = new URL(original.url())

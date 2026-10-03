@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import type { ReactElement, ReactNode } from 'react'
-import { frontendRootAttributes } from '@ztd-me/frontend'
 import { headers } from 'next/headers'
+import { frontendRootAttributes } from '@/components/ui/ztd-me/index'
 import { WebsiteFrontend } from '@/components/website-frontend'
 import { en, zh } from '@/lib/copy'
 import { resolveWebsiteFrontend } from '@/lib/website-frontend'
-import '@ztd-me/frontend/styles.css'
+import '@/components/ui/ztd-me/styles.css'
 import './globals.css'
 
 const baseMetadata: Metadata = {

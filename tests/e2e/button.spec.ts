@@ -1,6 +1,8 @@
-import { expect, test } from '@playwright/test'
-import { assertAccessible, captureState } from '@ztd-me/frontend-checks/playwright'
+import { expect } from '@playwright/test'
+import { captureState } from '@ztd-me/frontend-checks/playwright'
 import { buttonVariants } from '../../components/ui/button-variants'
+import { test } from './browser-fixtures'
+import { assertAccessible } from './font-accessibility.mjs'
 import { chooseMode } from './frontend-helpers'
 
 for (const theme of ['light', 'dark']) {

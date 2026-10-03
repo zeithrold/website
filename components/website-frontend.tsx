@@ -1,10 +1,10 @@
 'use client'
 
-import type { FrontendPreferences, PreferencePolicy } from '@ztd-me/frontend'
 import type { ReactElement, ReactNode } from 'react'
-import { FrontendProvider } from '@ztd-me/frontend/client'
+import type { FrontendPreferences, PreferencePolicy } from '@/components/ui/ztd-me/index'
 import { useCallback, useState } from 'react'
 import { I18nextProvider } from 'react-i18next'
+import { FrontendProvider } from '@/components/ui/ztd-me/client'
 import { applySiteLocale, createSiteI18n } from '@/lib/site-i18n'
 
 export function WebsiteFrontend({ children, initialPreferences, policy }: {

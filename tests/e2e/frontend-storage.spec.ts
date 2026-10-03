@@ -1,5 +1,6 @@
-import { expect, test } from '@playwright/test'
+import { expect } from '@playwright/test'
 import { captureState } from '@ztd-me/frontend-checks/playwright'
+import { test } from './browser-fixtures'
 import { chooseLocale, chooseMode, choosePalette } from './frontend-helpers'
 import { recordedStorageAccess, recordStorageAccess } from './frontend-storage-audit'
 

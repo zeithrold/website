@@ -1,6 +1,8 @@
-import { expect, test } from '@playwright/test'
-import { PALETTES } from '@ztd-me/frontend'
-import { assertAccessible, captureState } from '@ztd-me/frontend-checks/playwright'
+import { expect } from '@playwright/test'
+import { captureState } from '@ztd-me/frontend-checks/playwright'
+import { PALETTES } from '../../components/ui/ztd-me/index.ts'
+import { test } from './browser-fixtures'
+import { assertAccessible } from './font-accessibility.mjs'
 import { chooseLocale, chooseMode, choosePalette } from './frontend-helpers'
 
 test('every palette and explicit mode works with project content', { tag: '@a11y' }, async ({ page }, info) => {

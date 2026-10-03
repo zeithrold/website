@@ -5,7 +5,7 @@ import {
   preferenceCookie,
   readPreferenceCookie,
   resolveInitialPreferences,
-} from '@ztd-me/frontend'
+} from '../components/ui/ztd-me/index.ts'
 import { websitePreferencePolicy } from '../lib/frontend-policy.ts'
 import { frontendDeployment, frontendRenderRequest } from '../lib/frontend-request.ts'
 import { handleRegistrationFailure } from './helpers/registration.ts'

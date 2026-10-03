@@ -49,9 +49,10 @@ screenshot, video and HTML/JSON reports. It changes no product content or servic
 
 ## Local visual and token contract
 
-Published `@ztd-me/frontend@0.2.0` supplies the appbar/footer, shared controls,
-compiled CSS and Inter font assets. `app/globals.css` imports product styles, loads
-DM Sans and maps business roles to public shared tokens. Neutral/system is default;
+Editable `@ztd-me/ui` source at tools commit `7c708c0e0672a302cd751550276fb7a7a43cf1e5`
+supplies the appbar/footer, shared controls and CSS. `app/globals.css` imports product
+styles and maps business roles to public shared tokens. Noto Sans Latin/CJK and
+Noto Color Emoji load directly from the Google Fonts API. Neutral/system is default;
 all six palettes and light/dark/system are covered in the browser suite.
 
 `app/styles/` separates content layout, hero, diagrams/cards, sections and responsive
@@ -61,8 +62,8 @@ mode, including system-dark before hydration. Browser fixtures verify variant co
 and contrast without adding unused product controls.
 
 `css-check.config.mjs` inventories every product CSS file and actual Tailwind/shared
-package declarations. There are no external-variable exemptions, ignored files or
-local Stylelint overrides. Helper 0.1.1 accepts the Tailwind block variant used for
+source declarations. The three explicit external custom properties come from Radix
+Select and DropdownMenu positioning at runtime; every product and source CSS file remains checked. Helper 0.1.1 accepts the Tailwind block variant used for
 explicit and system dark; invalid nesting elsewhere remains checked. Cross-file
 inventory complements real browser palette/variant checks.
 
@@ -71,7 +72,7 @@ the same validated cookie/Accept-Language snapshot. English/Simplified Chinese a
 non-sensitive appearance share through the package policy; blocked persistence is
 nonfatal. See [shared frontend integration](unified-frontend-migration.md) for cookie,
 storage isolation, hydration and ownership boundaries. The full-page helper uses its
-default WCAG 2/2.1/2.2 A/AA tags. Visual baselines/performance budgets remain deferred.
+default WCAG 2/2.1/2.2 A/AA tags. Font transfer budgets and glyph-level browser evidence are required; pixel-diff baselines remain deferred.
 
 ## Evidence and CI
 
