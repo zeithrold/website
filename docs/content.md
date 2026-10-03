@@ -34,12 +34,12 @@ automatically. Review claims against each README when changing copy.
 
 ## Visual contract
 
-The shared frontend package supplies Inter, the appbar/footer and six palettes;
-neutral/system is the default. Local DM Sans, the connected-ideas illustration,
+The installed UI source supplies Google Noto Sans, the appbar/footer and six palettes;
+neutral/system is the default. The connected-ideas illustration,
 project architecture sketches, rounded content surfaces and editorial hierarchy
-remain website-owned. Product color roles map to the package's semantic tokens.
+remain website-owned. Product color roles map to the source's semantic tokens.
 See [shared frontend integration](unified-frontend-migration.md) for ownership,
-SSR, cookie/locale sharing, legacy migration and storage recovery.
+SSR, cookie/locale sharing, storage isolation and recovery.
 
 English/Simplified Chinese copy remains paired and typed. Appearance and UI locale
 may share across production ztd.me subdomains; auth and business data do not. CSS

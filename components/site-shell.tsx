@@ -1,11 +1,11 @@
 'use client'
 
 import type { ReactElement, ReactNode } from 'react'
-import { PublicShell } from '@ztd-me/frontend/client'
 import { ArrowUp } from 'lucide-react'
 import { BrandMark } from '@/components/brand-mark'
 import { useCopy } from '@/components/preferences-hooks'
 import { SiteSectionLinks } from '@/components/site-section-links'
+import { PublicShell } from '@/components/ui/ztd-me/client'
 
 export { BrandMark } from '@/components/brand-mark'
 

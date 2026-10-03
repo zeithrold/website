@@ -1,15 +1,16 @@
 # ztd.me
 
 Zeithrold's personal index: selected open-source projects, experiments, writing,
-and `hello@ztd.me`. English and Simplified Chinese, light/dark/system modes, six palettes, local fonts,
+and `hello@ztd.me`. English and Simplified Chinese, light/dark/system modes, six palettes, Google Noto fonts,
 keyboard navigation, and reduced-motion support.
 
 Built with vinext App Router, React, TypeScript, Vite, Tailwind, Shadcn's new-york
-Button, Radix, and Lucide. Published `@ztd-me/frontend@0.2.0` provides the shared
+Button, Radix, and Lucide. Editable pinned `@ztd-me/ui` source provides the shared
 appbar/footer, appearance controls and UI locale preferences. Neutral/system is
 the default; product content, diagrams and in-page links remain website-owned.
 One Cloudflare Worker plus built-in `ASSETS`;
-no KV, R2, D1, database, external font service, or other addons.
+no KV, R2, D1, database, or other Cloudflare addons.
+Fonts load directly from Google's API; see [source provenance and font policy](docs/source-ui.md).
 
 ## Develop and verify
 
@@ -56,7 +57,7 @@ Stop a local Worker before rebuilding its `dist/` directory.
 
 - `lib/projects.ts`: editable project selection and links.
 - `lib/copy.ts`: paired, typed English/Chinese copy.
-- `app/globals.css`: bundled Inter, local DM Sans and mappings to shared palette tokens.
+- `app/globals.css`: source-owned Google Noto fonts and mappings to shared palette tokens.
 - `components/home/`: project diagrams, service cards, and homepage sections.
 - [Content evidence and selection policy](docs/content.md).
 - [Strict ESLint configuration and dependency policy](docs/eslint-migration.md).

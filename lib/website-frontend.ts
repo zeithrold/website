@@ -1,5 +1,5 @@
-import type { FrontendPreferences, PreferencePolicy } from '@ztd-me/frontend'
-import { resolveInitialPreferences } from '@ztd-me/frontend'
+import type { FrontendPreferences, PreferencePolicy } from '@/components/ui/ztd-me/index'
+import { resolveInitialPreferences } from '@/components/ui/ztd-me/index'
 import { websitePreferencePolicy } from './frontend-policy.ts'
 import { frontendDeployment } from './frontend-request.ts'
 

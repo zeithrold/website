@@ -1,11 +1,13 @@
-import { expect, test } from '@playwright/test'
+import { expect } from '@playwright/test'
 import { captureState } from '@ztd-me/frontend-checks/playwright'
+import { installLocalFontPreview, test } from './browser-fixtures'
 
 const cookieName = 'ztd.frontend.development.website.v1'
 
 test('SSR negotiates locale and renders system dark without JavaScript', async ({ browser }, info) => {
   const context = await browser.newContext({ javaScriptEnabled: false, locale: 'zh-CN', colorScheme: 'dark' })
   const page = await context.newPage()
+  await installLocalFontPreview(page)
   const response = await page.goto('http://127.0.0.1:4173/')
   expect(response?.headers()['cache-control']).toBe('private, no-store')
   expect(response?.headers().vary).toContain('Accept-Language')
@@ -28,6 +30,7 @@ test('cookie snapshot agrees before and after hydration and overrides Accept-Lan
     const context = await browser.newContext({ javaScriptEnabled, locale: 'en-US', colorScheme: 'light' })
     await context.addCookies([cookie])
     const page = await context.newPage()
+    await installLocalFontPreview(page)
     const errors: string[] = []
     page.on('pageerror', error => errors.push(error.message))
     page.on('console', (message) => {

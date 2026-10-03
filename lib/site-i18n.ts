@@ -1,5 +1,5 @@
-import type { Locale } from '@ztd-me/frontend'
 import type { i18n } from 'i18next'
+import type { Locale } from '@/components/ui/ztd-me/index'
 import { createInstance } from 'i18next'
 import { en, zh } from './copy.ts'
 

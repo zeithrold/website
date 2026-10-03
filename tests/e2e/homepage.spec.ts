@@ -1,5 +1,7 @@
-import { expect, test } from '@playwright/test'
-import { assertAccessible, captureState } from '@ztd-me/frontend-checks/playwright'
+import { expect } from '@playwright/test'
+import { captureState } from '@ztd-me/frontend-checks/playwright'
+import { installLocalFontPreview, test } from './browser-fixtures'
+import { assertAccessible } from './font-accessibility.mjs'
 import { chooseLocale, chooseMode } from './frontend-helpers'
 
 test('WCAG AA checks in both languages and themes', { tag: '@a11y' }, async ({ page }, info) => {
@@ -26,7 +28,7 @@ test('WCAG AA checks in both languages and themes', { tag: '@a11y' }, async ({ p
   }
 })
 
-test('desktop content, outbound links, metadata and local assets', async ({ page }, info) => {
+test('desktop content, outbound links, metadata and approved font requests', async ({ page }, info) => {
   await page.setViewportSize({ width: 1440, height: 1000 })
   const errors: string[] = []
   const externalRequests: string[] = []
@@ -62,12 +64,13 @@ test('desktop content, outbound links, metadata and local assets', async ({ page
   await page.evaluate(async () => await document.fonts.ready)
   expect(
     await page.evaluate(
-      () => document.fonts.check('14px "Inter Variable"') && document.fonts.check('14px "DM Sans Variable"'),
+      () => document.fonts.check('14px "Noto Sans"'),
     ),
   ).toBe(true)
   await captureState(page, info, 'desktop-en-light')
   expect(errors).toEqual([])
-  expect(externalRequests).toEqual([])
+  expect(externalRequests.length).toBeGreaterThan(0)
+  expect(externalRequests.every(url => /^https:\/\/(?:fonts.googleapis|fonts.gstatic)\.com\//.test(url))).toBe(true)
 })
 
 test('language and theme persist after reload', async ({ page }, info) => {
@@ -145,6 +148,7 @@ test('browser locale, system theme and unavailable storage', async ({ browser })
     })
   })
   const page = await context.newPage()
+  await installLocalFontPreview(page)
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.message))
   await page.goto('http://127.0.0.1:4173/')
@@ -222,6 +226,7 @@ test('current-format cookies fall back and valid fields restore independently', 
       },
     ])
     const page = await context.newPage()
+    await installLocalFontPreview(page)
     await page.goto('http://127.0.0.1:4173/')
     const locale = stored === '{broken' ? 'zh-CN' : 'en'
     await expect(page.locator('html')).toHaveAttribute('lang', locale)

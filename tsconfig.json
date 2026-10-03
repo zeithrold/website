@@ -18,9 +18,8 @@
     "resolveJsonModule": true,
     "types": [
       "vinext/types",
-      "vite/client",
-      "node",
-      "@cloudflare/workers-types"
+      "vite/types/importMeta.d.ts",
+      "node"
     ],
     "allowImportingTsExtensions": true,
     "allowJs": false,
@@ -29,7 +28,7 @@
     "noEmit": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "skipLibCheck": true
+    "skipLibCheck": false
   },
   "include": [
     "next-env.d.ts",
@@ -41,6 +40,10 @@
     "node_modules",
     "dist",
     "artifacts",
-    "test-results"
+    "test-results",
+    "vite.config.ts",
+    "worker",
+    "worker-configuration.d.ts",
+    "types/vinext-worker-entry.d.ts"
   ]
 }

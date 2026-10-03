@@ -21,7 +21,7 @@
 
 h1 {
   margin: 0;
-  font-family: "DM Sans Variable", "Inter Variable", sans-serif;
+  font-family: var(--ztd-font-sans);
   font-size: clamp(52px, 5.5vw, 74px);
   font-weight: 500;
   letter-spacing: -3.3px;
@@ -154,8 +154,6 @@ h1 > span {
 
 .sketch-plus {
   position: absolute;
-  font-size: 19px;
-  font-weight: 300;
   color: var(--muted-text);
 }
 
@@ -173,7 +171,7 @@ h1 > span {
 .sketch-caption {
   color: var(--muted-text);
   text-align: center;
-  font-family: "DM Sans Variable", sans-serif;
+  font-family: var(--ztd-font-sans);
   font-size: 11px;
   margin: 0;
 }

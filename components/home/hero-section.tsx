@@ -6,6 +6,7 @@ import {
   Braces,
   GitBranch as Github,
   Layers,
+  Plus,
   Sparkles,
 } from 'lucide-react'
 import { useCopy } from '@/components/preferences-hooks'
@@ -36,8 +37,8 @@ function IdeaSketch(): ReactElement {
           <Sparkles size={24} />
           <span>{t('sketch.explore')}</span>
         </div>
-        <span className="sketch-plus plus-one">+</span>
-        <span className="sketch-plus plus-two">+</span>
+        <Plus className="sketch-plus plus-one" size={19} strokeWidth={1.5} aria-hidden="true" />
+        <Plus className="sketch-plus plus-two" size={19} strokeWidth={1.5} aria-hidden="true" />
       </div>
       <p className="sketch-caption">{t('sketch.caption')}</p>
     </div>

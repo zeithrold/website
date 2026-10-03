@@ -40,7 +40,7 @@ they do not establish current live Cloudflare ownership.
 Browser coverage includes 1440px desktop and 320/390/768px layouts, English and
 Simplified Chinese, all six palettes and light/dark/system modes, saved/malformed/unavailable
 storage, keyboard skip links and anchors, reduced motion, source/service/contact
-links, local fonts, canonical/Open Graph metadata, 404 navigation and static assets.
+links, Google Noto glyphs and font transfers, canonical/Open Graph metadata, 404 navigation and static assets.
 Actual Worker responses cover approved alias hosts and reject excluded/lookalike
 hosts. The shared Axe helper checks WCAG 2/2.1/2.2 A/AA rules in both languages and both themes; automated
 checks do not establish a complete accessibility audit. Other browser engines
