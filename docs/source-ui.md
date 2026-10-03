@@ -20,8 +20,10 @@ managed Skills. Normal checks require no registry network access or source updat
 ## Fonts and icons
 
 The UI uses Noto Sans for Latin, Simplified Chinese, Japanese and Korean. Weight
-400/500/600/700 requests match used weights; `font-synthesis:none` prevents faux
-weights. Language rules select Japanese/Korean Noto variants. Noto Color Emoji
+400/500/600/700 use the API's variable `400..700` range; `font-synthesis:none` prevents faux
+weights. This preserves all required weights while removing repeated API CSS
+face rules. [Google documents axis ranges](https://developers.google.com/fonts/docs/css2#axis_ranges).
+Language rules select Japanese/Korean Noto variants. Noto Color Emoji
 renders intentional emoji and complex sequences. The website does not need a serif
 role, so it loads no unused serif family. Action/status/navigation symbols use Lucide;
 the decorative hero plus and accounting equality mark now use its SVGs. Meaningful

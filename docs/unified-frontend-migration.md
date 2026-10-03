@@ -11,6 +11,8 @@ The source replaces `@ztd-me/frontend@0.2.0`. Actual required dependencies use
 exact pins; every unrelated lock resolution is retained. The reviewed Radix
 Select 2.3.7 patch changes declarations only, resolving its `onPlaced` conflict.
 No JavaScript package patch or automatic source synchronization is installed.
+The Google API request uses the variable 400..700 weight range to reduce repeated
+CSS face declarations while retaining every required weight and font family.
 MIT, shadcn MIT and all Noto OFL notices remain with the source.
 
 The server-safe source module imports use explicit `.ts` extensions so native Node
@@ -24,7 +26,7 @@ strict and unchecked indexed access enabled. Cloudflare Workers globals use thei
 own program; browser types load only Vite import-meta declarations, since vinext
 already declares CSS/image modules. The separate build-tool program preserves
 the previous `skipLibCheck:true`: Cloudflare Vite/Wrangler declarations refer to
-unpublished development-only modules. Its source remains strictly type checked
+omitted development-only dependencies. Its source remains strictly type checked
 and receives the full typed ESLint rules. No rule or threshold is reduced.
 
 ## Consumer configuration

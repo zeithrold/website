@@ -53,11 +53,19 @@ export async function fontSession(page) {
 export async function renderedWeight(page) {
   return page.locator('#font-bold strong').evaluate((node) => {
     const canvas = document.createElement('canvas').getContext('2d')
-    const widths = [400, 600].map((weight) => {
+    const widths = [
+      400,
+      500,
+      600,
+      700,
+    ].map((weight) => {
       canvas.font = `${weight} 24px "Noto Sans"`
       return canvas.measureText('English Noto weight').width
     })
-    const faces = Array.from(document.fonts).filter(face => face.weight === '600' && face.status === 'loaded')
+    const faces = Array.from(document.fonts).filter((face) => {
+      const [minimum, maximum = minimum] = face.weight.split(' ').map(Number)
+      return minimum <= 600 && maximum >= 600 && face.status === 'loaded'
+    })
     return {
       weight: getComputedStyle(node).fontWeight,
       synthesis: getComputedStyle(node).fontSynthesis,

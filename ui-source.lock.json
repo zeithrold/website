@@ -73,6 +73,10 @@
     "components/ui/ztd-me/README.md": {
       "sha256": "358549feeaa43e462c16a6da6d90c43a851e07f9cd60da1af5ea18bbb711ee81",
       "reason": "Checked documentation example"
+    },
+    "components/ui/ztd-me/styles/fonts.css": {
+      "sha256": "523c594708d8cf19c4e13c4cfc57b724f559202194404e8b37e9421900b5dc6c",
+      "reason": "Google variable weight range preserves 400/500/600/700 with smaller API CSS"
     }
   }
 }

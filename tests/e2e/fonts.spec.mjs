@@ -44,7 +44,8 @@ test('English and CJK use Google Noto with real weights and bounded requests', a
   const weight = await renderedWeight(page)
   expect(weight).toMatchObject({ weight: '600', synthesis: 'none' })
   expect(weight.faces.some(face => face.family.includes('Noto Sans SC'))).toBe(true)
-  expect(weight.widths[1]).not.toBe(weight.widths[0])
+  expect(new Set(weight.widths).size).toBe(4)
+  expect(weight.widths[2]).not.toBe(weight.widths[0])
   // Google may use query URLs without a file extension. Observe actual font responses and encoded sizes.
   const transfers = await Promise.all(fontTransfers)
   await info.attach('noto-font-evidence', {
