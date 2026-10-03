@@ -37,19 +37,22 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Setup Go for the pinned verification CLI
+      - name: Setup Go for verification
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         with:
-          go-version: 1.24.0
+          go-version: 1.27.1
           cache: false
-      - name: Install the reviewed zt CLI
+      - name: Install reviewed zt CLI
         env:
           GOBIN: ${{ runner.temp }}/zt-bin
         run: |
           go install github.com/zeithrold/tools/cmd/zt@3f9a3a7d33befc5a954ba1e86d3aa6d72e2c762f
           printf '%s\n' "$GOBIN" >> "$GITHUB_PATH"
+      - name: Record verification provenance
+        run: |
           mkdir -p .zt/artifacts
-          go version -m "$GOBIN/zt" > .zt/artifacts/zt-toolchain.txt
+          zt version > .zt/artifacts/zt-version.txt
+          go version -m "$(command -v zt)" > .zt/artifacts/zt-toolchain.txt
           git rev-parse HEAD > .zt/artifacts/revision.txt
           sha256sum pnpm-lock.yaml > .zt/artifacts/lockfile.sha256
           node --version > .zt/artifacts/node-version.txt
@@ -58,6 +61,9 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: Verify frontend and production Worker
         run: pnpm check
+      - name: Show failed native checks
+        if: failure()
+        run: node scripts/show-check-failures.mjs
       - name: Upload verified build
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -66,7 +72,7 @@ jobs:
           include-hidden-files: true
           retention-days: 7
           if-no-files-found: error
-      - name: Upload frontend evidence on success or failure
+      - name: Upload frontend verification evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -106,23 +112,23 @@ jobs:
         with:
           name: worker-${{ github.sha }}
           path: dist/
-      - name: Verify build and deployment boundaries
+      - name: Verify deployment boundaries
         run: pnpm check:build
       - name: Require a main push to the existing account
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: node scripts/check-release.mjs
-      - name: Verify all five existing Custom Domain owners
+      - name: Verify production domain owners
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: node scripts/check-cloudflare-target.mjs
-      - name: Deploy the tested Worker and built-in assets
+      - name: Deploy the tested Worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: pnpm exec wrangler deploy --config dist/server/wrangler.json --tag "$GITHUB_SHA"
-      - name: Verify all five existing Custom Domain owners after deployment
+      - name: Verify production deployment
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}

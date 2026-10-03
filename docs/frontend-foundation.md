@@ -15,7 +15,7 @@ zt sync --root . --plan
 zt sync --root .
 ```
 
-Put GOBIN or GOPATH/bin on PATH. CI installs that exact CLI source with Go 1.24.0.
+Put GOBIN or GOPATH/bin on PATH. CI installs that exact CLI source with Go 1.27.1.
 `zt.lock.json` records versions and hashes for `js-ts-testing`, `ui-foundation`,
 `ui-web`, `frontend-engineering` and `frontend-verification`. Sync previews were
 reviewed before installation; managed local edits are refused. Project design
