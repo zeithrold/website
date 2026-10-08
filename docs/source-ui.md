@@ -1,21 +1,18 @@
 # Reviewed UI source delivery
 
 The accepted public registry source is
-[`7c708c0e0672a302cd751550276fb7a7a43cf1e5`](https://github.com/zeithrold/tools/tree/7c708c0e0672a302cd751550276fb7a7a43cf1e5).
+[`9abea5a57b97f63109fb7dc5255543b53629c3ba`](https://github.com/zeithrold/tools/tree/9abea5a57b97f63109fb7dc5255543b53629c3ba).
 Its generated item SHA256 is
-`fd862845249d052d761a8661e8ec60683f42e0691f69d8afbeff88caf158995d`.
-The actual `shadcn@4.21.1` dry run and public install copied 42 previously absent files;
-all bytes matched the public item. Source identity is `@ztd-me/ui`, independent of npm.
+`0ea6c065dc4da6608fb8b2beb817b8607c03ad694f40af1a49160971c804ddd4`.
+The Tools public-source CI performed the actual `shadcn@4.21.1` dry run and fresh
+77-file public install. This consumer's installed bytes match that verified graph,
+with 16 explicit TypeScript import adaptations recorded for native Node tests.
+Source identity is `@ztd-me/ui`, independent of npm. The durable receipt and guard
+are described in [the consumer foundation contract](consumer-foundation.md).
 
-`components.json` pins the full source SHA. `ui-source.lock.json` preserves original
-installed hashes and reviewed local adaptations. `pnpm check:ui` checks those files
-and the declaration-only patch. Keep the source lock, dependency pins and native
-pnpm lock in the same review. Licenses and notices are part of the source lock.
-
-For a proposed update, run the pinned CLI dry run in a temporary checkout. Compare
-incoming source with the accepted hashes, review local adaptations, then merge
-deliberately. Do not rerun `add --overwrite` blindly or synchronize these files as
-managed Skills. Normal checks require no registry network access or source updater.
+For an update, compare a new verified full public source and preserve reviewed
+adaptations. Do not rerun `add --overwrite` blindly. Normal checks require no
+registry network or source updater; licenses and notices are part of the inventory.
 
 ## Fonts and icons
 

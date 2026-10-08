@@ -3,6 +3,7 @@ import { captureState } from '@ztd-me/frontend-checks/playwright'
 import { installLocalFontPreview, test } from './browser-fixtures'
 import { assertAccessible } from './font-accessibility.mjs'
 import { chooseLocale, chooseMode } from './frontend-helpers'
+import { websiteTestOrigin } from './test-origins.ts'
 
 test('WCAG AA checks in both languages and themes', { tag: '@a11y' }, async ({ page }, info) => {
   await page.goto('/')
@@ -39,7 +40,7 @@ test('desktop content, outbound links, metadata and approved font requests', asy
     }
   })
   page.on('request', (request) => {
-    if (!request.url().startsWith('http://127.0.0.1:4173')) {
+    if (!request.url().startsWith(websiteTestOrigin)) {
       externalRequests.push(request.url())
     }
   })
@@ -151,7 +152,7 @@ test('browser locale, system theme and unavailable storage', async ({ browser })
   await installLocalFontPreview(page)
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.message))
-  await page.goto('http://127.0.0.1:4173/')
+  await page.goto(`${websiteTestOrigin}/`)
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN')
   await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark')
   await chooseLocale(page, 'en')
@@ -222,12 +223,12 @@ test('current-format cookies fall back and valid fields restore independently', 
       {
         name: 'ztd.frontend.development.website.v1',
         value: encodeURIComponent(stored),
-        url: 'http://127.0.0.1:4173',
+        url: websiteTestOrigin,
       },
     ])
     const page = await context.newPage()
     await installLocalFontPreview(page)
-    await page.goto('http://127.0.0.1:4173/')
+    await page.goto(`${websiteTestOrigin}/`)
     const locale = stored === '{broken' ? 'zh-CN' : 'en'
     await expect(page.locator('html')).toHaveAttribute('lang', locale)
     await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark')

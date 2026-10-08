@@ -1,7 +1,7 @@
 import type { PreferencePolicy } from '../components/ui/ztd-me/index.ts'
 import { createPreferencePolicy } from '../components/ui/ztd-me/index.ts'
 
-interface WebsitePreferenceEnvironment {
+type WebsitePreferenceEnvironment = {
   environment: 'production' | 'preview' | 'development'
   protocol: 'http:' | 'https:'
 }

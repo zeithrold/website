@@ -1,75 +1,20 @@
-@import url("tailwindcss");
-@import url("tw-animate-css");
-@import url("./styles/base.css");
-@import url("./styles/hero.css");
-@import url("./styles/project-diagrams.css");
-@import url("./styles/projects.css");
-@import url("./styles/sections.css");
-@import url("./styles/responsive.css");
+@import "tailwindcss";
+@import "../components/ui/ztd-me/tailwind.css";
+@import "tw-animate-css";
+@import "./styles/base.css";
+@import "./styles/hero.css";
+@import "./styles/project-diagrams.css";
+@import "./styles/projects.css";
+@import "./styles/sections.css";
+@import "./styles/responsive.css";
 
-@custom-variant dark {
-  :root[data-frontend-mode="dark"] & { @slot; }
+@source "../components/ui/ztd-me";
 
-  @media (prefers-color-scheme: dark) {
-    :root[data-frontend-mode="system"] & { @slot; }
+@layer components {
+  :root {
+    --shadow-sketch: color-mix(in srgb, var(--ztd-foreground) 2%, transparent);
+    --shadow-diagram: color-mix(in srgb, var(--ztd-foreground) 1%, transparent);
+    --shadow-hover: color-mix(in srgb, var(--ztd-foreground) 2%, transparent);
   }
-}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-primary: var(--ztd-action);
-  --color-primary-foreground: var(--ztd-action-foreground);
-  --color-secondary: var(--subtle);
-  --color-secondary-foreground: var(--foreground);
-  --color-muted: var(--subtle);
-  --color-muted-foreground: var(--muted-text);
-  --color-accent: var(--subtle);
-  --color-accent-foreground: var(--foreground);
-  --color-border: var(--border);
-  --color-input: var(--border);
-  --color-ring: var(--accent-color);
-  --color-destructive: var(--destructive);
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 20px;
-  --font-sans: var(--ztd-font-sans);
-}
-
-:root {
-  color-scheme: var(--ztd-color-scheme);
-
-  --background: var(--ztd-background);
-  --foreground: var(--ztd-foreground);
-  --card: var(--ztd-surface);
-  --subtle: var(--ztd-muted);
-  --muted-text: var(--ztd-muted-foreground);
-  --border: var(--ztd-border);
-  --accent-color: var(--ztd-focus);
-  --accent-text: var(--ztd-accent);
-  --accent-wash: var(--ztd-muted);
-  --diagram-card: var(--ztd-surface);
-  --destructive: #a84225;
-  --selection-background: color-mix(in srgb, var(--ztd-accent) 20%, transparent);
-  --shadow-sketch: #25231d04;
-  --shadow-diagram: #25231d03;
-  --shadow-hover: #25231d05;
-
-  font-family: var(--ztd-font-sans);
-  background: var(--background);
-  color: var(--foreground);
-  font-synthesis: none;
-  -webkit-font-smoothing: antialiased;
-}
-
-:root[data-frontend-mode="dark"] {
-  --destructive: #ee8661;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root[data-frontend-mode="system"] {
-    --destructive: #ee8661;
-  }
 }

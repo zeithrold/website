@@ -38,7 +38,7 @@ for (const theme of ['light', 'dark']) {
     await invalid.focus()
     const colors = await invalid.evaluate((node) => {
       const sample = document.createElement('span')
-      sample.style.color = getComputedStyle(node).getPropertyValue('--destructive')
+      sample.style.color = getComputedStyle(node).getPropertyValue('--ztd-destructive')
       node.appendChild(sample)
       const expected = getComputedStyle(sample).color
       sample.remove()

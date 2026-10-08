@@ -1,6 +1,6 @@
-import type { FrontendPreferences, PreferenceCookieResult, PreferencePolicy } from './types.js'
-import { preferenceCookie, readPreferenceCookie } from './cookies.js'
-import { serializePreferences } from './preferences.js'
+import type { FrontendPreferences, PreferenceCookieResult, PreferencePolicy } from './types.ts'
+import { preferenceCookie, readPreferenceCookie } from './cookies.ts'
+import { serializePreferences } from './preferences.ts'
 
 function browserCookieHeader(): string | null {
   try {

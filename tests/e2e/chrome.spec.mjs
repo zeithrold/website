@@ -2,6 +2,7 @@ import { expect } from '@playwright/test'
 import { installLocalFontPreview, test } from './browser-fixtures.ts'
 import { assertAccessible } from './font-accessibility.mjs'
 import { watchErrors } from './font-specimen.mjs'
+import { websiteTestOrigin } from './test-origins.ts'
 
 const appbar = page => page.locator('.ztd-appbar')
 
@@ -16,7 +17,7 @@ test('compact chrome preserves hit areas, focus and narrow layout', async ({ con
     {
       name: 'ztd.frontend.development.website.v1',
       value: encodeURIComponent(JSON.stringify({ version: 1, mode: 'light', palette: 'ocean', locale: 'zh-CN' })),
-      url: 'http://127.0.0.1:4173',
+      url: websiteTestOrigin,
     },
   ])
   await page.goto('/')
@@ -37,7 +38,7 @@ test('compact chrome preserves hit areas, focus and narrow layout', async ({ con
     for (const control of controls) {
       expect(control.width).toBeGreaterThanOrEqual(44)
       expect(control.height).toBeGreaterThanOrEqual(44)
-      expect(control.fontSize).toBe('13px')
+      expect(control.fontSize).toBe('16px')
       expect(control.border).toBe('rgba(0, 0, 0, 0)')
     }
   }

@@ -2,6 +2,7 @@ import { expect } from '@playwright/test'
 import { localFontPreview, test } from './browser-fixtures.ts'
 import { addFontSpecimen, fontSession, renderedFonts, watchErrors } from './font-specimen.mjs'
 import { transferProfile } from './font-transfer-profile.mjs'
+import { websiteTestOrigin } from './test-origins.ts'
 
 const scenarios = [
   { scenario: 'ordinary-english-homepage', locale: 'en', coldCap: 500_000 },
@@ -76,7 +77,7 @@ async function runScenario(browser, info, scenario) {
           palette: 'neutral',
           locale: scenario.locale,
         })),
-        url: 'http://127.0.0.1:4173',
+        url: websiteTestOrigin,
       },
     ])
     const page = await context.newPage()
@@ -93,7 +94,7 @@ async function runScenario(browser, info, scenario) {
     for (const phase of ['cold', 'warm']) {
       let headers
       const resources = await sample(phase, async () => {
-        const response = await (phase === 'cold' ? page.goto('http://127.0.0.1:4173/') : page.reload())
+        const response = await (phase === 'cold' ? page.goto(`${websiteTestOrigin}/`) : page.reload())
         headers = response.headers()
         if (scenario.coldCap === undefined) {
           await addFontSpecimen(page)

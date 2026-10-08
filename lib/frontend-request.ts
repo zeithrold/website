@@ -2,7 +2,7 @@ import { routeRequest } from './routing.ts'
 
 const DEPLOYMENT_HEADER = 'x-ztd-frontend-deployment'
 
-interface WebsiteDeployment {
+type WebsiteDeployment = {
   environment: 'production' | 'development'
   protocol: 'http:' | 'https:'
 }

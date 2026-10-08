@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { en, zh } from '../lib/copy.ts'
-import { createSiteI18n } from '../lib/site-i18n.ts'
+import { createSiteI18n, siteTranslation } from '../lib/site-i18n.ts'
 import { handleRegistrationFailure } from './helpers/registration.ts'
 
 test('product translation instances initialize in the same locale as their request snapshot', () => {
@@ -21,4 +21,16 @@ test('translation changes stay within their own document instance', async () => 
   await first.changeLanguage('en')
   assert.ok(Object.is(first.t('hero.first'), en['hero.first']))
   assert.ok(Object.is(second.t('hero.first'), zh['hero.first']))
+}).catch(handleRegistrationFailure)
+
+test('typed product copy follows the root locale while language events catch up', () => {
+  const instance = createSiteI18n('en')
+  assert.ok(Object.is(siteTranslation(instance, 'zh-CN')('hero.first'), zh['hero.first']))
+  instance.addResourceBundle('en', 'unrelated', { 'hero.first': 'Wrong namespace' })
+  assert.ok(Object.is(siteTranslation(instance, 'zh-CN')('hero.first', {
+    lng: 'en',
+    lngs: ['en'],
+    ns: 'unrelated',
+  }), zh['hero.first']))
+  assert.equal(instance.language, 'en')
 }).catch(handleRegistrationFailure)

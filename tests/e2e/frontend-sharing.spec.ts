@@ -5,6 +5,7 @@ import { preferenceCookie } from '../../components/ui/ztd-me/index.ts'
 import { test } from './browser-fixtures'
 import { assertAccessible } from './font-accessibility.mjs'
 import { chooseLocale, chooseMode, choosePalette } from './frontend-helpers'
+import { websiteCanonicalTestOrigin, websiteTestOrigin } from './test-origins.ts'
 
 /** The second local emulator presents a canonical HTTPS URL to the built Worker. */
 async function interceptWebsite(page: Page): Promise<void> {
@@ -20,7 +21,7 @@ async function interceptWebsite(page: Page): Promise<void> {
   await page.route('https://ztd.me/**', async (route) => {
     const original = route.request()
     const url = new URL(original.url())
-    const response = await page.request.fetch(`http://127.0.0.1:4174${url.pathname}${url.search}`, {
+    const response = await page.request.fetch(`${websiteCanonicalTestOrigin}${url.pathname}${url.search}`, {
       method: original.method(),
       headers: await original.allHeaders(),
       data: original.postDataBuffer() ?? undefined,
@@ -109,10 +110,10 @@ test('local runtime stays isolated despite production UI cookies and forged depl
 }) => {
   const value = encodeURIComponent(JSON.stringify({ version: 1, mode: 'dark', palette: 'plum', locale: 'zh-CN' }))
   await context.addCookies([
-    { name: 'ztd.frontend.v1', value, url: 'http://127.0.0.1:4173' },
+    { name: 'ztd.frontend.v1', value, url: websiteTestOrigin },
   ])
   await page.setExtraHTTPHeaders({ 'x-ztd-frontend-deployment': 'production', 'x-forwarded-host': 'ztd.me' })
-  await page.goto('http://127.0.0.1:4173/')
+  await page.goto(`${websiteTestOrigin}/`)
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
   await expect(page.locator('html')).toHaveAttribute('data-frontend-palette', 'neutral')
   await choosePalette(page, 'moss')

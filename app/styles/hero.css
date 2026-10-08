@@ -1,185 +1,25 @@
-.hero {
-  display: grid;
-  grid-template-columns: 1.25fr 1fr;
-  gap: 70px;
-  align-items: center;
-  padding: 75px 0 77px;
-}
+@layer components {
+  h1 {
+    margin: 0;
+    font-family: var(--ztd-font-sans);
+    font-size: clamp(52px, 5.5vw, 74px);
+    font-weight: 500;
+    letter-spacing: -3.3px;
+    line-height: 1.08;
+  }
 
-.hero-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 25px;
-}
+  h1 > span {
+    color: var(--ztd-muted-foreground);
+  }
 
-.asterisk {
-  color: var(--accent-color);
-  font-size: 20px;
-  line-height: 1;
-}
+  .sketch-lines path {
+    stroke: var(--ztd-border);
+    stroke-width: 1.5;
+    fill: none;
+    stroke-dasharray: 4 5;
+  }
 
-h1 {
-  margin: 0;
-  font-family: var(--ztd-font-sans);
-  font-size: clamp(52px, 5.5vw, 74px);
-  font-weight: 500;
-  letter-spacing: -3.3px;
-  line-height: 1.08;
-}
-
-h1 > span {
-  color: var(--muted-text);
-}
-
-.hero-description {
-  margin: 26px 0 28px;
-  max-width: 370px;
-  color: var(--muted-text);
-  font-size: 13px;
-  line-height: 1.9;
-}
-
-.hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-}
-
-.primary-link {
-  border-radius: 8px;
-  height: 44px;
-  padding: 0 17px;
-  font-size: 11px;
-  gap: 15px;
-  font-weight: 500;
-  color: var(--background);
-}
-
-.github-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  font-size: 11px;
-  color: var(--muted-text);
-}
-
-.github-link:hover {
-  color: var(--foreground);
-}
-
-.idea-sketch {
-  padding-top: 17px;
-}
-
-.sketch-label {
-  text-align: center;
-  margin: 0;
-  font-size: 8px;
-}
-
-.sketch-canvas {
-  height: 234px;
-  position: relative;
-  max-width: 360px;
-  margin: 0 auto;
-}
-
-.sketch-lines {
-  position: absolute;
-  inset: 9px 0 0;
-  width: 100%;
-  height: 210px;
-  overflow: visible;
-}
-
-.sketch-lines path {
-  stroke: var(--border);
-  stroke-width: 1.5;
-  fill: none;
-  stroke-dasharray: 4 5;
-}
-
-.sketch-lines circle {
-  fill: var(--accent-color);
-}
-
-.idea-node {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  border-radius: 19px;
-  width: 90px;
-  height: 90px;
-  box-shadow: 0 9px 23px var(--shadow-sketch);
-}
-
-.idea-node span {
-  font-size: 9px;
-  letter-spacing: .3px;
-}
-
-.node-memory {
-  left: 32px;
-  top: 29px;
-  transform: rotate(-9deg);
-}
-
-.node-memory svg {
-  color: var(--accent-color);
-}
-
-.node-build {
-  left: 127px;
-  top: 121px;
-  width: 78px;
-  height: 78px;
-  transform: rotate(7deg);
-  background: var(--subtle);
-}
-
-.node-explore {
-  right: 38px;
-  top: 82px;
-  transform: rotate(11deg);
-  background: var(--accent-wash);
-  color: var(--accent-text);
-}
-
-.sketch-plus {
-  position: absolute;
-  color: var(--muted-text);
-}
-
-.plus-one {
-  right: 69px;
-  top: 18px;
-}
-
-.plus-two {
-  left: 43px;
-  bottom: 17px;
-  color: var(--accent-color);
-}
-
-.sketch-caption {
-  color: var(--muted-text);
-  text-align: center;
-  font-family: var(--ztd-font-sans);
-  font-size: 11px;
-  margin: 0;
-}
-
-.section-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 22px;
+  .sketch-lines circle {
+    fill: var(--ztd-accent);
+  }
 }
