@@ -18,7 +18,7 @@ pluralization and interpolation options. No second engine or locale authority is
 introduced.
 
 Application object contracts use TypeScript `type` aliases. The official
-`@ztd-me/eslint@0.1.4` profile enforces
+`@ztd-me/eslint@0.1.5` profile enforces
 `ts/consistent-type-definitions: ["error", "type"]`. Required native/global
 declaration merging remains interface-based in handwritten declaration files; generated declarations and installed shared source
 are separate provenance boundaries.

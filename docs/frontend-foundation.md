@@ -5,7 +5,7 @@ Current source provenance and the verified 77-file inventory are defined in
 records below describe their original test runs.
 
 The executable helper is the registry package `@ztd-me/frontend-checks@0.1.3`,
-with `@playwright/test@1.62.0`. Strict `@ztd-me/eslint@0.1.4`, TypeScript 6.0.3,
+with `@playwright/test@1.62.0`. Strict `@ztd-me/eslint@0.1.5`, TypeScript 6.0.3,
 Node 24 and pnpm 11.22.0 remain in use. Vite is pinned to its existing tested
 8.3.1 resolution to avoid an unrelated upgrade during helper installation.
 
