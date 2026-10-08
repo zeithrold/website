@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test'
 import { captureState } from '@ztd-me/frontend-checks/playwright'
 import { installLocalFontPreview, test } from './browser-fixtures'
+import { websiteTestOrigin } from './test-origins.ts'
 
 const cookieName = 'ztd.frontend.development.website.v1'
 
@@ -8,7 +9,7 @@ test('SSR negotiates locale and renders system dark without JavaScript', async (
   const context = await browser.newContext({ javaScriptEnabled: false, locale: 'zh-CN', colorScheme: 'dark' })
   const page = await context.newPage()
   await installLocalFontPreview(page)
-  const response = await page.goto('http://127.0.0.1:4173/')
+  const response = await page.goto(`${websiteTestOrigin}/`)
   expect(response?.headers()['cache-control']).toBe('private, no-store')
   expect(response?.headers().vary).toContain('Accept-Language')
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN')
@@ -25,7 +26,7 @@ test('SSR negotiates locale and renders system dark without JavaScript', async (
 
 test('cookie snapshot agrees before and after hydration and overrides Accept-Language', async ({ browser }) => {
   const stored = { version: 1, mode: 'dark', palette: 'ocean', locale: 'zh-CN' }
-  const cookie = { name: cookieName, value: encodeURIComponent(JSON.stringify(stored)), url: 'http://127.0.0.1:4173' }
+  const cookie = { name: cookieName, value: encodeURIComponent(JSON.stringify(stored)), url: websiteTestOrigin }
   for (const javaScriptEnabled of [false, true]) {
     const context = await browser.newContext({ javaScriptEnabled, locale: 'en-US', colorScheme: 'light' })
     await context.addCookies([cookie])
@@ -38,7 +39,7 @@ test('cookie snapshot agrees before and after hydration and overrides Accept-Lan
         errors.push(message.text())
       }
     })
-    await page.goto('http://127.0.0.1:4173/')
+    await page.goto(`${websiteTestOrigin}/`)
     await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN')
     await expect(page.locator('html')).toHaveAttribute('data-frontend-palette', 'ocean')
     await expect(page.locator('html')).toHaveAttribute('data-frontend-mode', 'dark')
@@ -61,7 +62,7 @@ for (const value of [
 ]) {
   test(`invalid or future cookie has deterministic SSR defaults: ${value}`, async ({ page, context }) => {
     await context.addCookies([
-      { name: cookieName, value: encodeURIComponent(value), url: 'http://127.0.0.1:4173' },
+      { name: cookieName, value: encodeURIComponent(value), url: websiteTestOrigin },
     ])
     await page.goto('/')
     await expect(page.getByRole('button', { name: 'Appearance', exact: true })).toBeEnabled()

@@ -5,8 +5,13 @@ import { frontendRootAttributes } from '@/components/ui/ztd-me/index'
 import { WebsiteFrontend } from '@/components/website-frontend'
 import { en, zh } from '@/lib/copy'
 import { resolveWebsiteFrontend } from '@/lib/website-frontend'
-import '@/components/ui/ztd-me/styles.css'
 import './globals.css'
+
+const SCROLL_SMOOTH_CLASS = [
+  'scroll-smooth scroll-pt-8 motion-reduce:scroll-auto [color-scheme:var(--ztd-color-scheme)]',
+].join(' ')
+
+const M_0_CLASS = ['m-0 min-w-80 bg-background font-sans text-body text-foreground [font-synthesis:none]'].join(' ')
 
 const baseMetadata: Metadata = {
   title: 'Zeithrold — Projects, experiments & notes',
@@ -46,8 +51,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>): Promise<ReactElement> {
   const props = resolveWebsiteFrontend(await headers())
   return (
-    <html {...frontendRootAttributes(props.initialPreferences)}>
-      <body><WebsiteFrontend {...props}>{children}</WebsiteFrontend></body>
+    <html className={SCROLL_SMOOTH_CLASS} {...frontendRootAttributes(props.initialPreferences)}>
+      <body className={M_0_CLASS}><WebsiteFrontend {...props}>{children}</WebsiteFrontend></body>
     </html>
   )
 }

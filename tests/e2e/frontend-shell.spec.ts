@@ -1,9 +1,17 @@
+import type { Page } from '@playwright/test'
 import { expect } from '@playwright/test'
 import { captureState } from '@ztd-me/frontend-checks/playwright'
 import { PALETTES } from '../../components/ui/ztd-me/index.ts'
 import { test } from './browser-fixtures'
 import { assertAccessible } from './font-accessibility.mjs'
 import { chooseLocale, chooseMode, choosePalette } from './frontend-helpers'
+
+async function settleOverlay(page: Page): Promise<void> {
+  await page.locator('.ztd-overlay').evaluateAll(async (nodes) => {
+    await Promise.all(nodes.flatMap(node => node.getAnimations()
+      .map(async animation => await animation.finished.catch(() => undefined))))
+  })
+}
 
 test('every palette and explicit mode works with project content', { tag: '@a11y' }, async ({ page }, info) => {
   await page.goto('/')
@@ -29,6 +37,8 @@ test('menus and locale Select preserve keyboard focus and translated accessible 
     await appearance.focus()
     await page.keyboard.press('Enter')
     await expect(page.getByRole('menuitemradio', { name: locale === 'en' ? 'System' : '跟随系统' })).toBeFocused()
+    await settleOverlay(page)
+    expect(await page.getByRole('menu').evaluate(node => getComputedStyle(node).opacity)).toBe('1')
     await assertAccessible(page, info, { label: `appearance-open-${locale}` })
     await page.keyboard.press('Escape')
     await expect(appearance).toBeFocused()
@@ -36,6 +46,7 @@ test('menus and locale Select preserve keyboard focus and translated accessible 
     await language.focus()
     await page.keyboard.press('Space')
     await expect(page.getByRole('option', { name: locale === 'en' ? 'English' : '简体中文' })).toBeFocused()
+    await settleOverlay(page)
     await assertAccessible(page, info, { label: `language-open-${locale}` })
     await page.keyboard.press('Escape')
     await expect(language).toBeFocused()

@@ -3,7 +3,7 @@ import { isDeepStrictEqual } from 'node:util'
 import { cloudflareResult, requireArray, requireRecord, requireString } from './cloudflare-json.ts'
 import { ACCOUNT_ID, EXPECTED_ROUTES, WORKER_NAME } from './deployment-policy.ts'
 
-interface WorkerDomain {
+type WorkerDomain = {
   hostname: string
   service: string
   environment: string

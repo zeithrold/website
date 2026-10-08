@@ -1,8 +1,8 @@
-import type { PreferenceSnapshot, PreferenceStore } from './store-types.js'
-import type { FrontendPreferences, PreferencePolicy } from './types.js'
-import { persistBrowserPreferences, readBrowserPreferences } from './browser-environment.js'
-import { createPreferencePolicy } from './policy.js'
-import { normalizePreferences, serializePreferences } from './preferences.js'
+import type { PreferenceSnapshot, PreferenceStore } from './store-types.ts'
+import type { FrontendPreferences, PreferencePolicy } from './types.ts'
+import { persistBrowserPreferences, readBrowserPreferences } from './browser-environment.ts'
+import { createPreferencePolicy } from './policy.ts'
+import { normalizePreferences, serializePreferences } from './preferences.ts'
 
 export function createPreferenceStore(initial: FrontendPreferences, policy: PreferencePolicy): PreferenceStore {
   const validatedPolicy = createPreferencePolicy(policy)
@@ -58,7 +58,7 @@ export function createPreferenceStore(initial: FrontendPreferences, policy: Pref
     connect,
   }
 }
-interface BrowserActions {
+type BrowserActions = {
   restore: () => void
   setSystem: (dark: boolean) => void
 }

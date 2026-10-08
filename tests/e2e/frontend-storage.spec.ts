@@ -3,6 +3,7 @@ import { captureState } from '@ztd-me/frontend-checks/playwright'
 import { test } from './browser-fixtures'
 import { chooseLocale, chooseMode, choosePalette } from './frontend-helpers'
 import { recordedStorageAccess, recordStorageAccess } from './frontend-storage-audit'
+import { websiteTestOrigin } from './test-origins.ts'
 
 test('preference persistence only accesses its configured current-format storage key', async ({ page }) => {
   await recordStorageAccess(page)
@@ -80,7 +81,7 @@ test('denied cookie read preserves SSR preferences and ignores unrelated storage
     {
       name: 'ztd.frontend.development.website.v1',
       value: encodeURIComponent(JSON.stringify(stored)),
-      url: 'http://127.0.0.1:4173',
+      url: websiteTestOrigin,
     },
   ])
   await page.addInitScript(() => {
@@ -105,7 +106,7 @@ test('denied cookie read preserves SSR preferences and ignores unrelated storage
 test('same-origin tabs observe real cookie and mirror updates', async ({ page, context }) => {
   await page.goto('/')
   const second = await context.newPage()
-  await second.goto('http://127.0.0.1:4173/')
+  await second.goto(`${websiteTestOrigin}/`)
   await expect(second.getByRole('button', { name: 'Appearance', exact: true })).toBeEnabled()
   await choosePalette(page, 'plum')
   await chooseMode(page, 'dark')
@@ -123,7 +124,7 @@ test('preference updates leave unrelated business storage unchanged', async ({ p
     {
       name: 'ztd.frontend.development.website.v1',
       value: encodeURIComponent(JSON.stringify(current)),
-      url: 'http://127.0.0.1:4173',
+      url: websiteTestOrigin,
     },
   ])
   await page.addInitScript((value) => {
@@ -150,7 +151,7 @@ test('cookie read recovery restores the saved locale and appearance on focus', a
     {
       name: 'ztd.frontend.development.website.v1',
       value: encodeURIComponent(JSON.stringify(preferences)),
-      url: 'http://127.0.0.1:4173',
+      url: websiteTestOrigin,
     },
   ])
   await page.addInitScript(() => {

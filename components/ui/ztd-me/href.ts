@@ -1,4 +1,4 @@
-import { hasControlCharacters } from './text.js'
+import { hasControlCharacters } from './text.ts'
 
 function validateHref(value: string): void {
   if (typeof value !== 'string' || value.length === 0 || value !== value.trim()

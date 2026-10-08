@@ -11,7 +11,7 @@ export const EXPECTED_ROUTES = [
   { pattern: 'ztd.one', custom_domain: true, enabled: true, previews_enabled: false },
 ]
 
-export interface DeploymentConfig {
+export type DeploymentConfig = {
   name?: unknown
   account_id?: unknown
   workers_dev?: unknown
@@ -73,7 +73,7 @@ export function assertDeploymentConfig(config: DeploymentConfig): void {
   }
 }
 
-export interface ReleaseRequest {
+export type ReleaseRequest = {
   repository?: string
   eventName?: string
   ref?: string
