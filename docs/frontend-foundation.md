@@ -1,7 +1,11 @@
 # Website frontend foundations
 
-The executable helper is the registry package `@ztd-me/frontend-checks@0.1.1`,
-with `@playwright/test@1.62.0`. Strict `@ztd-me/eslint@0.1.1`, TypeScript 6.0.3,
+Current source provenance and the verified 77-file inventory are defined in
+[the consumer foundation contract](consumer-foundation.md). Earlier acceptance
+records below describe their original test runs.
+
+The executable helper is the registry package `@ztd-me/frontend-checks@0.1.3`,
+with `@playwright/test@1.62.0`. Strict `@ztd-me/eslint@0.1.4`, TypeScript 6.0.3,
 Node 24 and pnpm 11.22.0 remain in use. Vite is pinned to its existing tested
 8.3.1 resolution to avoid an unrelated upgrade during helper installation.
 
@@ -29,9 +33,9 @@ required `frontend` profile maps native commands as follows:
 | Capability | Native command | Actual scope |
 | --- | --- | --- |
 | lint | `pnpm lint` | Strict ESLint, zero errors and warnings |
-| css | `pnpm lint:css` | Standalone CSS plus cross-file token inventory |
+| css | `pnpm lint:css` | CSS imports, Tailwind utility classes and cross-file token inventory |
 | typecheck | `pnpm check:types` | Regenerate bindings, require no drift, run TypeScript |
-| unit | `pnpm test` | 41 routing, shared preference, translation, SSR/cache and deployment-boundary tests |
+| unit | `pnpm test` | Routing, shared preference, translation, SSR/cache and deployment-boundary tests |
 | build | `pnpm check:worker` | Build once and check the original deployment configuration |
 | e2e | `pnpm check:browser` | Full production-Worker browser suite, then recheck deployment boundaries |
 | integration | `pnpm check:evidence` | Deliberate accessibility failure must retain complete useful evidence |
@@ -49,7 +53,7 @@ screenshot, video and HTML/JSON reports. It changes no product content or servic
 
 ## Local visual and token contract
 
-Editable `@ztd-me/ui` source at tools commit `7c708c0e0672a302cd751550276fb7a7a43cf1e5`
+Editable `@ztd-me/ui` source at tools commit `9abea5a57b97f63109fb7dc5255543b53629c3ba`
 supplies the appbar/footer, shared controls and CSS. `app/globals.css` imports product
 styles and maps business roles to public shared tokens. Noto Sans Latin/CJK and
 Noto Color Emoji load directly from the Google Fonts API. Neutral/system is default;
@@ -62,8 +66,9 @@ mode, including system-dark before hydration. Browser fixtures verify variant co
 and contrast without adding unused product controls.
 
 `css-check.config.mjs` inventories every product CSS file and actual Tailwind/shared
-source declarations. The three explicit external custom properties come from Radix
-Select and DropdownMenu positioning at runtime; every product and source CSS file remains checked. Helper 0.1.1 accepts the Tailwind block variant used for
+source declarations. Explicit external custom properties come from Radix positioning and Vaul motion
+at runtime; every product and source CSS file remains checked. Official helper
+0.1.3 validates Tailwind imports, utilities and the block variants used for
 explicit and system dark; invalid nesting elsewhere remains checked. Cross-file
 inventory complements real browser palette/variant checks.
 

@@ -17,10 +17,10 @@ locale. The boundary ignores caller `lng`, `lngs` and `ns` overrides while prese
 pluralization and interpolation options. No second engine or locale authority is
 introduced.
 
-Application object contracts use TypeScript `type` aliases. The project enforces
-`ts/consistent-type-definitions: ["error", "type"]` during the published ESLint
-transition. Required native/global declaration merging remains interface-based in
-handwritten declaration files; generated declarations and installed shared source
+Application object contracts use TypeScript `type` aliases. The official
+`@ztd-me/eslint@0.1.4` profile enforces
+`ts/consistent-type-definitions: ["error", "type"]`. Required native/global
+declaration merging remains interface-based in handwritten declaration files; generated declarations and installed shared source
 are separate provenance boundaries.
 
 The project preserves its current `app/`, `components/`, `lib/` and `tests/` roots.
@@ -29,18 +29,31 @@ content remain outside the generic shared provider.
 
 ## Shared-source review boundary
 
-`ui-source.lock.json` retains the original 42-file public pin and records the
-installed 76-file reviewed local candidate separately. `check:ui` verifies the
-candidate inventory digest, every installed file byte, reviewed import adaptations,
-atomic installation and exact direct dependency pins. The candidate is explicitly
-not an approved public installation. Final source acceptance requires owner review,
-a full approved public source SHA and a fresh public registry installation.
+`ui-source.lock.json` pins the complete 77-file public Tools UI graph at
+[`9abea5a57b97f63109fb7dc5255543b53629c3ba`](https://github.com/zeithrold/tools/tree/9abea5a57b97f63109fb7dc5255543b53629c3ba).
+Its payload SHA256 is
+`0ea6c065dc4da6608fb8b2beb817b8607c03ad694f40af1a49160971c804ddd4`.
+The [public-source CI gate](https://github.com/zeithrold/tools/actions/runs/37713345587)
+performed a fresh `shadcn@4.21.1` install, checked every public byte and license,
+and passed native lint/CSS/types, 14 source-consumer units and 32 real browser cases
+with actual Google Fonts. `docs/ui-public-installation.json` preserves its receipt
+with a final newline; the source lock records both the original CI receipt hash and
+the checked-in receipt hash.
 
-The CSS-first checker is a portable patch of published
-`@ztd-me/frontend-checks@0.1.1`; its runtime TypeScript dependency is declared through
-`packageExtensions`. Dependency pins, patches, shared licenses and the lockfile
-must be reviewed together. These local candidates do not imply Tools publication
-or a dependency release.
+The source guard checks that receipt, upstream and installed hashes, the complete
+inventory digest, reviewed adaptations, atomic delivery and exact dependency pins.
+It rejects altered bytes, extra files, changed inventory digests and unverified
+installation claims. The installed graph is a verified public source rather than a
+local candidate. Source updates require a new verified full commit and reviewed
+inventory; normal checks use the committed evidence without network access.
+
+Website retains 16 reviewed TypeScript relative-import adaptations for its native
+Node tests. All other delivered bytes match the public graph.
+
+The CSS and Tailwind checker uses official `@ztd-me/frontend-checks@0.1.3`,
+including its declared runtime TypeScript dependency. Consumer patches and package
+extensions are not used for the checker. Review exact dependency pins, shared
+source licenses and the lockfile together.
 
 ## Native verification
 

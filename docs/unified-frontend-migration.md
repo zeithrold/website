@@ -1,7 +1,11 @@
 # Source-owned frontend integration
 
+Current source provenance and the verified 77-file inventory are defined in
+[the consumer foundation contract](consumer-foundation.md). Earlier acceptance
+records below describe their original test runs.
+
 The website installs editable `@ztd-me/ui` from public tools source
-`7c708c0e0672a302cd751550276fb7a7a43cf1e5` through `shadcn@4.21.1`.
+`9abea5a57b97f63109fb7dc5255543b53629c3ba` through `shadcn@4.21.1`.
 The dry run showed all 42 targets absent; the real public install matched every
 item file before intentional local adaptations. `ui-source.lock.json` records
 the public item SHA256, original file hashes and reviewed adaptation hashes.
