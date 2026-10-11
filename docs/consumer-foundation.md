@@ -2,7 +2,7 @@
 
 `app/globals.css` imports Tailwind and the installed shared `tailwind.css` entry once.
 The Tools source graph owns semantic colors, configurable Noto body/control/help roles
-(18/16/14px), shared shell layout and primitive behavior. Consumer components express
+(15/13/12px), shared shell layout and primitive behavior. Consumer components express
 ordinary layout, spacing and responsive states with Tailwind utilities. Product CSS
 retains intentional hero typography, illustration strokes, locale adjustments and
 reduced-motion behavior; `app/styles/typography.css` is a compatibility marker rather
@@ -43,12 +43,19 @@ the checked-in receipt hash.
 The source guard checks that receipt, upstream and installed hashes, the complete
 inventory digest, reviewed adaptations, atomic delivery and exact dependency pins.
 It rejects altered bytes, extra files, changed inventory digests and unverified
-installation claims. The installed graph is a verified public source rather than a
-local candidate. Source updates require a new verified full commit and reviewed
-inventory; normal checks use the committed evidence without network access.
+installation claims. The public receipt verifies the accepted upstream base; the installation inventory
+also identifies reviewed local adaptations. Updating the public source pin requires
+a new verified full commit and reviewed inventory. Normal checks verify the
+committed provenance and installed hashes without network access.
 
 Website retains 16 reviewed TypeScript relative-import adaptations for its native
-Node tests. All other delivered bytes match the public graph.
+Node tests. Seven further reviewed source adaptations synchronize the local Tools
+typography contract: body/control/help/heading 15/13/12/19px, reading prose 17px
+and editable fields 16px. Tokens, the Tailwind bridge, class merging, fields and
+delivered guidance move together; dialog animation preserves Tailwind centering.
+Root/rem sizing and touch targets remain unchanged. The public pin and receipt
+continue to identify the accepted upstream base; local adaptation hashes identify
+the installed changes. All remaining delivered bytes match that public base.
 
 The CSS and Tailwind checker uses official `@ztd-me/frontend-checks@0.1.3`,
 including its declared runtime TypeScript dependency. Consumer patches and package
