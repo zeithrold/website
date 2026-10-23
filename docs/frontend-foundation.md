@@ -9,17 +9,19 @@ with `@playwright/test@1.62.0`. Strict `@ztd-me/eslint@0.1.5`, TypeScript 6.0.3,
 Node 24 and pnpm 11.22.0 remain in use. Vite is pinned to its existing tested
 8.3.1 resolution to avoid an unrelated upgrade during helper installation.
 
-The CLI and complete Skills come from reviewed, merged tools commit
-`3f9a3a7d33befc5a954ba1e86d3aa6d72e2c762f`:
+The managed development Skills come from reviewed, merged tools commit
+`405d732ed93488ff08568751e522c42537480752`:
 
 ```sh
-go install github.com/zeithrold/tools/cmd/zt@3f9a3a7d33befc5a954ba1e86d3aa6d72e2c762f
+go install github.com/zeithrold/tools/cmd/zt@405d732ed93488ff08568751e522c42537480752
 zt inspect --root . --json
 zt sync --root . --plan
 zt sync --root .
 ```
 
-Put GOBIN or GOPATH/bin on PATH. CI installs that exact CLI source with Go 1.27.1.
+Put GOBIN or GOPATH/bin on PATH. The Skill bundle and its hashes are independent of
+CI's check runner, which remains pinned to `3f9a3a7d33befc5a954ba1e86d3aa6d72e2c762f` with Go 1.27.1.
+CI does not run Skill sync.
 `zt.lock.json` records versions and hashes for `js-ts-testing`, `ui-foundation`,
 `ui-web`, `frontend-engineering` and `frontend-verification`. Sync previews were
 reviewed before installation; managed local edits are refused. Project design

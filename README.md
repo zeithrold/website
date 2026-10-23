@@ -19,7 +19,7 @@ Install the reviewed `zt` CLI with Go 1.24 or newer and put its binary directory
 on `PATH`:
 
 ```sh
-go install github.com/zeithrold/tools/cmd/zt@3f9a3a7d33befc5a954ba1e86d3aa6d72e2c762f
+go install github.com/zeithrold/tools/cmd/zt@405d732ed93488ff08568751e522c42537480752
 ```
 
 ```sh

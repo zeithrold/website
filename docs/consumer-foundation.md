@@ -35,6 +35,20 @@ Ordinary UI retains the shared body/control/help roles at 15/13/12px and 44px co
 
 Visual review covers computed typography, actual font rendering, spacing, hierarchy, palette contrast, motion, focus/hover states, reflow and the content-led illustration. Reference awards guide the comparison; self-review does not certify an award. Keep run-specific captures and measurements under ignored artifacts. Identify source, built-Worker and live-deployment evidence separately.
 
+## Managed design guidance
+
+The five development Skills selected in `zt.json` are installed under `.agents/skills`
+from Tools `405d732ed93488ff08568751e522c42537480752`. `zt.lock.json` records the delivered module
+version and complete directory hashes. Review `zt sync --plan` before applying an update;
+project components, this contract and the installed UI source remain consumer-owned.
+
+For visual work, read this contract and the installed
+[UI foundation](../.agents/skills/ui-foundation/SKILL.md), then use its
+[eight-dimension visual review](../.agents/skills/ui-foundation/references/visual-design.md).
+The local role budgets above govern the composition. Separate measured typography,
+interaction evidence and visual judgment; confirm real interaction before an SSR test
+injects additional DOM content.
+
 ## Shared-source review boundary
 
 `ui-source.lock.json` pins the complete 77-file public Tools UI graph at
