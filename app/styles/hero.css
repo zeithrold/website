@@ -2,24 +2,106 @@
   h1 {
     margin: 0;
     font-family: var(--ztd-font-sans);
-    font-size: clamp(52px, 5.5vw, 74px);
+    font-size: clamp(40px, 4vw, 54px);
     font-weight: 500;
-    letter-spacing: -3.3px;
-    line-height: 1.08;
+    letter-spacing: -.045em;
+    line-height: 1.14;
+    text-wrap: balance;
   }
+  h1 > span { color: var(--ztd-muted-foreground); }
 
-  h1 > span {
-    color: var(--ztd-muted-foreground);
-  }
-
-  .sketch-lines path {
+  .atlas-guide {
     stroke: var(--ztd-border);
-    stroke-width: 1.5;
-    fill: none;
-    stroke-dasharray: 4 5;
+    stroke-width: .5;
+    stroke-dasharray: 2 5;
   }
 
-  .sketch-lines circle {
-    fill: var(--ztd-accent);
+  .atlas-route  {
+    stroke: var(--ztd-accent);
+    stroke-width: 1;
+  }
+
+  .atlas-point  {
+    fill: var(--ztd-surface);
+    stroke: var(--ztd-accent);
+    stroke-width: 1.5;
+  }
+
+  .atlas-register  {
+    stroke: var(--ztd-muted-foreground);
+    stroke-width: 1;
+  }
+
+  .atlas-idea-1  {
+    top: 15%;
+    left: 9%;
+  }
+
+  .atlas-idea-2  {
+    top: 41%;
+    right: 8%;
+  }
+
+  .atlas-idea-3  {
+    bottom: 14%;
+    left: 16%;
+  }
+  .atlas-idea { transition: transform 240ms cubic-bezier(.2,.7,.3,1), border-color 180ms; }
+
+  .idea-sketch:hover .atlas-idea-1,
+  .idea-sketch:hover .atlas-idea-3 { transform: translateX(3px); }
+  .idea-sketch:hover .atlas-idea-2 { transform: translateX(-3px); }
+  .project-card { transition: border-color 180ms; }
+  .project-card:focus-within { border-color: var(--ztd-accent); }
+
+  .space-visit svg,
+  .project-links a svg,
+  .email-link > svg:last-child,
+  .nav-link::after { transition: transform 180ms, opacity 180ms; }
+
+  .project-links a:hover svg,
+  .email-link:hover > svg:last-child { transform: translate(2px, -2px); }
+  .site-section-links .nav-link { position: relative; }
+
+  .site-section-links .nav-link::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 6px;
+    height: 1px;
+    background: currentcolor;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .site-section-links .nav-link:hover::after,
+  .site-section-links .nav-link:focus-visible::after { transform: scaleX(1); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-copy { animation: index-enter 600ms cubic-bezier(.2,.7,.3,1) both; }
+    .atlas-route { animation: index-route 900ms cubic-bezier(.2,.7,.3,1) both; }
+  }
+
+  @keyframes index-enter {
+    from  {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to  {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes index-route {
+    from  {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+
+    to  {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 0;
+    }
   }
 }

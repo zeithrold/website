@@ -2,7 +2,7 @@
 
 `app/globals.css` imports Tailwind and the installed shared `tailwind.css` entry once.
 The Tools source graph owns semantic colors, configurable Noto body/control/help roles
-(18/16/14px), shared shell layout and primitive behavior. Consumer components express
+(15/13/12px), shared shell layout and primitive behavior. Consumer components express
 ordinary layout, spacing and responsive states with Tailwind utilities. Product CSS
 retains intentional hero typography, illustration strokes, locale adjustments and
 reduced-motion behavior; `app/styles/typography.css` is a compatibility marker rather
@@ -27,6 +27,14 @@ The project preserves its current `app/`, `components/`, `lib/` and `tests/` roo
 New translation behavior stays in named i18n modules and hooks. Project policy and
 content remain outside the generic shared provider.
 
+## Personal index composition
+
+The homepage uses a connected index illustration, ruled project entries and compact destination links. The illustration explains remembering, building and exploring; its brief line draw is progressive CSS enhancement. Essential copy and links remain available without animation or JavaScript. Reduced motion disables movement. Mobile keeps a compact composition and native document scrolling.
+
+Ordinary UI retains the shared body/control/help roles at 15/13/12px and 44px control reach. Display type is consumer-owned: the English hero caps at 54px on wide layouts and 38px on narrow layouts, Chinese at 50/36px; project titles use 25/23px. Section labels use the control role rather than competing display sizes. Noto Sans, all six palettes and request-owned locale/theme behavior remain shared.
+
+Visual review covers computed typography, actual font rendering, spacing, hierarchy, palette contrast, motion, focus/hover states, reflow and the content-led illustration. Reference awards guide the comparison; self-review does not certify an award. Keep run-specific captures and measurements under ignored artifacts. Identify source, built-Worker and live-deployment evidence separately.
+
 ## Shared-source review boundary
 
 `ui-source.lock.json` pins the complete 77-file public Tools UI graph at
@@ -43,12 +51,19 @@ the checked-in receipt hash.
 The source guard checks that receipt, upstream and installed hashes, the complete
 inventory digest, reviewed adaptations, atomic delivery and exact dependency pins.
 It rejects altered bytes, extra files, changed inventory digests and unverified
-installation claims. The installed graph is a verified public source rather than a
-local candidate. Source updates require a new verified full commit and reviewed
-inventory; normal checks use the committed evidence without network access.
+installation claims. The public receipt verifies the accepted upstream base; the installation inventory
+also identifies reviewed local adaptations. Updating the public source pin requires
+a new verified full commit and reviewed inventory. Normal checks verify the
+committed provenance and installed hashes without network access.
 
 Website retains 16 reviewed TypeScript relative-import adaptations for its native
-Node tests. All other delivered bytes match the public graph.
+Node tests. Seven further reviewed source adaptations synchronize the local Tools
+typography contract: body/control/help/heading 15/13/12/19px, reading prose 17px
+and editable fields 16px. Tokens, the Tailwind bridge, class merging, fields and
+delivered guidance move together; dialog animation preserves Tailwind centering.
+Root/rem sizing and touch targets remain unchanged. The public pin and receipt
+continue to identify the accepted upstream base; local adaptation hashes identify
+the installed changes. All remaining delivered bytes match that public base.
 
 The CSS and Tailwind checker uses official `@ztd-me/frontend-checks@0.1.3`,
 including its declared runtime TypeScript dependency. Consumer patches and package

@@ -7,14 +7,14 @@ import { ProjectVisual } from './project-visual'
 const SECTION_NUMBER_CLASS = ['section-number text-accent text-help font-normal tabular-nums'].join(' ')
 
 const PROJECT_CARD_CLASS = [
-  'project-card bg-card border border-border rounded-[20px] overflow-hidden p-[15px] max-[700px]:p-[13px]',
-  'min-w-0 wrap-anywhere',
+  'project-card grid grid-cols-[.95fr_1fr] gap-10 items-center border-t border-border py-8',
+  'max-[700px]:grid-cols-1 max-[700px]:gap-6 max-[700px]:py-6 min-w-0 wrap-anywhere',
 ].join(' ')
 
 const PROJECT_CONTENT_CLASS = [
-  'project-content pt-[25px] px-[13px] pb-[6px] [&_h3]:font-sans [&_h3]:text-[length:29px]',
-  '[&_h3]:font-medium [&_h3]:tracking-[-1px] [&_h3]:mt-0 [&_h3]:mx-0 [&_h3]:mb-3 max-[700px]:pt-[22px]',
-  'max-[700px]:px-[10px] max-[700px]:pb-1',
+  'project-content min-w-0 py-2 [&_h3]:font-sans [&_h3]:text-[length:25px] [&_h3]:leading-[1.3]',
+  '[&_h3]:font-medium [&_h3]:tracking-[-.035em] [&_h3]:mt-0 [&_h3]:mb-3',
+  'max-[700px]:[&_h3]:text-[length:23px]',
 ].join(' ')
 
 const PROJECT_CATEGORY_CLASS = [
@@ -28,9 +28,8 @@ const PROJECT_DESCRIPTION_CLASS = [
 ].join(' ')
 
 const PROJECT_TAGS_CLASS = [
-  'project-tags list-none flex flex-wrap gap-[7px] p-0 my-[18px] mx-0 [&_li]:text-muted-foreground',
-  '[&_li]:border [&_li]:border-border [&_li]:rounded-[5px] [&_li]:py-1 [&_li]:px-[7px] [&_li]:text-help',
-  'max-[700px]:my-[17px] max-[700px]:mx-0',
+  'project-tags list-none flex flex-wrap gap-x-4 gap-y-2 p-0 my-5 [&_li]:text-muted-foreground',
+  '[&_li]:text-help',
 ].join(' ')
 
 const PROJECT_LINKS_CLASS = [
@@ -40,14 +39,13 @@ const PROJECT_LINKS_CLASS = [
 ].join(' ')
 
 const TOOLS_CARD_CLASS = [
-  'tools-card flex items-center gap-5 py-[22px] px-7 border border-border rounded-[14px] mt-5 bg-card',
-  'max-[700px]:p-5 max-[700px]:gap-[14px] max-[700px]:items-start min-w-0 wrap-anywhere',
+  'tools-card flex items-center gap-5 py-6 border-y border-border bg-transparent max-[700px]:gap-3',
+  'max-[700px]:items-start min-w-0 wrap-anywhere',
 ].join(' ')
 
 const TOOLS_ICON_CLASS = [
-  'tools-icon flex items-center justify-center w-[46px] h-[46px] bg-muted border border-border',
-  'rounded-[10px] shrink-0 text-muted-foreground max-[700px]:w-[38px] max-[700px]:h-[38px]',
-  'max-[700px]:rounded-[8px]',
+  'tools-icon grid place-items-center size-10 bg-muted border border-border rounded-sm shrink-0',
+  'text-muted-foreground',
 ].join(' ')
 
 const TOOLS_BODY_CLASS = [
@@ -67,31 +65,20 @@ const STAGE_BADGE_CLASS = [
 
 const TOOLS_LINK_CLASS = [
   'tools-link flex items-center gap-[14px] min-h-11 text-control [&_svg]:text-accent hover:text-accent',
-  'max-[700px]:min-w-6 max-[700px]:[&_span]:hidden',
+  'max-[700px]:min-w-11 max-[700px]:[&_span]:hidden',
 ].join(' ')
 
 const SECTION_HEADING_CLASS = [
-  'section-heading flex items-center justify-between gap-5 mb-[22px] [&_h2]:flex [&_h2]:items-center',
-  '[&_h2]:gap-[13px] [&_h2]:m-0 [&_h2]:text-control [&_h2]:font-semibold [&_.eyebrow]:m-0',
-  '[&_.eyebrow]:text-help [&_.eyebrow]:tracking-[1.2px] max-[700px]:mb-[18px]',
-  'max-[700px]:[&_h2]:text-control max-[700px]:[&_h2]:gap-[10px] max-[700px]:[&_.eyebrow]:text-help',
-  'max-[700px]:[&_.eyebrow]:tracking-[.8px] max-[700px]:[&_.eyebrow]:text-right',
-  'max-[700px]:[&_.eyebrow]:max-w-[130px] max-[360px]:[&_.eyebrow]:max-w-[110px]',
-  'max-[360px]:[&_.eyebrow]:text-help flex-wrap [&_.eyebrow]:max-w-none [&_.eyebrow]:[text-align:start]',
-  'max-[700px]:items-start max-[700px]:gap-y-2 max-[700px]:gap-x-4',
+  'section-heading flex flex-wrap items-center justify-between gap-x-6 gap-y-2 pb-5 [&_h2]:flex',
+  '[&_h2]:items-center [&_h2]:gap-3 [&_h2]:m-0 [&_h2]:text-control [&_h2]:font-semibold',
+  '[&_.eyebrow]:m-0 [&_.eyebrow]:text-help [&_.eyebrow]:tracking-[.1em]',
 ].join(' ')
 
 const EYEBROW_CLASS = ['eyebrow text-help font-medium tracking-[1.5px] text-muted-foreground leading-[1.6]'].join(' ')
 
-const PROJECT_GRID_CLASS = [
-  'project-grid grid grid-cols-[repeat(2,_minmax(0,_1fr))] gap-6 max-[700px]:grid-cols-[1fr]',
-  'max-[700px]:gap-[18px]',
-].join(' ')
+const PROJECT_GRID_CLASS = 'project-grid grid grid-cols-1'
 
-const SECTION_FOOTNOTE_CLASS = [
-  'section-footnote mt-3 mx-[3px] mb-0 text-help text-muted-foreground text-right leading-[1.7]',
-  'max-[700px]:text-help max-[700px]:text-left max-[700px]:ml-0',
-].join(' ')
+const SECTION_FOOTNOTE_CLASS = 'section-footnote mt-3 mb-0 text-help text-muted-foreground leading-[1.7]'
 
 type Project = (typeof PROJECTS)[number]
 
