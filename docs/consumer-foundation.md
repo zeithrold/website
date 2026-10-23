@@ -38,7 +38,7 @@ Visual review covers computed typography, actual font rendering, spacing, hierar
 ## Managed design guidance
 
 The five development Skills selected in `zt.json` are installed under `.agents/skills`
-from Tools `405d732ed93488ff08568751e522c42537480752`. `zt.lock.json` records the delivered module
+from Tools `880e26363c8a3ec35c1e316edb30780c33bcecbc`. `zt.lock.json` records the delivered module
 version and complete directory hashes. Review `zt sync --plan` before applying an update;
 project components, this contract and the installed UI source remain consumer-owned.
 

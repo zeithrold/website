@@ -10,10 +10,10 @@ Node 24 and pnpm 11.22.0 remain in use. Vite is pinned to its existing tested
 8.3.1 resolution to avoid an unrelated upgrade during helper installation.
 
 The managed development Skills come from reviewed, merged tools commit
-`405d732ed93488ff08568751e522c42537480752`:
+`880e26363c8a3ec35c1e316edb30780c33bcecbc`:
 
 ```sh
-go install github.com/zeithrold/tools/cmd/zt@405d732ed93488ff08568751e522c42537480752
+go install github.com/zeithrold/tools/cmd/zt@880e26363c8a3ec35c1e316edb30780c33bcecbc
 zt inspect --root . --json
 zt sync --root . --plan
 zt sync --root .
