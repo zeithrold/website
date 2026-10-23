@@ -20,7 +20,7 @@ const eyebrowStyle3 = [
 ].join(' ')
 
 const heroDescriptionStyle4 = [
-  'hero-description mt-6 mb-6 max-w-90 text-body leading-[1.85] text-muted-foreground',
+  'hero-description mt-6 mb-6 max-w-90 text-balance text-body leading-[1.85] text-muted-foreground',
 ].join(' ')
 
 const githubLinkStyle5 = [
