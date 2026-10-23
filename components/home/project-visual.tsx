@@ -29,10 +29,10 @@ const PRECISION_LABEL_CLASS = [
 ].join(' ')
 
 const PROJECT_VISUAL_CLASS = [
-  'project-visual memory-visual border border-border rounded-[11px] px-[22px] py-4',
+  'project-visual memory-visual border border-border rounded-sm px-[22px] py-4',
   'bg-[color-mix(in_srgb,var(--ztd-background)_85%,var(--ztd-muted))]',
   'max-[700px]:h-[199px] max-[700px]:py-[17px] max-[700px]:px-5',
-  'max-[360px]:pl-[13px] max-[360px]:pr-[13px] h-auto min-h-65 max-[700px]:min-h-[250px]',
+  'max-[360px]:pl-[13px] max-[360px]:pr-[13px] h-auto min-h-56 max-[700px]:min-h-52',
 ].join(' ')
 
 const MEMORY_CORE_CLASS = [
@@ -44,9 +44,9 @@ const MEMORY_CORE_CLASS = [
 ].join(' ')
 
 const PROJECT_VISUAL_CLASS_1 = [
-  'project-visual ledger-visual border border-border rounded-[11px] px-[22px] py-4 bg-background',
+  'project-visual ledger-visual border border-border rounded-sm px-[22px] py-4 bg-background',
   'max-[700px]:h-[199px] max-[700px]:py-[17px] max-[700px]:px-5',
-  'max-[360px]:pl-[13px] max-[360px]:pr-[13px] h-auto min-h-65 max-[700px]:min-h-[250px]',
+  'max-[360px]:pl-[13px] max-[360px]:pr-[13px] h-auto min-h-56 max-[700px]:min-h-52',
 ].join(' ')
 
 const LEDGER_SYSTEM_CLASS = [
@@ -70,7 +70,7 @@ function MemoryVisual(): ReactElement {
         {t('memory.context')}
         <ArrowUpRight className={VISUAL_GLYPH_CLASS} size={13} aria-hidden="true" />
       </div>
-      <div className="memory-diagram w-[min(310px,_100%)] mx-auto mt-[25px] mb-0" aria-hidden="true">
+      <div className="memory-diagram w-[min(310px,_100%)] mx-auto mt-8 mb-0" aria-hidden="true">
         <div className={MEMORY_CORE_CLASS}>
           <Layers size={20} />
           <span>{t('memory.library')}</span>

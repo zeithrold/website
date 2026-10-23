@@ -27,6 +27,14 @@ The project preserves its current `app/`, `components/`, `lib/` and `tests/` roo
 New translation behavior stays in named i18n modules and hooks. Project policy and
 content remain outside the generic shared provider.
 
+## Personal index composition
+
+The homepage uses a connected index illustration, ruled project entries and compact destination links. The illustration explains remembering, building and exploring; its brief line draw is progressive CSS enhancement. Essential copy and links remain available without animation or JavaScript. Reduced motion disables movement. Mobile keeps a compact composition and native document scrolling.
+
+Ordinary UI retains the shared body/control/help roles at 15/13/12px and 44px control reach. Display type is consumer-owned: the English hero caps at 54px on wide layouts and 38px on narrow layouts, Chinese at 50/36px; project titles use 25/23px. Section labels use the control role rather than competing display sizes. Noto Sans, all six palettes and request-owned locale/theme behavior remain shared.
+
+Visual review covers computed typography, actual font rendering, spacing, hierarchy, palette contrast, motion, focus/hover states, reflow and the content-led illustration. Reference awards guide the comparison; self-review does not certify an award. Keep run-specific captures and measurements under ignored artifacts. Identify source, built-Worker and live-deployment evidence separately.
+
 ## Shared-source review boundary
 
 `ui-source.lock.json` pins the complete 77-file public Tools UI graph at

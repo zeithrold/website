@@ -15,7 +15,8 @@ const SITE_CONTENT_CLASS = [
 const SITE_AFTERWORD_CLASS = [
   'site-afterword max-[700px]:pt-4 max-[700px]:px-0 max-[700px]:pb-5 flex items-center justify-between',
   'gap-6 pt-[26px] px-0 pb-[31px] border-t border-border text-muted-foreground [&_p]:flex',
-  '[&_p]:items-center [&_p]:m-0 [&_p]:text-body [&_a]:inline-flex [&_a]:min-h-11 [&_a]:min-w-8',
+  '[&_p]:items-center [&_p]:m-0 [&_p]:text-help [&_a]:inline-flex [&_a]:min-h-11 [&_a]:min-w-8',
+  '[&_p]:flex-1 [&_p]:min-w-0 [&_a]:shrink-0 [&_a]:whitespace-nowrap',
   '[&_a]:items-center [&_a]:justify-center [&_a:hover]:text-foreground',
 ].join(' ')
 
