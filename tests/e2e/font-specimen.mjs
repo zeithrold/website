@@ -12,7 +12,20 @@ export function watchErrors(page) {
 }
 
 export async function addFontSpecimen(page) {
-  await expect(page.getByRole('button', { name: /Appearance|外观/u, exact: true })).toBeEnabled()
+  // Enabled SSR controls do not prove hydration. Complete a real interaction
+  // before inserting the specimen into React-owned markup.
+  const appearance = page.getByRole('button', { name: /Appearance|外观/u, exact: true })
+  const menu = page.getByRole('menu')
+  await expect.poll(async () => {
+    if (await menu.isVisible()) {
+      return true
+    }
+    await appearance.click()
+    return menu.isVisible()
+  }, { message: 'Appearance must be interactive before adding the font specimen' }).toBe(true)
+  await page.keyboard.press('Escape')
+  await expect(menu).toBeHidden()
+  await expect(appearance).toBeFocused()
   await page.evaluate(() => {
     const section = document.createElement('section')
     section.setAttribute('aria-label', 'Multilingual font verification specimen')
