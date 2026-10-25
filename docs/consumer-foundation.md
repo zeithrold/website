@@ -79,7 +79,7 @@ Root/rem sizing and touch targets remain unchanged. The public pin and receipt
 continue to identify the accepted upstream base; local adaptation hashes identify
 the installed changes. All remaining delivered bytes match that public base.
 
-The CSS and Tailwind checker uses official `@ztd-me/frontend-checks@0.1.3`,
+The CSS and Tailwind checker uses official `@ztd-me/frontend-checks@0.1.4`,
 including its declared runtime TypeScript dependency. Consumer patches and package
 extensions are not used for the checker. Review exact dependency pins, shared
 source licenses and the lockfile together.

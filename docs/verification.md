@@ -24,11 +24,11 @@ workspace, use writable temporary XDG/config/log directories as described in the
 | ESLint | Entire source with zero errors and zero warnings |
 | CSS | Stylelint plus cross-file variable and semantic-color checks |
 | TypeScript | Strict project with `noUncheckedIndexedAccess` |
-| Unit tests | 41 tests: routing, preferences, translation initialization, SSR/cache and deployment/domain boundaries |
+| Unit tests | 48 tests: routing, preferences, translation initialization, SSR/cache, deployment/domain boundaries and failure-evidence retention |
 | Production build | Production Worker and generated `dist/server/wrangler.json` |
 | Build boundary checks | One Worker + ASSETS, exactly five approved domains, no addons or previews, Vercel Git deploy disabled |
-| Chromium suite | 33 tests against the local production Worker, including variant regression fixtures |
-| Failure evidence | Intentional unnamed-button failure must retain its full Axe scan, trace, screenshot, video and reports |
+| Chromium suite | 40 tests against the local production Worker, including variant regression fixtures |
+| Failure evidence | The intended probe's own failed result retains its complete Axe scan (engine and every rule bucket), trace, screenshot, video and the global HTML report inside the run directory |
 | Whitespace | `git diff --check` |
 
 The seven tests for the removed one-time retirement feature are no longer part
@@ -54,7 +54,11 @@ Named screenshots are attached by the suite:
 - `mobile-zh-CN`
 
 Reports and captures are not committed. The aggregate keeps them below its unique
-`.zt/artifacts` run directory; standalone browser runs use `.zt/browser`. CI uploads
+`.zt/artifacts` run directory; standalone browser runs use `.zt/browser`. Each
+browser run also writes `test-timings.json` there: per-attempt setup, body and
+teardown walls derived from native step timestamps, with `durationMs` kept
+separately and unknown durations left `null`. Timings observe the run; they are
+not a pass/fail gate, and the helper budgets and retries stay unchanged. CI uploads
 the entire `.zt/artifacts` tree as `frontend-<run>-<attempt>` even on failure,
 retained for seven days. The local production URL is
 `http://127.0.0.1:4173`; local verification creates no remote preview deployment.
@@ -73,6 +77,11 @@ exercises cookie visibility and focus refresh, not the real showcase application
 No production browser request or remote mutation is required. Development isolation
 is verified against the ordinary local instance; preview hosts remain rejected.
 Both temporary local configs must be removed before the final build guard.
+
+Browser workers are half of the CPU count available to the process, at least two
+and at most eight. The four-vCPU CI runners keep the historical two workers;
+larger developer machines run the same cases concurrently, so compare wall-clock
+numbers only within one machine.
 
 Build output may include nonfatal upstream vinext/Rolldown notices about dynamic
 imports and route classification. Verification exercises the production Worker
