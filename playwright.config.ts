@@ -1,3 +1,4 @@
+import { availableParallelism } from 'node:os'
 import process from 'node:process'
 import { defineConfig } from '@playwright/test'
 import { verificationArtifacts } from '@ztd-me/frontend-checks/playwright'
@@ -10,12 +11,16 @@ import {
 
 const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
 const artifacts = verificationArtifacts()
+// Page setup, Axe scans and font CDP reads are CPU-bound, so half the available
+// cores keeps every case while filling idle workers on larger machines. The
+// four-vCPU CI runners therefore keep this suite at the historical two workers.
+const workers = Math.min(8, Math.max(2, Math.floor(availableParallelism() / 2)))
 
 export default defineConfig({
   ...artifacts,
   testDir: './tests/e2e',
   fullyParallel: true,
-  workers: 2,
+  workers,
   retries: 0,
   use: {
     ...artifacts.use,

@@ -4,7 +4,7 @@ Current source provenance and the verified 77-file inventory are defined in
 [the consumer foundation contract](consumer-foundation.md). Earlier acceptance
 records below describe their original test runs.
 
-The executable helper is the registry package `@ztd-me/frontend-checks@0.1.3`,
+The executable helper is the registry package `@ztd-me/frontend-checks@0.1.4`,
 with `@playwright/test@1.62.0`. Strict `@ztd-me/eslint@0.1.5`, TypeScript 6.0.3,
 Node 24 and pnpm 11.22.0 remain in use. Vite is pinned to its existing tested
 8.3.1 resolution to avoid an unrelated upgrade during helper installation.
@@ -70,7 +70,7 @@ and contrast without adding unused product controls.
 `css-check.config.mjs` inventories every product CSS file and actual Tailwind/shared
 source declarations. Explicit external custom properties come from Radix positioning and Vaul motion
 at runtime; every product and source CSS file remains checked. Official helper
-0.1.3 validates Tailwind imports, utilities and the block variants used for
+0.1.4 validates Tailwind imports, utilities and the block variants used for
 explicit and system dark; invalid nesting elsewhere remains checked. Cross-file
 inventory complements real browser palette/variant checks.
 
@@ -87,8 +87,15 @@ default WCAG 2/2.1/2.2 A/AA tags. Font transfer budgets and glyph-level browser 
 argv, directories, statuses, exits and logs. The CSS CLI writes `css.json` there;
 Playwright's shared settings retain JSON/HTML reports, named PNG captures, full
 Axe scans and failure traces/screenshots/videos under the same root. Direct
-browser runs use `.zt/browser` instead. An Axe attachment may be embedded as a
-base64 body in `playwright.json`; it need not be a separately named JSON file.
+browser runs use `.zt/browser` instead. Helper 0.1.4 writes each complete scan
+and capture to a file in the test output directory and attaches it by path, so
+the report references the evidence instead of embedding a base64 body; very
+long labels keep the earlier inline form. The failure-evidence gate resolves
+the failed result's own attachments, requires real paths confined to the
+retained run directory, and checks the scan's engine and every rule bucket. The
+same settings write `test-timings.json` beside the reports, recording each
+attempt's phase walls separately from native `durationMs`; it observes the run
+without gating it.
 
 CI records the CLI module/toolchain, workflow revision, lockfile checksum and
 Node/pnpm versions. It uploads the entire `.zt/artifacts` tree on success or

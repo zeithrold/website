@@ -67,7 +67,7 @@
     "@vitejs/plugin-react": "6.1.1",
     "@vitejs/plugin-rsc": "latest",
     "@ztd-me/eslint": "0.1.5",
-    "@ztd-me/frontend-checks": "0.1.3",
+    "@ztd-me/frontend-checks": "0.1.4",
     "eslint": "10.11.0",
     "tailwindcss": "latest",
     "typescript": "6.0.3",
