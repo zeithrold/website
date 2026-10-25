@@ -9,23 +9,25 @@ with `@playwright/test@1.62.0`. Strict `@ztd-me/eslint@0.1.5`, TypeScript 6.0.3,
 Node 24 and pnpm 11.22.0 remain in use. Vite is pinned to its existing tested
 8.3.1 resolution to avoid an unrelated upgrade during helper installation.
 
-The managed development Skills come from reviewed, merged tools commit
-`880e26363c8a3ec35c1e316edb30780c33bcecbc`:
+The generic development Skills come from the reviewed, released tools commit
+[`7fd78ba96830452502adbda07575bb250af914ba`](https://github.com/zeithrold/tools/tree/7fd78ba96830452502adbda07575bb250af914ba/skills)
+and are installed once for the current user in `~/.agents/skills`. This pinned CLI inspects
+this project, and `pnpm check` runs the native profile through the same binary:
 
 ```sh
-go install github.com/zeithrold/tools/cmd/zt@880e26363c8a3ec35c1e316edb30780c33bcecbc
+go install github.com/zeithrold/tools/cmd/zt@7fd78ba96830452502adbda07575bb250af914ba
 zt inspect --root . --json
-zt sync --root . --plan
-zt sync --root .
 ```
 
-Put GOBIN or GOPATH/bin on PATH. The Skill bundle and its hashes are independent of
-CI's check runner, which remains pinned to `3f9a3a7d33befc5a954ba1e86d3aa6d72e2c762f` with Go 1.27.1.
-CI does not run Skill sync.
-`zt.lock.json` records versions and hashes for `js-ts-testing`, `ui-foundation`,
-`ui-web`, `frontend-engineering` and `frontend-verification`. Sync previews were
-reviewed before installation; managed local edits are refused. Project design
-and deployment decisions remain here, outside the managed Skill directories.
+Put GOBIN or GOPATH/bin on PATH. Generic Skill distribution is a user-global concern: the new
+`zt sync` in the Tools source working tree takes `--global` and `--skills <list>` and has no
+released build yet, so no project-level sync command is reproduced here and the pin above
+gains no global flags. The Skill bundle is independent of CI's check runner, which remains
+pinned to `3f9a3a7d33befc5a954ba1e86d3aa6d72e2c762f` with Go 1.27.1 and does not sync Skills.
+This project keeps no Skill copy; `zt.lock.json` stays as an empty retired lock for the five
+generic Skills (`js-ts-testing`, `ui-foundation`, `ui-web`, `frontend-engineering`,
+`frontend-verification`). Project design and deployment decisions remain here, outside any
+managed Skill directory.
 
 ## Explicit checks
 

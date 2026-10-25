@@ -37,14 +37,18 @@ Visual review covers computed typography, actual font rendering, spacing, hierar
 
 ## Managed design guidance
 
-The five development Skills selected in `zt.json` are installed under `.agents/skills`
-from Tools `880e26363c8a3ec35c1e316edb30780c33bcecbc`. `zt.lock.json` records the delivered module
-version and complete directory hashes. Review `zt sync --plan` before applying an update;
-project components, this contract and the installed UI source remain consumer-owned.
+The five generic development Skills are installed once for the current user in
+`~/.agents/skills` from Tools
+[`7fd78ba96830452502adbda07575bb250af914ba`](https://github.com/zeithrold/tools/tree/7fd78ba96830452502adbda07575bb250af914ba/skills);
+this repository keeps no copy, and `zt.json` selects modules and native commands only.
+Selection lives in the user-global `~/.agents/zt.json` or an explicit `zt sync --skills` list for
+the new global `zt sync` in the Tools source working tree, which has no released build yet.
+`zt.lock.json` stays as an empty retired lock, not an installation record.
+Project components, this contract and the installed UI source remain consumer-owned.
 
-For visual work, read this contract and the installed
-[UI foundation](../.agents/skills/ui-foundation/SKILL.md), then use its
-[eight-dimension visual review](../.agents/skills/ui-foundation/references/visual-design.md).
+For visual work, read this contract and the globally installed
+[UI foundation](https://github.com/zeithrold/tools/blob/7fd78ba96830452502adbda07575bb250af914ba/skills/ui-foundation/SKILL.md), then use its
+[eight-dimension visual review](https://github.com/zeithrold/tools/blob/7fd78ba96830452502adbda07575bb250af914ba/skills/ui-foundation/references/visual-design.md).
 The local role budgets above govern the composition. Separate measured typography,
 interaction evidence and visual judgment; confirm real interaction before an SSR test
 injects additional DOM content.
