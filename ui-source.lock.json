@@ -176,6 +176,22 @@
     "components/ui/ztd-me/ui/cn.ts": {
       "sha256": "655fa933d16370a0251046b40fd3e8e65f5ed7a3f491369cd3f33709591b19e2",
       "reason": "User-requested local sync of Tools compact typography (body/control/help/heading 15/13/12/19px, reading 17px, editable input 16px), semantic Tailwind utilities and preserved dialog centering; public source provenance remains pinned."
+    },
+    "components/ui/ztd-me/styles/fonts.css": {
+      "sha256": "eea625bf3cbee695d99b25b3249e67594dcebf6482181365e8cf7249bef323b9",
+      "reason": "User-requested local Source Serif 4 serif typography with Noto Serif CJK, real italic and optical sizing; retain the accepted public source pin and CI receipt."
+    },
+    "components/ui/ztd-me/styles/fonts-serif.css": {
+      "sha256": "3fecf4569d5534eaf87f1ef6922279bfd8a60075275febc151f4be8a486b92a3",
+      "reason": "User-requested local Source Serif 4 serif typography with Noto Serif CJK, real italic and optical sizing; retain the accepted public source pin and CI receipt."
+    },
+    "components/ui/ztd-me/fonts.md": {
+      "sha256": "bab57f716442832a220a6609795b8a6116a6777e6fe5f3b71b0ec7ecf1354121",
+      "reason": "User-requested local Source Serif 4 serif typography with Noto Serif CJK, real italic and optical sizing; retain the accepted public source pin and CI receipt."
+    },
+    "components/ui/ztd-me/THIRD_PARTY_NOTICES.md": {
+      "sha256": "ba7bc75244e69e0e5f9538935b0d00a0701b1a695127d8548502271f2a481390",
+      "reason": "User-requested local Source Serif 4 serif typography with Noto Serif CJK, real italic and optical sizing; retain the accepted public source pin and CI receipt."
     }
   },
   "installedDelivery": "verified-public-source",
@@ -183,7 +199,7 @@
     "kind": "verified-public-source",
     "sourceSha": "9abea5a57b97f63109fb7dc5255543b53629c3ba",
     "registryItemSha256": "0ea6c065dc4da6608fb8b2beb817b8607c03ad694f40af1a49160971c804ddd4",
-    "inventorySha256": "833cec075914d85a770cc66ad6ff1b82f7b8326d00755374d011b8a931ee4b66",
+    "inventorySha256": "eedf6f1f4333a6298b4b716898df0b8441f3e10f6d6b845225c900a58c389a43",
     "publicInstallationVerified": true,
     "dependencies": [
       "react@19.3.0",
@@ -373,7 +389,8 @@
       {
         "path": "components/ui/ztd-me/styles/fonts.css",
         "upstreamSha256": "38b6e20b0eb0617b776a457d345a2a10341e270fdab5dd74aded87a3c543a8ad",
-        "sha256": "38b6e20b0eb0617b776a457d345a2a10341e270fdab5dd74aded87a3c543a8ad"
+        "sha256": "eea625bf3cbee695d99b25b3249e67594dcebf6482181365e8cf7249bef323b9",
+        "adaptation": "User-requested local Source Serif 4 serif typography with Noto Serif CJK, real italic and optical sizing; retain the accepted public source pin and CI receipt."
       },
       {
         "path": "components/ui/ztd-me/LICENSE",
@@ -383,7 +400,8 @@
       {
         "path": "components/ui/ztd-me/THIRD_PARTY_NOTICES.md",
         "upstreamSha256": "3be38b51e01957b87389e39cd3426eabc50190fb46ae85ebc58b48290718b1f2",
-        "sha256": "3be38b51e01957b87389e39cd3426eabc50190fb46ae85ebc58b48290718b1f2"
+        "sha256": "ba7bc75244e69e0e5f9538935b0d00a0701b1a695127d8548502271f2a481390",
+        "adaptation": "User-requested local Source Serif 4 serif typography with Noto Serif CJK, real italic and optical sizing; retain the accepted public source pin and CI receipt."
       },
       {
         "path": "components/ui/ztd-me/third-party/SHADCN-MIT.txt",
@@ -434,7 +452,8 @@
       {
         "path": "components/ui/ztd-me/fonts.md",
         "upstreamSha256": "49a405c2aefa84ff1e9f3e4232f259759fc2e4ea1604483c80cc1350c5e1c709",
-        "sha256": "49a405c2aefa84ff1e9f3e4232f259759fc2e4ea1604483c80cc1350c5e1c709"
+        "sha256": "bab57f716442832a220a6609795b8a6116a6777e6fe5f3b71b0ec7ecf1354121",
+        "adaptation": "User-requested local Source Serif 4 serif typography with Noto Serif CJK, real italic and optical sizing; retain the accepted public source pin and CI receipt."
       },
       {
         "path": "components/ui/ztd-me/i18n.ts",
@@ -572,7 +591,8 @@
       {
         "path": "components/ui/ztd-me/styles/fonts-serif.css",
         "upstreamSha256": "f6cd39e592ad002db35267e771d18a394c3e1829c4ba6a9326e4bb2d9cb4b916",
-        "sha256": "f6cd39e592ad002db35267e771d18a394c3e1829c4ba6a9326e4bb2d9cb4b916"
+        "sha256": "3fecf4569d5534eaf87f1ef6922279bfd8a60075275febc151f4be8a486b92a3",
+        "adaptation": "User-requested local Source Serif 4 serif typography with Noto Serif CJK, real italic and optical sizing; retain the accepted public source pin and CI receipt."
       },
       {
         "path": "components/ui/ztd-me/styles/drawer.css",
